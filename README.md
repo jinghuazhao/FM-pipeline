@@ -23,7 +23,7 @@ Note that JAM requires Java 1.8 so call to Java -jar inside the function needs t
 reflect this, not straightforward with install_github() from devtools but one needs to 
 clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
 
-## Installation
+## INSTALLATION
 
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
 
@@ -43,7 +43,7 @@ gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 ```
 The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
 
-## Usage
+## USAGE
 
 The syntax of pipeline is simply
 ```
@@ -66,6 +66,9 @@ The **second input file** is a list of SNPs for which finemapping will be conduc
 No header is required for neither file.
 
 ### Reference panel
+
+The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
+development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
 A .GEN file is required for each region, named such that chr${chr}_{start}_{end}.gen, together with a sample file. A [utility program in Stata](files/p0.do) is 
 provided to generated such files from their whole chromosome counterpart. The SNPinfo.dta.gz has the following information,
@@ -95,7 +98,7 @@ JAM      | .jam/.top | the posterior summary table and top models containing sel
 Sometimes it is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code [here](files/finemap-check.R) 
 serves for illustration.
 
-## Example
+## EXAMPLE
 
 We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The data is obtained as follows,
 ```
@@ -111,12 +114,7 @@ A list of two SNPs is contained in [2.snps](files/2.snps). The Stata program
 [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
 exc3_122844451_123344451.txt and exc3_122881254_123381254.txt.
 
-## Additional information
-
-The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
-development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
-
-## Software and references
+## SOFTWARE AND REFERENCES
 
 **[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
