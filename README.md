@@ -32,13 +32,13 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 
 ## Inputs
 
-The first input file will be GWAS summary statistics with the following columns,
+The **first input file** will be GWAS summary statistics with the following columns,
 
 SNP | A1 | A2 | beta | se | N
 -----|----|----|------|----|--
 RSid | Effect allele | Other allele | effect estimate | standard error of effect | sample size
 
-The second input file is a list of SNPs for which finemapping will be conducted.
+The **second input file** is a list of SNPs for which finemapping will be conducted.
 
 No header is required for neither file.
 
