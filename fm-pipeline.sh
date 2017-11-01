@@ -73,7 +73,7 @@ ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_l
          --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
 echo "--> auxiliary files"
 ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' 'sort -k2,2 {}.map|join -110 -22 {}.dat -|sort -k10,10>{}.incl'
-cat $wd/st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
+cat st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
      awk "{print \$9,\$10,\$5,\$6,\$7,\$8,15234,\$11,\$1,\$6/\$7}" $f.incl > $f.r2;\
      cut -d" " -f9,10 $f.r2>$f.z;\
      awk "{print \$1}" $f.incl > $f.inc;\
@@ -108,7 +108,7 @@ ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
          sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}p.ld'
 echo "--> finemap"
    echo "z;ld;snp;config;log;n-ind" > finemap.cfg
-   cat $wd/st.bed | parallel -j${threads} -C ' ' 'f=chr{1}_{2}_{3};sort -k7,7n $f.r2|tail -n1|cut -d" " -f7|\
+   cat st.bed | parallel -j${threads} -C ' ' 'f=chr{1}_{2}_{3};sort -k7,7n $f.r2|tail -n1|cut -d" " -f7|\
    awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-max 1 --corr-config 0.9
    sed 's/\./p\./g' finemap.cfg > finemapp.cfg
@@ -120,5 +120,5 @@ fi
 
 echo "--> JAM"
 if [ $JAM -eq 1 ]; then
-   cat $wd/st.bed|parallel -j${threads} --env wd -C' ' 'export fp=chr{1}_{2}_{3}p; R CMD BATCH --no-save ${FM_location}/files/JAM.R ${fp}.log'
+   cat st.bed|parallel -j${threads} --env wd -C' ' 'export fp=chr{1}_{2}_{3}p; R --no-save <${FM_location}/files/JAM.R > ${fp}.log'
 fi
