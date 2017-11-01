@@ -30,17 +30,19 @@ The pipeline itself can be installed in the usual way,
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
 
-## Input
+## Inputs
 
-The input will be GWAS summary statistics with the following columns,
+The first input file will be GWAS summary statistics with the following columns,
 
 SNP | A1 | A2 | beta | se | N
 -----|----|----|------|----|--
 RSid | Effect allele | Other allele | effect estimate | standard error of effect | sample size
 
-No header is required.
+The second input file is a list of SNPs for which finemapping will be conducted.
 
-## Output
+No header is required for neither file.
+
+## Outputs
 
 The output will involve output from a variety of software whose list is given below.
 
