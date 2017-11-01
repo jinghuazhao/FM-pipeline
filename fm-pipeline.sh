@@ -39,6 +39,7 @@ if [ ! -d $dir ]; then
    mkdir -p $dir
 fi
 cd $dir
+cd /genetics/data/gwas/6-7-17/MAGIC
 if $(test -f ${FM_location}/snp150.txt ); then
    echo "Chromosomal positions are ready to use"
    ln -sf ${FM_location}/snp150.txt
@@ -58,10 +59,9 @@ grep -w -f ${snplist} $dir/$(basename $1).input | awk -vs=$f{lanking} '{print $8
 cat $dir/$(basename $1).lst | parallel -j${threads} -C' ' \
 'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
  if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2}; \
- \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $1).input | sort -k10,10 > {1}.dat'
+ \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $1).input | \
+ sort -k10,10 > chr{9}_{$({10}-${flanking})}_{$({10}+{flanking})}.dat'
 
-ln -sf $wd/rs2877716.dat chr3_122844451_123344451.dat
-ln -sf $wd/rs17361324.dat chr3_122881254_123381254.dat
 # --> map/ped
 ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
           gtool -G --g {}.ord --s ${sample_file} \
