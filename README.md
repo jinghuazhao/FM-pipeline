@@ -102,7 +102,7 @@ bash fm-pipeline.sh 2hrglucose.txt
 The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-## Links to software and references
+## Software and references
 
 **[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
