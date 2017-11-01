@@ -32,6 +32,8 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 
 ## Inputs
 
+### GWAS summary statistics and lead SNPs
+
 The **first input file** will be GWAS summary statistics with the following columns,
 
 SNP | A1 | A2 | beta | se | N
@@ -41,6 +43,11 @@ RSid | Effect allele | Other allele | effect estimate | standard error of effect
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
 No header is required for neither file.
+
+### Reference panel
+
+A .GEN file is required for each region, named such that chr${chr}_{start}_{end}.gen, together with a sample file. A [utility program in Stata](files/p0.do) is 
+provided to generated such files from their whole chromosome counterpart.
 
 ## Outputs
 
