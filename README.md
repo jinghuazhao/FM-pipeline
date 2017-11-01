@@ -49,7 +49,7 @@ No header is required for neither file.
 ### Reference panel
 
 A .GEN file is required for each region, named such that chr${chr}_{start}_{end}.gen, together with a sample file. A [utility program in Stata](files/p0.do) is 
-provided to generated such files from their whole chromosome counterpart. The SNPinfo.dta.gz 
+provided to generated such files from their whole chromosome counterpart. The SNPinfo.dta.gz has the following information,
 
 chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
