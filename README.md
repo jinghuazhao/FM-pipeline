@@ -21,8 +21,10 @@ fgwas | annotation
 
 ## Installation
 
-Besides (sub)set of software listed in the table above, the pipeline requires [GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html) and 
-[PLINK](https://www.cog-genomics.org/plink2) 1.9 to be installed. The pipeline itself can be installed in the usual way,
+Besides (sub)set of software listed in the table above, the pipeline requires [GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html),
+[PLINK](https://www.cog-genomics.org/plink2) 1.9, and the companion program LDstore from finemap's websiet need to be installed.
+
+The pipeline itself can be installed in the usual way,
 ```
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
