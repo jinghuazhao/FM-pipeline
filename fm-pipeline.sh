@@ -12,12 +12,14 @@ export wd=/genetics/data/gwas/6-7-17/MAGIC
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
 # the outputs should be available individually from them
+export locuszoom=0
 export GCTA=0
 export fgwas=0
-export CAVIAR=1
-export CAVIARBF=1
+export CAVIAR=0
+export CAVIARBF=0
 export finemap=1
 export JAM=1
+export FM_location=/genetics/bin/FM-pipeline
 
 if [ $# -lt 1 ] || [ "$1" == "-h" ]; then
     echo "Usage: fm-pipeline.sh <input>"
@@ -57,7 +59,7 @@ ln -sf /gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 ln -sf $wd/rs2877716.dat chr3_122844451_123344451.dat
 ln -sf $wd/rs17361324.dat chr3_122881254_123381254.dat
 # --> map/ped
-ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f $wd/order.awk {}.gen > {}.ord;\
+ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
           gtool -G --g {}.ord --s EPIC-Norfolk.sample \
          --ped {}.ped --map {}.map --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles \
          --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
@@ -76,17 +78,20 @@ ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} --env wd -C' ' '\
          plink-1.9 --file {} --missing-genotype N --extract {}.inc --remove $wd/exclude.dat \
          --make-bed --keep-allele-order --a2-allele {}.a 3 1 --out {}'
 # --> bcor
-ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
-         ldstore --bcor {}.bcor --bplink {} --n-threads ${threads}; \  
-         ldstore --bcor {}.bcor --merge ${threads}; \
-         ldstore --bcor {}.bcor --matrix {}.ld --incl_variants {}.incl_variants; \
-         sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}.ld'
+if [ $finemap -eq 1 ]; then
+   ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
+        ldstore --bcor {}.bcor --bplink {} --n-threads ${threads}; \  
+        ldstore --bcor {}.bcor --merge ${threads}; \
+        ldstore --bcor {}.bcor --matrix {}.ld --incl_variants {}.incl_variants; \
+        sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}.ld'
+fi
 # JAM, IPD
 ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} -C' ' '\
          plink-1.9 --bfile {} --indep-pairwise 500kb 5 0.80 --maf 0.05 --out {}; \
          grep -w -f {}.prune.in {}.a > {}.p; \
          grep -w -f {}.prune.in {}.dat > {}p.dat; \
          plink-1.9 --bfile {} --extract {}.prune.in --keep-allele-order --a2-allele {}.p 3 1 --make-bed --out {}p'
+if [ $finemap -eq 1 ]; then
 ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\ 
          grep -w -f {}.prune.in {}.z > {}p.z; \
          ldstore --bcor {}p.bcor --bplink {}p --n-threads ${threads}; \
@@ -94,14 +99,18 @@ ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
          ldstore --bcor {}p.bcor --matrix {}p.ld; \
          sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}p.ld'
 # --> finemap
-echo "z;ld;snp;config;log;n-ind" > finemap.cfg
-cat $wd/st.bed | parallel -j${threads} -C ' ' 'f=chr{1}_{2}_{3};sort -k7,7n $f.r2|tail -n1|cut -d" " -f7|\
-awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-finemap --sss --in-files finemap.cfg --n-causal-max 1 --corr-config 0.9
-sed 's/\./p\./g' finemap.cfg > finemapp.cfg
-finemap --sss --in-files finemapp.cfg --n-causal-max 1 --corr-config 0.9
-# --> JAM
-cat $wd/st.bed|parallel -j${threads} --env wd -C' ' 'export fp=chr{1}_{2}_{3}p; R CMD BATCH --no-save $wd/JAM.R ${fp}.log'
+   echo "z;ld;snp;config;log;n-ind" > finemap.cfg
+   cat $wd/st.bed | parallel -j${threads} -C ' ' 'f=chr{1}_{2}_{3};sort -k7,7n $f.r2|tail -n1|cut -d" " -f7|\
+   awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
+   finemap --sss --in-files finemap.cfg --n-causal-max 1 --corr-config 0.9
+   sed 's/\./p\./g' finemap.cfg > finemapp.cfg
+   finemap --sss --in-files finemapp.cfg --n-causal-max 1 --corr-config 0.9
 
-finemap --sss --in-files finemap.cfg --n-causal-max 3 --corr-config 0.9  
-finemap --sss --in-files finemapp.cfg --n-causal-max 3 --corr-config 0.9
+   finemap --sss --in-files finemap.cfg --n-causal-max 3 --corr-config 0.9  
+   finemap --sss --in-files finemapp.cfg --n-causal-max 3 --corr-config 0.9
+fi
+
+# --> JAM
+if [ $JAM -eq 1 ]; then
+   cat $wd/st.bed|parallel -j${threads} --env wd -C' ' 'export fp=chr{1}_{2}_{3}p; R CMD BATCH --no-save ${FM_location}/files/JAM.R ${fp}.log'
+fi
