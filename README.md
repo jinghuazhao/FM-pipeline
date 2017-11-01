@@ -59,11 +59,23 @@ CAVIARBF | .caviarbf
 finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 JAM      | .jam/.top | the posterior summary table and top models containing selected SNPs
 
+## Example application
+
+We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The data is obtained as follows,
+```
+wget ftp://ftp.sanger.ac.uk/pub/magic/MAGIC_2hrGlucose_AdjustedForBMI.txt
+gzip -f MAGIC_2hrGlucose_AdjustedForBMI.txt
+gunzip -c MAGIC_2hrGlucose_AdjustedForBMI.txt.gz | awk '(NR>1){print $1, $2, $3, $5, $6}' | sort -k1,1 > 2hrglucose.txt
+```
+and the command to call is
+```
+bash fm-pipeline.sh 2hrglucose.txt
+```
+
 ## Additional information
 
-A key 
-
-
+The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
+development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
 ## Links to software and references
 
@@ -94,3 +106,7 @@ Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data
 **[JAM](https://github.com/pjnewcombe/R2BGLiMS)**
 
 Newcombe PJ, et al. (2016). JAM: A Scalable Bayesian Framework for Joint Analysis of Marginal SNP Effects. Genet Epidemiol 40:188–201
+
+**MAGIC paper**
+
+Saxena R, et al. (2010). Genetic variation in GIPR influences the glucose and insulin responses to an oral glucose challenge. Nat Genet 42:142-148
