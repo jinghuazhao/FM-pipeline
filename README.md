@@ -19,6 +19,10 @@ FM-summary | finemapping | .sumstats Association results | GitHub download
 GCTA | joint/conditional analysis | .sumstats, reference data | Association results | Yang, et al. (2012)
 fgwas | annotation 
 
+Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
+reflect this, not straightforward with install_github() from devtools but one needs to 
+clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
+
 ## Installation
 
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
@@ -31,6 +35,20 @@ The pipeline itself can be installed in the usual way,
 ```
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
+The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed over different builds. TO remedy this, we use information from UCSC.
+```
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
+gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
+```
+The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
+
+## Usage
+
+The syntax of pipeline is simply
+```
+bash fm-pipeline.sh <input>
+```
+You will need to change the configurations at the beginning of the script before execution.
 
 ## Inputs
 
@@ -63,28 +81,8 @@ Optionally, specification of file containing sample to be excluded from the refe
 
 ## Outputs
 
-The output will involve output from a variety of software whose list is given below.
-
-## Setup
-
-This is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed over different builds. TO remedy this, we use information from UCSC.
-```
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
-gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
-```
-The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
-
-## Usage
-
-The syntax of pipeline is simply
-```
-bash fm-pipeline.sh <input>
-```
-You will need to change the configurations at the beginning of the script before execution.
-
-## Output
-
-The outputs will be generated as from individual software, i.e., .cavibf, caviarbf, .snp/.config, .jam/.top
+The output will involve counterpart(s) from individual software, i.e., .cavibf, 
+caviarbf, .snp/.config, .jam/.top
 
 Software | file extension name | Description
 ---------|---------------------|------------
@@ -108,6 +106,9 @@ and the command to call is
 ```
 bash fm-pipeline.sh 2hrglucose.txt
 ```
+A list of two SNPs is contained in [2.snps](files/2.snps). The Stata program p0.do 
+generates [Extract.sh](files/Extract.sh) excluding SNPs in exc* 
+exc3_122844451_123344451.txt and exc3_122881254_123381254.txt.
 
 ## Additional information
 
