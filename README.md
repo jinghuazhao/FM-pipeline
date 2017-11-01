@@ -47,7 +47,7 @@ No header is required for neither file.
 ### Reference panel
 
 A .GEN file is required for each region, named such that chr${chr}_{start}_{end}.gen, together with a sample file. A [utility program in Stata](files/p0.do) is 
-provided to generated such files from their whole chromosome counterpart.
+provided to generated such files from their whole chromosome counterpart. Optionally, specification of file containing sample to be excluded is also indicated.
 
 ## Outputs
 
