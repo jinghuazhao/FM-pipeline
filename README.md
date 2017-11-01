@@ -38,6 +38,8 @@ SNP | A1 | A2 | beta | se | N
 -----|----|----|------|----|--
 RSid | Effect allele | Other allele | effect estimate | standard error of effect | sample size
 
+No header is required.
+
 ## Output
 
 The output will involve output from a variety of software whose list is given below.
