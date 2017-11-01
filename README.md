@@ -25,7 +25,7 @@ The software included in this pipeline range from descriptive analysis via fgwas
 
 ## References
 
-I*[FM-summary](https://github.com/hailianghuang/FM-summary)**
+**[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
 Huang H, et al (2017). Fine-mapping inflammatory bowel disease loci to single-variant resolution. Nature 547, 173–178, doi:10.1038/nature22969
 
