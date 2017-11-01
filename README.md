@@ -1,7 +1,7 @@
 # FM-pipeline
 
 This is a pipeline for GWAS finemapping, implemented in Bash as a series of steps to furnish an incremental finemapping analysis using summary statistics. As 
-sketched ![one](files/fm-pipeline.png)
+sketched in the diagram below ![one](files/fm-pipeline.png)
 A typical process involves the following steps,
 1. Extraction of effect (beta)/z statistics from GWAS summary statistics (.sumstats), 
 2. Extraction of correlation from the reference panel among overlapped SNPs from 1 and the reference panel containing individual level data. 
