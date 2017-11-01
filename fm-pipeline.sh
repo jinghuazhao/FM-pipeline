@@ -1,13 +1,14 @@
 # 1-11-2017 MRC-Epid JHZ
 
-# -/+ flanking position
-export flanking=25000
 # GWAS summary statistics (the .sumstats file)
-export input=$1
 # filename containing list of lead SNPs
 export snplist=2.snps
-# working directory
-export wd=/genetics/data/gwas/6-7-17/MAGIC
+# GEN file
+# in the form of chr{chr}_{start}_{end}.gen
+# sample file
+export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
+# -/+ flanking position
+export flanking=25000
 # number of threads
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
@@ -50,22 +51,20 @@ fi
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-}' $(input) | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $1).input
+}' $(1) | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $1).input
 sort -k1,1 ${snplist} | join $dir/$(basename $1).input - > $dir/$(basename $1).lst
 grep -w -f ${snplist} $dir/$(basename $1).input | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
 
-cat $(basename ${input.input}).lst | parallel -j${threads} -C' ' \
+cat $dir/$(basename $1).lst | parallel -j${threads} -C' ' \
 'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
  if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2}; \
- \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=250000 MAGIC.txt | sort -k10,10 > {1}.dat'
+ \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $1).input | sort -k10,10 > {1}.dat'
 
-cd MAGIC
-ln -sf /gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 ln -sf $wd/rs2877716.dat chr3_122844451_123344451.dat
 ln -sf $wd/rs17361324.dat chr3_122881254_123381254.dat
 # --> map/ped
 ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
-          gtool -G --g {}.ord --s EPIC-Norfolk.sample \
+          gtool -G --g {}.ord --s ${sample_file} \
          --ped {}.ped --map {}.map --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles \
          --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
 # --> auxiliary files
