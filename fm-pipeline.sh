@@ -2,6 +2,7 @@
 # 1-11-2017 MRC-Epid JHZ
 
 # GWAS summary statistics (the .sumstats file)
+export args=$1
 # filename containing list of lead SNPs
 export snplist=2.snps
 # GEN file
@@ -25,7 +26,7 @@ export finemap=1
 export JAM=1
 export FM_location=/genetics/bin/FM-pipeline
 
-if [ $# -lt 1 ] || [ "$1" == "-h" ]; then
+if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fm-pipeline.sh <input>"
     echo "where <input> is in sumstats format:"
     echo "SNP A1 A2 beta se N"
@@ -33,10 +34,10 @@ if [ $# -lt 1 ] || [ "$1" == "-h" ]; then
     echo "and the outputs will be in <input>.out directory"
     exit
 fi
-if [ $(dirname $1) == "." ]; then
-   dir=$(pwd)/$(basename $1).tmp
+if [ $(dirname $args) == "." ]; then
+   dir=$(pwd)/$(basename $args).tmp
 else
-   dir=$1.tmp
+   dir=$args.tmp
 fi
 if [ ! -d $dir ]; then
    mkdir -p $dir
@@ -55,14 +56,14 @@ echo supplement .sumstats with chromosomal positions
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-}' $1 | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $1).input
-sort -k1,1 ${snplist} | join $dir/$(basename $1).input - > $dir/$(basename $1).lst
-grep -w -f ${snplist} $dir/$(basename $1).input | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
+}' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $args).input
+sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $dir/$(basename $args).lst
+grep -w -f ${snplist} $dir/$(basename $args).input | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
 
-cat $dir/$(basename $1).lst | parallel -j${threads} -C' ' \
+cat $dir/$(basename $args).lst | parallel -j${threads} -C' ' \
 'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
  if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2}; \
- \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $1).input | \
+ \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $args).input | \
  sort -k10,10 > chr{9}_{$({10}-${flanking})}_{$({10}+{flanking})}.dat'
 
 echo "--> map/ped"
