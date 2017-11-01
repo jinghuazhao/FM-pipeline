@@ -16,7 +16,7 @@ Finemap | Finemapping | z, correlation matrix | Causal SNPs+configuration | Benn
 CAVIAR | Finemapping | z, correlation matrix | Causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | finemapping | z, correlation matrix | BF+probabilities for all configurations | Chen, et al. (2015)
 FM-summary | finemapping | .sumstats Association results | GitHub download
-GCTA | joint/conditional analysis | .sumstats, reference data | Association results Yang, et al. (2012)
+GCTA | joint/conditional analysis | .sumstats, reference data | Association results | Yang, et al. (2012)
 fgwas | annotation 
 
 ## Input
@@ -86,6 +86,11 @@ Huang H, et al (2017). Fine-mapping inflammatory bowel disease loci to single-va
 **[fgwas](https://github.com/joepickrell/fgwas)**
 
 Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide association studies of 18 human traits. bioRxiv 10.1101/000752
+
+**[GCTA](cnsgenomics.com/software/gcta/)**
+
+Yang J, et al. (2012). Conditional and joint multiple-SNP analysis of GWAS summary statistics identifies additional variants influencing complex traits. Nat Genet 
+44:369-375
 
 **[CAVIAR](https://github.com/fhormoz/caviar)**
 
