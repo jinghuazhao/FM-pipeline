@@ -86,8 +86,8 @@ You will need to change the configurations at the beginning of the script before
 
 The outputs will be generated as from individual software, i.e., .cavibf, caviarbf, .snp/.config, .jam/.top
 
-Software | extension | Description
----------|-----------|------------
+Software | file extension name | Description
+---------|---------------------|------------
 CAVIAR   | .caviar
 CAVIARBF | .caviarbf
 finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
