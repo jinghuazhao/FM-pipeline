@@ -59,7 +59,7 @@ CAVIARBF | .caviarbf
 finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 JAM      | .jam/.top | the posterior summary table and top models containing selected SNPs
 
-## Example application
+## Example
 
 We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The data is obtained as follows,
 ```
