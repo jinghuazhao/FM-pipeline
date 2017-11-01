@@ -65,7 +65,7 @@ We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, e
 ```
 wget ftp://ftp.sanger.ac.uk/pub/magic/MAGIC_2hrGlucose_AdjustedForBMI.txt
 gzip -f MAGIC_2hrGlucose_AdjustedForBMI.txt
-gunzip -c MAGIC_2hrGlucose_AdjustedForBMI.txt.gz | awk '(NR>1){print $1, $2, $3, $5, $6}' | sort -k1,1 > 2hrglucose.txt
+gunzip -c MAGIC_2hrGlucose_AdjustedForBMI.txt.gz | awk -vN=15234 '(NR>1){print $1, $2, $3, $5, $6, N}' | sort -k1,1 > 2hrglucose.txt
 ```
 and the command to call is
 ```
