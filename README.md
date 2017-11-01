@@ -55,6 +55,9 @@ chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  |
 ----|--------------|-------------|--------|-----------|----------|------|------|----
  1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
+... | ... | ... | ... | ... | ... | ... | ... | ... |
+
+Given these, one can do away with Stata and work on a text version SNPinfo.txt.
 
 Optionally, specification of file containing sample to be excluded from the reference panel is also indicated.
 
