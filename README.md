@@ -6,6 +6,7 @@ This is a collection of functions for an incremental approach to GWAS finemappin
 ## Input
 
 The input will be GWAS summary statistics with the following columns,
+
 SNP | A1 | A2 | beta | se | N
 -----|----|----|------|----|--
 RSid | Effect allele | Other allele | effect estimate | standard error of effect | sample size
