@@ -1,3 +1,4 @@
+#!/usr/bash
 # 1-11-2017 MRC-Epid JHZ
 
 # GWAS summary statistics (the .sumstats file)
@@ -7,6 +8,8 @@ export snplist=2.snps
 # in the form of chr{chr}_{start}_{end}.gen
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
+# sample for exclusion
+export sample_to_exclude=/genetics/data/gwas/6-7-17/doc/exclude.dat
 # -/+ flanking position
 export flanking=25000
 # number of threads
@@ -52,7 +55,7 @@ fi
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-}' $(1) | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $1).input
+}' $1 | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $1).input
 sort -k1,1 ${snplist} | join $dir/$(basename $1).input - > $dir/$(basename $1).lst
 grep -w -f ${snplist} $dir/$(basename $1).input | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
 
@@ -79,7 +82,7 @@ cat $wd/st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
 # --> bfile
 rm *bed *bim *fam
 ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} --env wd -C' ' '\
-         plink-1.9 --file {} --missing-genotype N --extract {}.inc --remove $wd/exclude.dat \
+         plink-1.9 --file {} --missing-genotype N --extract {}.inc --remove ${sample_to_exclude} \
          --make-bed --keep-allele-order --a2-allele {}.a 3 1 --out {}'
 # --> bcor
 if [ $finemap -eq 1 ]; then
