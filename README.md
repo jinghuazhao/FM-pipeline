@@ -35,7 +35,8 @@ The pipeline itself can be installed in the usual way,
 ```
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
-The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed over different builds. TO remedy this, we use information from UCSC.
+The setup is in line with summary statistics from consortia where only RSid are given 
+for the fact that their chromosomal position may be changed over different builds. To remedy this, we use information from UCSC.
 ```
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
 gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
