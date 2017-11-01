@@ -1,7 +1,22 @@
 # FM-pipeline
-A pipeline for GWAS finemapping
 
-This is a collection of functions for an incremental approach to GWAS finemapping involving summary statistics.
+This is a pipeline for GWAS finemapping, implemented in Bash as a series of steps to furnish an incremental finemapping analysis using summary statistics. A typical process involves the following steps, ![logo](files/fm-pipeline.jpg)
+
+1. Extraction of effect (beta)/z statistics from GWAS summary statistics (.sumstats), 
+2. Extraction of correlation from the reference panel among overlapped SNPs from 1 and the reference panel containing individual level data. 
+3. Information from 1 and 2 above is then used as input for finemapping.
+
+The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
+
+Name | function | Input | Output | Reference
+-----|----------|-------|--------|----------
+JAM | Finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
+Finemap | Finemapping | z, correlation matrix | Causal SNPs+configuration | Benner, et al. (2016)
+CAVIAR | Finemapping | z, correlation matrix | Causal sets and probabilities | Hormozdiari, et al. (2014)
+CAVIARBF | finemapping | z, correlation matrix | BF+probabilities for all configurations | Chen, et al. (2015)
+FM-summary | finemapping | .sumstats Association results | GitHub download
+GCTA | joint/conditional analysis | .sumstats, reference data | Association results Yang, et al. (2012)
+fgwas | annotation 
 
 ## Input
 
@@ -26,7 +41,30 @@ The software included in this pipeline range from descriptive analysis via fgwas
 
 ## How to run the pipeline
 
-## References
+The syntax of pipeline is simply
+```
+bash fm-pipeline.sh <input>
+```
+You will need to change the configurations at the beginning of the script before execution.
+
+## Output
+
+The outputs will be generated as from individual software, i.e., .cavibf, caviarbf, .snp/.config, .jam/.top
+
+Software | extension | Description
+---------|-----------|------------
+CAVIAR   | .caviar
+CAVIARBF | .caviarbf
+finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
+JAM      | .jam/.top | the posterior summary table and top models containing selected SNPs
+
+## Additional information
+
+A key 
+
+
+
+## Links to software and references
 
 **[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
