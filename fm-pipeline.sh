@@ -4,7 +4,7 @@
 # GWAS summary statistics (the .sumstats file)
 export args=$1
 # filename containing list of lead SNPs
-export snplist=2.snps
+export snplist=/genetics/data/gwas/6-7-17/2.snps
 # GEN file
 # in the form of chr{chr}_{start}_{end}.gen
 # sample file
@@ -43,7 +43,7 @@ if [ ! -d $dir ]; then
    mkdir -p $dir
 fi
 cd $dir
-cd /genetics/data/gwas/6-7-17/MAGIC
+cd /genetics/data/gwas/6-7-17/MAGIC/MAGIC
 if $(test -f ${FM_location}/snp150.txt ); then
    echo "Chromosomal positions are ready to use"
    ln -sf ${FM_location}/snp150.txt
