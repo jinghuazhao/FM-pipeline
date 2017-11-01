@@ -34,7 +34,7 @@ Huang H, et al (2017). Fine-mapping inflammatory bowel disease loci to single-va
 
 Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide association studies of 18 human traits. bioRxiv 10.1101/000752
 
-**[CAVIAR](https://github.com/fhormoz/caviar)""
+**[CAVIAR](https://github.com/fhormoz/caviar)**
 
 Hormozdiari F, et al. (2014). Identifying Causal Variants at Loci with Multiple Signals of Association. Genetics, 44, 725–731
 
