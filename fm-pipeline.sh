@@ -58,7 +58,7 @@ awk '{
   $3=toupper($3)
 }' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $args).input
 sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $dir/$(basename $args).lst
-grep -w -f ${snplist} $dir/$(basename $args).input | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
+grep -w -f ${snplist} $dir/$(basename $args).input | awk -vs=${flanking} '{print $8,$9-s,$9+s}' > st.bed
 
 cat $dir/$(basename $args).lst | parallel -j${threads} -C' ' \
 'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
