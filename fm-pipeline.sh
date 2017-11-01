@@ -29,25 +29,30 @@ if [ $# -lt 1 ] || [ "$1" == "-h" ]; then
     echo "and the outputs will be in <input>.out directory"
     exit
 fi
-
-if $(test -f snp150.txt ); then
+if [ $(dirname $1) == "." ]; then
+   dir=$(pwd)/$(basename $1).tmp
+else
+   dir=$1.tmp
+fi
+if [ ! -d $dir ]; then
+   mkdir -p $dir
+fi
+cd $dir
+if $(test -f ${FM_location}/snp150.txt ); then
    echo "Chromosomal positions are ready to use"
+   ln -sf ${FM_location}/snp150.txt
 else
    echo "Obtaining chromosomal positions"
    wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
    gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 fi
-
 # .sumstats with chromosomal positions
-export input.input=$(basename ${input}).input
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-}' $(input) | join -11 -23 - snp150.txt | sed 's/chr//g' > ${input.input)
-head ${input.input}
-sort -k1,1 ${snplist} | join ${input.input} - > $(basename ${snplist}).lst
-wc -l $(basename ${snplist}).lst
-grep -w -f ${snplist} ${input.input} | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
+}' $(input) | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $1).input
+sort -k1,1 ${snplist} | join $dir/$(basename $1).input - > $dir/$(basename $1).lst
+grep -w -f ${snplist} $dir/$(basename $1).input | awk -vs=$f{lanking} '{print $8,$9-s,$9+s}' > st.bed
 
 cat $(basename ${input.input}).lst | parallel -j${threads} -C' ' \
 'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
