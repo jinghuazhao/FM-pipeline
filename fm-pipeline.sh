@@ -1,4 +1,4 @@
-#!/usr/bash
+#!/bin/bash
 # 1-11-2017 MRC-Epid JHZ
 
 # GWAS summary statistics (the .sumstats file)
@@ -51,7 +51,7 @@ else
    wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
    gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 fi
-# .sumstats with chromosomal positions
+echo supplement .sumstats with chromosomal positions
 awk '{
   $2=toupper($2)
   $3=toupper($3)
@@ -65,12 +65,11 @@ cat $dir/$(basename $1).lst | parallel -j${threads} -C' ' \
  \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $1).input | \
  sort -k10,10 > chr{9}_{$({10}-${flanking})}_{$({10}+{flanking})}.dat'
 
-# --> map/ped
+echo "--> map/ped"
 ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
           gtool -G --g {}.ord --s ${sample_file} \
          --ped {}.ped --map {}.map --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles \
-         --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
-# --> auxiliary files
+         --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'# --> auxiliary files
 ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' 'sort -k2,2 {}.map|join -110 -22 {}.dat -|sort -k10,10>{}.incl'
 cat $wd/st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
      awk "{print \$9,\$10,\$5,\$6,\$7,\$8,15234,\$11,\$1,\$6/\$7}" $f.incl > $f.r2;\
@@ -79,12 +78,12 @@ cat $wd/st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
      awk "{print \$1,\$4,\$3,\$14,\$15}" $f.incl > $f.a;\
      echo "RSID position chromosome A_allele B_allele" > $f.incl_variants;\
      awk "{print \$1,\$10,\$9,\$4,\$3}" $f.incl >> $f.incl_variants'
-# --> bfile
+echo "--> bfile"
 rm *bed *bim *fam
 ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} --env wd -C' ' '\
          plink-1.9 --file {} --missing-genotype N --extract {}.inc --remove ${sample_to_exclude} \
          --make-bed --keep-allele-order --a2-allele {}.a 3 1 --out {}'
-# --> bcor
+echo "--> bcor"
 if [ $finemap -eq 1 ]; then
    ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
         ldstore --bcor {}.bcor --bplink {} --n-threads ${threads}; \  
@@ -92,7 +91,7 @@ if [ $finemap -eq 1 ]; then
         ldstore --bcor {}.bcor --matrix {}.ld --incl_variants {}.incl_variants; \
         sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}.ld'
 fi
-# JAM, IPD
+echo "JAM, IPD"
 ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} -C' ' '\
          plink-1.9 --bfile {} --indep-pairwise 500kb 5 0.80 --maf 0.05 --out {}; \
          grep -w -f {}.prune.in {}.a > {}.p; \
@@ -105,7 +104,7 @@ ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
          ldstore --bcor {}p.bcor --merge ${threads}; \
          ldstore --bcor {}p.bcor --matrix {}p.ld; \
          sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}p.ld'
-# --> finemap
+echo "--> finemap"
    echo "z;ld;snp;config;log;n-ind" > finemap.cfg
    cat $wd/st.bed | parallel -j${threads} -C ' ' 'f=chr{1}_{2}_{3};sort -k7,7n $f.r2|tail -n1|cut -d" " -f7|\
    awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
@@ -117,7 +116,7 @@ ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
    finemap --sss --in-files finemapp.cfg --n-causal-max 3 --corr-config 0.9
 fi
 
-# --> JAM
+echo "--> JAM"
 if [ $JAM -eq 1 ]; then
    cat $wd/st.bed|parallel -j${threads} --env wd -C' ' 'export fp=chr{1}_{2}_{3}p; R CMD BATCH --no-save ${FM_location}/files/JAM.R ${fp}.log'
 fi
