@@ -2,7 +2,7 @@
 # 1-11-2017 MRC-Epid JHZ
 
 # working directory
-export wd=/genetics/data/gwas/6-7-15
+export wd=/genetics/data/gwas/6-7-17
 # GWAS summary statistics (the .sumstats file)
 export args=$wd/MAGIC/2hrglucose.txt
 # filename containing list of lead SNPs
@@ -65,7 +65,8 @@ grep -w -f ${snplist} $dir/$(basename $args).input | awk -vs=${flanking} '{print
 cat $dir/$(basename $args).lst | parallel -j${threads} -C' ' \
 'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
  if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2}; \
- \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $dir/$(basename $args).input | \
+w \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} 
+$dir/$(basename $args).input | \
  sort -k10,10 > chr{9}_{$({10}-${flanking})}_{$({10}+{flanking})}.dat'
 
 echo "--> map/ped"
