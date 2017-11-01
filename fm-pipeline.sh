@@ -69,7 +69,8 @@ echo "--> map/ped"
 ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
           gtool -G --g {}.ord --s ${sample_file} \
          --ped {}.ped --map {}.map --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles \
-         --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'# --> auxiliary files
+         --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
+echo "--> auxiliary files"
 ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' 'sort -k2,2 {}.map|join -110 -22 {}.dat -|sort -k10,10>{}.incl'
 cat $wd/st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
      awk "{print \$9,\$10,\$5,\$6,\$7,\$8,15234,\$11,\$1,\$6/\$7}" $f.incl > $f.r2;\
