@@ -40,7 +40,7 @@ gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 ```
 The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
 
-## How to run the pipeline
+## Usage
 
 The syntax of pipeline is simply
 ```
