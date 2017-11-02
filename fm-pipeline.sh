@@ -69,9 +69,8 @@ cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_
 
 echo "--> map/ped"
 ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
-          gtool -G --g {}.ord --s ${sample_file} \
-         --ped {}.ped --map {}.map --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles \
-         --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
+          gtool -G --g {}.ord --s ${sample_file} --ped {}.ped --map {}.map \
+         --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
 echo "--> auxiliary files"
 ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' 'sort -k2,2 {}.map|join -110 -22 {}.dat -|sort -k10,10>{}.incl'
 cat st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
