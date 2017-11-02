@@ -55,19 +55,17 @@ else
    gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 fi
 echo supplement .sumstats with chromosomal positions
+export rt=$dir/$(basename $args)
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-};1' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $args).input
-sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $dir/$(basename $args).lst
-grep -w -f ${snplist} $dir/$(basename $args).input | awk -vs=${flanking} '{print $8,$9-s,$9+s}' > st.bed
-
-cat $dir/$(basename $args).lst | parallel -j${threads} -C' ' \
-'awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){\$2=toupper(\$2);\$3=toupper(\$3); \
- if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2}; \
-w \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} 
-$dir/$(basename $args).input | \
- sort -k10,10 > chr{9}_{$({10}-${flanking})}_{$({10}+{flanking})}.dat'
+};1' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $rt.input
+sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $rt.lst
+grep -w -f ${snplist} $rt.input | awk -vs=${flanking} '{print $7,$8-s,$8+s}' > st.bed
+echo generate region-specific data
+cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_{$(({8}-${flanking}))}_{$(({8}+${flanking}))};\
+ awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
+       \$0=\$0 \" \" \$7 \":\" \$8 \"_\" a1 \"_\" a2};1" chr={7} pos={8} s=${flanking} $rt.input | sort -k9,9 > $f.dat'
 
 echo "--> map/ped"
 ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
