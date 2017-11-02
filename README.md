@@ -11,7 +11,7 @@ The process involves the following steps,
 
 The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
 
-Software which are included in this pipeline are listed in the table below.
+Software included in this pipeline are listed in the table below.
 
 **Name** | **Function** | **Input** | **Output** | **Reference**
 -----|----------|-------|--------|----------
