@@ -2,17 +2,17 @@
 # 2-11-2017 MRC-Epid JHZ
 
 # working directory
-export wd=/genetics/data/gwas/6-7-17
+export wd=/genetics/data/gwas/6-7-17/MAGIC
 # GWAS summary statistics (the .sumstats file)
-export args=$wd/MAGIC/2hrglucose.txt
+export args=$wd/2hrglucose.txt
 # filename containing list of lead SNPs
-export snplist=$wd/MAGIC/2.snps
+export snplist=$wd/2.snps
 # GEN file
 # in the form of chr{chr}_{start}_{end}.gen
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample for exclusion
-export sample_to_exclude=$wd/doc/exclude.dat
+export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=25000
 # number of threads
