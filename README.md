@@ -90,7 +90,7 @@ We also specifies a file containing sample to be excluded from the reference pan
 The output will involve counterpart(s) from individual software, i.e., .set/post, 
 caviarbf, .snp/.config, .jam/.top
 
-Software | output file extension name | Description
+Software | Output type | Description
 ---------|---------------------|------------
 CAVIAR   | .set/.post | causal set and probabilities in the causal set/posterior probabilities
 CAVIARBF | .caviarbf | causal configurations and their BFs
