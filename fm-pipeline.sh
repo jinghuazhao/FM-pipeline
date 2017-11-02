@@ -111,8 +111,10 @@ if [ $finemap -eq 1 ]; then
    sort -k7,7n $f.r|tail -n1|cut -d" " -f7|\
    awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+   cat st.bed | parallel -j${threads} -C' ' 'f=chr{1}_{2}_{3};R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
    sed 's/\./p\./g' finemap.cfg > finemapp.cfg
    finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
+   cat st.bed | parallel -j${threads} -C' ' 'f=chr{1}_{2}_{3}p;R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
 fi
 echo "--> JAM"
 if [ $JAM -eq 1 ]; then
