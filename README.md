@@ -18,7 +18,7 @@ Finemap | finemapping | z, correlation matrix | causal SNPs and configuration | 
 CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | finemapping | z, correlation matrix | BF abd probabilities for all configurations | Chen, et al. (2015)
 FM-summary | finemapping | .sumstats Association results | updated results | Huang, et al. (2017)
-GCTA | joint/conditional analysis | .sumstats, reference data | Association results | Yang, et al. (2012)
+GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
 fgwas | functional GWAS | | | Pickrell (2014)
 
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
