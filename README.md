@@ -65,7 +65,7 @@ RSid | Effect allele | Other allele | effect estimate | standard error of effect
 
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
-No header is required for neither file.
+A header is required for neither file.
 
 ### Reference panel
 
