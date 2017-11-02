@@ -92,8 +92,8 @@ caviarbf, .snp/.config, .jam/.top
 
 Software | file extension name | Description
 ---------|---------------------|------------
-CAVIAR   | .caviar
-CAVIARBF | .caviarbf
+CAVIAR   | .set/.post | causal set and probabilities in the causal set/posterior probabilities
+CAVIARBF | .caviarbf | causal configurations and their BFs
 finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 JAM      | .jam/.top | the posterior summary table and top models containing selected SNPs
 
