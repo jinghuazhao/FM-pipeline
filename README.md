@@ -51,7 +51,7 @@ The syntax of pipeline is simply
 ```
 bash fm-pipeline.sh <input>
 ```
-You will need to change the settings at the beginning of the script before start.
+Before start, settings at the beginning of the script need to be changed while change to the rest of the pipeline is at most minor.
 
 ## Inputs
 
@@ -72,8 +72,8 @@ A header is required for neither file.
 The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-A .GEN file is required for each region, named such that chr${chr}_{start}_{end}.gen, together with a sample file. A [utility program in Stata](files/p0.do) is 
-provided to generated such files from their whole chromosome counterpart. The SNPinfo.dta.gz has the following information,
+A .GEN file is required for each region, named such that chr${chr}_{start}_{end}.gen, together with a sample file. For our own data, a [utility program in 
+Stata](files/p0.do) is written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
 chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
@@ -83,7 +83,7 @@ chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  |
 
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt.
 
-Optionally, specification of file containing sample to be excluded from the reference panel is also indicated.
+We also specifies a file containing sample to be excluded from the reference panel.
 
 ## Outputs
 
