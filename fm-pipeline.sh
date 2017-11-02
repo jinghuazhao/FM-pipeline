@@ -23,7 +23,6 @@ export threads=5
 # the outputs should be available individually from them
 export locuszoom=0
 export GCTA=0
-export fgwas=0
 export CAVIAR=0
 export CAVIARBF=0
 export finemap=1
