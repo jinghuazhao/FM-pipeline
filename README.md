@@ -35,13 +35,14 @@ The pipeline itself can be installed in the usual way,
 ```
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
-The setup is in line with summary statistics from consortia where only RSid are given 
-for the fact that their chromosomal position may be changed over different builds. To remedy this, we use information from UCSC.
+The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
+over different builds. To remedy this, we use information from UCSC, i.e.,
 ```
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
 gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 ```
-The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
+The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, 
+CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
 
 ## USAGE
 
