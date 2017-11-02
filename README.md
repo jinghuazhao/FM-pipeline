@@ -4,7 +4,7 @@ This is a pipeline for finemapping using GWAS summary statistics, implemented in
 sketched in the diagram below ![one](files/fm-pipeline.png) the procedure attempts identify causal variants from region(s) showing significant SNP-trait 
 association.
 
-A typical process involves the following steps,
+The process involves the following steps,
 1. Extraction of effect (beta)/z statistics from GWAS summary statistics (.sumstats), 
 2. Extraction of correlation from the reference panel among overlapped SNPs from 1 and the reference panel containing individual level data. 
 3. Information from 1 and 2 above is then used as input for finemapping.
