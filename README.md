@@ -51,7 +51,7 @@ The syntax of pipeline is simply
 ```
 bash fm-pipeline.sh <input>
 ```
-You will need to change the settings at the beginning of the script before execution.
+You will need to change the settings at the beginning of the script before start.
 
 ## Inputs
 
