@@ -1,5 +1,5 @@
 #!/bin/bash
-# 1-11-2017 MRC-Epid JHZ
+# 2-11-2017 MRC-Epid JHZ
 
 # working directory
 export wd=/genetics/data/gwas/6-7-17
@@ -44,7 +44,7 @@ fi
 if [ ! -d $dir ]; then
    mkdir -p $dir
 fi
-cd $dir
+# cd $dir
 cd /genetics/data/gwas/6-7-17/MAGIC/MAGIC
 if $(test -f ${FM_location}/snp150.txt ); then
    echo "Chromosomal positions are ready to use"
@@ -58,7 +58,7 @@ echo supplement .sumstats with chromosomal positions
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-}' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $args).input
+};1' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $dir/$(basename $args).input
 sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $dir/$(basename $args).lst
 grep -w -f ${snplist} $dir/$(basename $args).input | awk -vs=${flanking} '{print $8,$9-s,$9+s}' > st.bed
 
