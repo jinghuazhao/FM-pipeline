@@ -14,10 +14,10 @@ The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP
 Name | function | Input | Output | Reference
 -----|----------|-------|--------|----------
 JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
-Finemap | finemapping | z, correlation matrix | Causal SNPs+configuration | Benner, et al. (2016)
-CAVIAR | finemapping | z, correlation matrix | Causal sets and probabilities | Hormozdiari, et al. (2014)
-CAVIARBF | finemapping | z, correlation matrix | BF+probabilities for all configurations | Chen, et al. (2015)
-FM-summary | finemapping | .sumstats Association results | GitHub download | Huang, et al. (2017)
+Finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
+CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
+CAVIARBF | finemapping | z, correlation matrix | BF abd probabilities for all configurations | Chen, et al. (2015)
+FM-summary | finemapping | .sumstats Association results | updated results | Huang, et al. (2017)
 GCTA | joint/conditional analysis | .sumstats, reference data | Association results | Yang, et al. (2012)
 fgwas | functional GWAS | | | Pickrell (2014)
 
