@@ -19,7 +19,6 @@ CAVIAR | Finemapping | z, correlation matrix | Causal sets and probabilities | H
 CAVIARBF | finemapping | z, correlation matrix | BF+probabilities for all configurations | Chen, et al. (2015)
 FM-summary | finemapping | .sumstats Association results | GitHub download
 GCTA | joint/conditional analysis | .sumstats, reference data | Association results | Yang, et al. (2012)
-fgwas | annotation 
 
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
 reflect this, not straightforward with install_github() from devtools but one needs to 
