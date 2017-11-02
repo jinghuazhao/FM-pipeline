@@ -112,9 +112,8 @@ and the command to call is
 ```
 bash fm-pipeline.sh 2hrglucose.txt
 ```
-For two SNPs is contained in [2.snps](files/2.snps), the Stata program 
-[p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
-exc3_122844451_123344451.txt and exc3_122881254_123381254.txt.
+For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
+[exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt).
 
 ## SOFTWARE AND REFERENCES
 
