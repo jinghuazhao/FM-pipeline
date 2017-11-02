@@ -11,7 +11,9 @@ The process involves the following steps,
 
 The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
 
-Name | function | Input | Output | Reference
+Software which are included in this pipeline are listed in the table below.
+
+**Name** | **Function** | **Input** | **Output** | **Reference**
 -----|----------|-------|--------|----------
 JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
 Finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
@@ -20,10 +22,6 @@ CAVIARBF | finemapping | z, correlation matrix | BF abd probabilities for all co
 FM-summary | finemapping | .sumstats Association results | updated results | Huang, et al. (2017)
 GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
 fgwas | functional GWAS | | | Pickrell (2014)
-
-Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
-reflect this, not straightforward with install_github() from devtools but one needs to 
-clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
 
 ## INSTALLATION
 
@@ -43,8 +41,12 @@ over different builds. To remedy this, we use information from UCSC, i.e.,
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
 gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
 ```
-The software included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, 
+The software eventually included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, 
 CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
+
+Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
+reflect this, not straightforward with install_github() from devtools but one needs to 
+clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
 
 At the moment implementations have been done for these finemapping software. and support for associate software fgwas, GCTA, and LocusZoom will be added in the near 
 future.
