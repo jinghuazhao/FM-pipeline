@@ -21,12 +21,13 @@ export N=15234
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
 # the outputs should be available individually from them
-export locuszoom=0
-export GCTA=0
 export CAVIAR=0
 export CAVIARBF=0
 export finemap=1
 export JAM=1
+export locuszoom=0
+export fgwas=0
+export GCTA=0
 export FM_location=/genetics/bin/FM-pipeline
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
