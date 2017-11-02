@@ -17,8 +17,9 @@ JAM | Finemapping | beta, individual reference data | Bayes Factor of being caus
 Finemap | Finemapping | z, correlation matrix | Causal SNPs+configuration | Benner, et al. (2016)
 CAVIAR | Finemapping | z, correlation matrix | Causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | finemapping | z, correlation matrix | BF+probabilities for all configurations | Chen, et al. (2015)
-FM-summary | finemapping | .sumstats Association results | GitHub download
+FM-summary | finemapping | .sumstats Association results | GitHub download | Huang, et al. (2017)
 GCTA | joint/conditional analysis | .sumstats, reference data | Association results | Yang, et al. (2012)
+fgwas | functional gwas | | | Pickrell (2014)
 
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
 reflect this, not straightforward with install_github() from devtools but one needs to 
