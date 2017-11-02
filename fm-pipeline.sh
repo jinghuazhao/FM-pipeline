@@ -7,14 +7,16 @@ export wd=/genetics/data/gwas/6-7-17/MAGIC
 export args=$wd/2hrglucose.txt
 # filename containing list of lead SNPs
 export snplist=$wd/2.snps
-# GEN file
-# in the form of chr{chr}_{start}_{end}.gen
+# GEN/info files, named chr{chr}_{start}_{end}.[gen|info]
+export gendir=$wd/MAGIC
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample for exclusion
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
+# N
+export N=15234
 # number of threads
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
@@ -67,9 +69,10 @@ cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_
     awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
          \$0=\$0 \" \" \$7 \":\" \$8 \"_\" a1 \"_\" a2;print}" chr={7} pos={8} s=${flanking} $rt.input | sort -k9,9 > $f.dat'
 echo "--> map/ped"
-ls chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' 'awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
-          gtool -G --g {}.ord --s ${sample_file} --ped {}.ped --map {}.map \
-         --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
+ls $gendir/chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' '\
+      awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
+      gtool -G --g {}.ord --s ${sample_file} --ped {}.ped --map {}.map \
+           --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
 echo "--> GWAS .sumstats auxiliary files"
 ls *.info|sed 's/\.info//g'| parallel -j${threads} -C' ' 'sort -k2,2 {}.map|join -19 -22 {}.dat -|sort -k10,10>{}.incl'
 cat st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
@@ -107,15 +110,20 @@ if [ $finemap -eq 1 ]; then
    cat st.bed | parallel -j${threads} -C ' ' 'f=chr{1}_{2}_{3};\
    sort -k7,7n $f.r|tail -n1|cut -d" " -f7|\
    awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-   finemap --sss --in-files finemap.cfg --n-causal-max 1 --corr-config 0.9
+   finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
    sed 's/\./p\./g' finemap.cfg > finemapp.cfg
-   finemap --sss --in-files finemapp.cfg --n-causal-max 1 --corr-config 0.9
-
-   finemap --sss --in-files finemap.cfg --n-causal-max 3 --corr-config 0.9  
-   finemap --sss --in-files finemapp.cfg --n-causal-max 3 --corr-config 0.9
+   finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
 fi
-
 echo "--> JAM"
 if [ $JAM -eq 1 ]; then
-   cat st.bed|parallel -j${threads} -C' ' 'export fp=chr{1}_{2}_{3}p; R --no-save <${FM_location}/files/JAM.R > ${fp}.log'
+   cat st.bed | parallel -j${threads} -C' ' 'export fp=chr{1}_{2}_{3}p; R --no-save <${FM_location}/files/JAM.R > ${fp}.log'
 fi
+if [ $CAVIAR -eq 1 ]; then
+   cat st.bed | parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3};CAVIAR -z ${f}.z -l ${f}.ld -r 0.9 -o ${f}'
+fi
+if [ $CAVIARBF -eq 1 ]; then
+   cat st.bed | parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3};caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
+fi
+
