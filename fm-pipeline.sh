@@ -63,7 +63,7 @@ awk '{
 sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | awk -vs=${flanking} '{print $7,$8-s,$8+s}' > st.bed
 echo generate region-specific data
-cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_{$(({8}-${flanking}))}_{$(({8}+${flanking}))};\
+cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_$(({8}+${flanking}));\
  awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
        \$0=\$0 \" \" \$7 \":\" \$8 \"_\" a1 \"_\" a2};1" chr={7} pos={8} s=${flanking} $rt.input | sort -k9,9 > $f.dat'
 
