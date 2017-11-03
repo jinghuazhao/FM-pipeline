@@ -198,10 +198,10 @@ Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide ass
 
 Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data from genome-wide association studies. Bioinformatics 32, 1493-1501        
 
-**MAGIC paper**
-
-Saxena R, et al. (2010). Genetic variation in GIPR influences the glucose and insulin responses to an oral glucose challenge. Nat Genet 42:142-148
-
 **GIANT paper**
 
 Locke AE, et al. (2015). Genetic studies of body mass index yield new insights for obesity biology. Nature 518(7538):197-206. doi: 10.1038/nature14177
+
+**MAGIC paper**
+
+Saxena R, et al. (2010). Genetic variation in GIPR influences the glucose and insulin responses to an oral glucose challenge. Nat Genet 42:142-148
