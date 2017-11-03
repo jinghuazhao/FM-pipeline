@@ -220,19 +220,20 @@ if [ $GCTA -eq 1 ]; then
        awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map'
    # ma for marginal effects used by GCTA
    rm *cojo *jma *cma
-   echo "{if(NR==1) print \"SNP\",\"A1\",\"A2\",\"freq\",\"b\",\"se\",\"p\",\"N\";print \$1,\$4,\$5,\$6,\$7,\$8,\$9,int(\$10)}" > ma.awk
+   echo "{if(NR==1) print \"SNP\",\"A1\",\"A2\",\"freq\",\"b\",\"se\",\"p\",\"N\";\
+         print \$1,\$4,\$5,\$6,\$7,\$8,\$9,int(\$10)}" > ma.awk
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
        sort -k4,4 ${f}_map | \
-       join -110 -24 $f.r - | \
+       join -111 -24 $f.r - | \
        grep -f $f.inc | \
        awk -f ma.awk > $f.ma'
    # --cojo-slct
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_${2}_${3}; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f;'
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f'
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
        echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
