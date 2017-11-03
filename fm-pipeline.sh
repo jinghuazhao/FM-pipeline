@@ -28,7 +28,7 @@ export CAVIAR=0
 export CAVIARBF=0
 export finemap=1
 export JAM=1
-export fm_summary=0
+export fm_summary=1
 export LocusZoom=1
 export fgwas=0
 export GCTA=0
@@ -177,7 +177,7 @@ if [ $JAM -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}p; \
-       R --no-save <${FM_location}/files/JAM.R > ${f}.log'
+       R --no-save < ${FM_location}/files/JAM.R > ${f}.log'
 fi
 if [ $CAVIAR -eq 1 ]; then
    awk 'NR>1' st.bed | \
@@ -201,7 +201,8 @@ if [ $LocusZoom -eq 1 ]; then
        locuszoom-1.3 --metal $f.lz --refsnp $refsnp --plotonly --no-date;pdftopng $refsnp.pdf -r 300 $refsnp'
 fi
 if [ $fm_summary -eq 1 ]; then
-   echo "region chr pos A B Freq1 Effect StdErr P TOTALSAMPLESIZE SNP inCredible probNorm cumSum"|sed 's/ /\t/g' > FM-summary.txt
+   echo "region chr pos A B Freq1 Effect StdErr P TOTALSAMPLESIZE SNP inCredible probNorm cumSum" | \
+   sed 's/ /\t/g' > FM-summary.txt
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location -C' ' '\
        $FM_location/files/getCredible.r {6}; \
