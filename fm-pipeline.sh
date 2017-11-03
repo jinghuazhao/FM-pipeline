@@ -197,7 +197,7 @@ if [ $LocusZoom -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        export refsnp={5}; \
        awk -f lz.awk $f.r > $f.lz; \
-       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --flank 250000 --plotonly \
+       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --flank 250kb --plotonly \
                      --build hg19 --pop EUR --no-date; \
        pdftopng $refsnp.pdf -r 300 $refsnp'
 fi
@@ -221,7 +221,7 @@ if [ $GCTA -eq 1 ]; then
        join -j2 $f.tmp - | \
        awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map'
    # ma for marginal effects used by GCTA
-   rm *cojo *jma *cma
+   rm -f *cojo *jma *cma
    echo "{if(NR==1) print \"SNP\",\"A1\",\"A2\",\"freq\",\"b\",\"se\",\"p\",\"N\";\
          print \$1,\$4,\$5,\$6,\$7,\$8,\$9,int(\$10)}" > ma.awk
    awk 'NR>1' st.bed | \
