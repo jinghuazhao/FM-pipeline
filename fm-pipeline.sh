@@ -37,7 +37,7 @@ export FM_location=/genetics/bin/FM-pipeline
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fm-pipeline.sh <input>"
     echo "where <input> is in sumstats format:"
-    echo "SNP A1 A2 beta se N"
+    echo "SNP A1 A2 freqA1 beta se N"
     echo "where SNP is RSid, A1 is effect allele"
     echo "and the outputs will be in <input>.out directory"
     exit
@@ -74,7 +74,7 @@ sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | \
 join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | \
-awk -vs=${flanking} '{print $7,$8-s,$8+s, $8, $1}' > st.dat
+awk -vs=${flanking} '{print $8,$9-s,$9+s, $9, $1}' > st.dat
 echo "chr start end pos rsid r" > st.bed
 awk '{$0=$0 " " NR};1' st.dat >> st.bed
 rm st.dat
@@ -86,18 +86,18 @@ fi
 ## region-specific data
 echo Generate region-specific data
 cat $rt.lst | \
-parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_$(({8}+${flanking}));\
-    awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-         \$0=\$0 \" \" \$7 \":\" \$8 \"_\" a1 \"_\" a2;print}" chr={7} pos={8} s=${flanking} $rt.input |\
-         sort -k9,9 > $f.dat'
+parallel -j${threads} -C' ' '\
+    export f=chr{8}_$(({9}-${flanking}))_$(({9}+${flanking}));\
+    awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
+         \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $rt.input |\
+         sort -k10,10 > $f.dat'
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
     export f=chr{1}_{2}_{3}; \
     awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
     gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
-         --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr $(echo $f| \
-         cut -d"_" -f1|sed "s/chr//g")'
+         --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env GEN_location -C' ' '\
      export f=chr{1}_{2}_{3}; \
@@ -111,17 +111,17 @@ awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
     export f=chr{1}_{2}_{3}; \
     sort -k2,2 $GEN_location/$f.map | \
-    join -19 -22 $f.dat - | \
+    join -110 -22 $f.dat - | \
     sort -k10,10 > $f.incl'
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
     export f=chr{1}_{2}_{3}; \
-    awk "{print \$8,\$9,\$3,\$4,\$5,\$6,\$7,\$2,\$1,\$5/\$6}" $f.incl > $f.r; \
-    cut -d" " -f9,10 $f.r > $f.z; \
+    awk "{print \$9,\$10,\$3,\$4,\$5,\$6,\$7,\$8,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
+    cut -d" " -f10,11 $f.r > $f.z; \
     awk "{print \$1}" $f.incl > $f.inc; \
-    awk "{print \$1,\$4,\$3,\$13,\$14}" $f.incl > $f.a; \
+    awk "{print \$1,\$4,\$3,\$14,\$15}" $f.incl > $f.a; \
     echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
-    awk "{print \$1,\$9,\$8,\$4,\$3}" $f.incl >> $f.incl_variants'
+    awk "{print \$1,\$10,\$9,\$4,\$3}" $f.incl >> $f.incl_variants'
 
 ## finemapping
 echo "--> bfile"
