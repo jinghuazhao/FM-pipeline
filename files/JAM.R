@@ -7,7 +7,7 @@ options(scipen=20, width=2000)
 fp <- Sys.getenv("fp")
 cat(fp,"\n")
 # summary statistics
-sumstats.name <- c("RS_ID","A1","A2","freqA1","b","se","N", "chr","pos","SNP_ID")
+sumstats.name <- c("RS_ID","A1","A2","freqA1","b","se","P","N","chr","pos","SNP_ID")
 sumstats <- read.table(paste0(fp,".dat"), as.is=TRUE, col.names=sumstats.name)
 beta <- with(sumstats, b)
 rsid <- with(sumstats, RS_ID)

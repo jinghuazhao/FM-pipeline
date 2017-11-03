@@ -19,7 +19,7 @@ getCredibleSNP <- function(snp, logProb, threshold=0.99)
          credible_set=credible_set, 
          select=select)
 }
-bed <- read.table("st.bed", as.is=TRUE, col.names=("chr","start","end","pos","rsid","r"), skip=args[1]+1, nrows=1)
+bed <- read.table("st.bed", as.is=TRUE, col.names=c("chr","start","end","pos","rsid","r"), skip=args[1]+1, nrows=1)
 f <- Sys.getenv("f")
 dat <- read.table(paste0(f,".r"), as.is=TRUE,
        col.names=c("chr","pos","A","B","Effect","StdErr","TOTALSAMPLESIZE","SNP",'SNPID',"z"))
