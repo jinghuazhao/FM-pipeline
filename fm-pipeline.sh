@@ -32,8 +32,8 @@ export fm_summary=1
 export LocusZoom=1
 export GCTA=1
 export fgwas=0
+export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
-export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes/
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fm-pipeline.sh <input>"
     echo "where <input> is in sumstats format:"
@@ -95,13 +95,13 @@ awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
     export f=chr{1}_{2}_{3}; \
     awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
-    gtool -G --g $f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
+    gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
          --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr $(echo $f| \
          cut -d"_" -f1|sed "s/chr//g")'
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env GEN_location -C' ' '\
      export f=chr{1}_{2}_{3}; \
-     awk -f $FM_location/files/info.awk $f.info | \
+     awk -vchr={1} -f $FM_location/files/info.awk $GEN_location/$f.info | \
      sort -k2,2 > $f.tmp; \
      sort -k2,2 $GEN_location/$f.map | \
      join -j2 $f.tmp -| \
