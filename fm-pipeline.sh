@@ -28,7 +28,7 @@ export CAVIAR=0
 export CAVIARBF=0
 export finemap=1
 export JAM=1
-export locuszoom=0
+export LocusZoom=1
 export fgwas=0
 export GCTA=0
 export FM_location=/genetics/bin/FM-pipeline
@@ -188,3 +188,13 @@ if [ $CAVIARBF -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
 fi
+if [ $LocusZoom == 1 ]; then
+   echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$8,\$6,\$7}" > lz.awk
+   cat st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       export refsnp={5}; \
+       awk -f lz.awk $f.r > $f.lz; \
+       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --plotonly --no-date;pdftopng $refsnp.pdf -r 300 $refsnp'
+fi
+
