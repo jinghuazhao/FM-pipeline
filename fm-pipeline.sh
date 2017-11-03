@@ -172,15 +172,18 @@ echo "--> JAM"
 if [ $JAM -eq 1 ]; then
    cat st.bed | \
    parallel -j${threads} -C' ' '\
-       export f=chr{1}_{2}_{3}p; R --no-save <${FM_location}/files/JAM.R > ${f}.log'
+       export f=chr{1}_{2}_{3}p; \
+       R --no-save <${FM_location}/files/JAM.R > ${f}.log'
 fi
 if [ $CAVIAR -eq 1 ]; then
    cat st.bed | \
    parallel -j${threads} -C' ' '\
-       export f=chr{1}_{2}_{3};CAVIAR -z ${f}.z -l ${f}.ld -r 0.9 -o ${f}'
+       export f=chr{1}_{2}_{3}; \
+       CAVIAR -z ${f}.z -l ${f}.ld -r 0.9 -o ${f}'
 fi
 if [ $CAVIARBF -eq 1 ]; then
    cat st.bed | \
    parallel -j${threads} -C' ' '\
-       export f=chr{1}_{2}_{3};caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
+       export f=chr{1}_{2}_{3}; \
+       caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
 fi
