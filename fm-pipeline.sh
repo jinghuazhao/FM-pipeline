@@ -15,11 +15,11 @@ export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
-# already in PLINK formt
+# already in PLINK rather than GEN format
 export inplink=0
-# only generate st.bed
+# only generate st.bed containg chr, start, end triplets
 export stbed=0
-# N
+# N, study sample size as used by finemap
 export N=15234
 # number of threads
 export threads=5
