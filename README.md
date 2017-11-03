@@ -68,9 +68,16 @@ Before start, settings at the beginning of the script need to be changed and onl
 
 The **first input file** will be GWAS summary statistics with the following columns,
 
-SNP | A1 | A2 | freqA1 | beta | se | P| N
-----|----|----|--------|------|----|--|--
-RSid | Effect allele | Other allele | A1 frequency | effect estimate | standard error of effect | P-vale | sample size
+Column | Name | Description
+-------|------|------------
+1 | SNP | RSid
+2 | A1 | Effect allele
+3 | A2 | Other allele
+4 | freqA1 | A1 frequency
+5 | beta | effect estimate
+6 | se | standard error of effect
+7 | P | P-vale
+8 | N | sample size
 
 This is in line with joint/conditional analysis by GCTA.
 
