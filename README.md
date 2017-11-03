@@ -137,7 +137,7 @@ sort -k1,1 > bmi.txt
 R --no-save <<END
 library(openxlsx)
 xlsx <- "https://www.nature.com/nature/journal/v518/n7538/extref/nature14177-s2.xlsx"
-snps <- read.xlsx(xlsxFile = xlsx, sheet = 4, colNames=FALSE, skipEmptyRows = FALSE, cols = 1, rows = 5:101)
+snps <- read.xlsx(xlsx, sheet = 4, colNames=FALSE, skipEmptyRows = FALSE, cols = 1, rows = 5:101)
 snplist <- sort(as.vector(snps[,1]))
 write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
 END
