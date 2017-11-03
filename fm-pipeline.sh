@@ -74,7 +74,7 @@ sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | \
 join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | \
-awk -vs=${flanking} '{print $8,$9-s,$9+s, $9, $1}' > st.dat
+awk -vs=${flanking} '{print $9,$10-s,$10+s, $10, $1}' > st.dat
 echo "chr start end pos rsid r" > st.bed
 awk '{$0=$0 " " NR};1' st.dat >> st.bed
 rm st.dat
@@ -87,10 +87,10 @@ fi
 echo Generate region-specific data
 cat $rt.lst | \
 parallel -j${threads} -C' ' '\
-    export f=chr{8}_$(({9}-${flanking}))_$(({9}+${flanking}));\
-    awk "(\$8==chr && \$9 >= pos-s && \$9 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-         \$0=\$0 \" \" \$8 \":\" \$9 \"_\" a1 \"_\" a2;print}" chr={8} pos={9} s=${flanking} $rt.input |\
-         sort -k10,10 > $f.dat'
+    export f=chr{9}_$(({10}-${flanking}))_$(({10}+${flanking}));\
+    awk "(\$9==chr && \$10 >= pos-s && \$10 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
+         \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} pos={10} s=${flanking} $rt.input |\
+         sort -k11,11 > $f.dat'
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
@@ -98,30 +98,22 @@ parallel -j${threads} --env wd -C' ' '\
     awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
     gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
          --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
-awk 'NR>1' st.bed | \
-parallel -j${threads} --env GEN_location -C' ' '\
-     export f=chr{1}_{2}_{3}; \
-     awk -vchr={1} -f $FM_location/files/info.awk $GEN_location/$f.info | \
-     sort -k2,2 > $f.tmp; \
-     sort -k2,2 $GEN_location/$f.map | \
-     join -j2 $f.tmp - | \
-     awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12}" > ${f}_map'
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
     export f=chr{1}_{2}_{3}; \
     sort -k2,2 $GEN_location/$f.map | \
-    join -110 -22 $f.dat - | \
-    sort -k10,10 > $f.incl'
+    join -111 -22 $f.dat - | \
+    sort -k11,11 > $f.incl'
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
     export f=chr{1}_{2}_{3}; \
-    awk "{print \$9,\$10,\$3,\$4,\$5,\$6,\$7,\$8,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
-    cut -d" " -f10,11 $f.r > $f.z; \
+    awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
+    cut -d" " -f11,12 $f.r > $f.z; \
     awk "{print \$1}" $f.incl > $f.inc; \
-    awk "{print \$1,\$4,\$3,\$14,\$15}" $f.incl > $f.a; \
+    awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
     echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
-    awk "{print \$1,\$10,\$9,\$4,\$3}" $f.incl >> $f.incl_variants'
+    awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
 
 ## finemapping
 echo "--> bfile"
@@ -219,6 +211,14 @@ if [ $fm_summary -eq 1 ]; then
 fi
 if [ $GCTA -eq 1 ]; then
    # setup
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env GEN_location -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       awk -vchr={1} -f $FM_location/files/info.awk $GEN_location/$f.info | \
+       sort -k2,2 > $f.tmp; \
+       sort -k2,2 $GEN_location/$f.map | \
+       join -j2 $f.tmp - | \
+       awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map'
    # ma for marginal effects used by GCTA
    rm *cojo *jma *cma
    echo "{if(NR==1) print \"SNP\",\"A1\",\"A2\",\"freq\",\"b\",\"se\",\"p\",\"N\";print \$1,\$4,\$5,\$6,\$7,\$8,\$9,int(\$10)}" > ma.awk
@@ -226,7 +226,7 @@ if [ $GCTA -eq 1 ]; then
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
        sort -k4,4 ${f}_map | \
-       join -111 -24 $f.r - | \
+       join -110 -24 $f.r - | \
        grep -f $f.inc | \
        awk -f ma.awk > $f.ma'
    # --cojo-slct
