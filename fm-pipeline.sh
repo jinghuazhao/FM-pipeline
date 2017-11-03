@@ -61,7 +61,7 @@ else
    cut -f2,4,5 | \
    sort -k3,3 > snp150.txt
 fi
-echo supplement .sumstats with chromosomal positions
+echo Supplement .sumstats with chromosomal positions
 export rt=$dir/$(basename $args)
 awk '{
   $2=toupper($2)
@@ -81,7 +81,7 @@ if [ $stbed -eq 1 ]; then
 fi
 
 ## region-specific data
-echo generate region-specific data
+echo Generate region-specific data
 cat $rt.lst | \
 parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_$(({8}+${flanking}));\
     awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
@@ -106,7 +106,7 @@ awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
     export f=chr{1}_{2}_{3}; \
     awk "{print \$8,\$9,\$3,\$4,\$5,\$6,\$7,\$2,\$1,\$5/\$6}" $f.incl > $f.r; \
-    cut -d" " -f9,10 $f.r2 > $f.z; \
+    cut -d" " -f9,10 $f.r > $f.z; \
     awk "{print \$1}" $f.incl > $f.inc; \
     awk "{print \$1,\$4,\$3,\$13,\$14}" $f.incl > $f.a; \
     echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
@@ -114,7 +114,6 @@ parallel -j${threads} --env wd -C' ' '\
 
 ## finemapping
 echo "--> bfile"
-rm *bed *bim *fam
 if [ ${sample_to_exclude} == "" ]; then 
    export OPTs=""
 else 
@@ -123,6 +122,7 @@ fi
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
     export f=chr{1}_{2}_{3}; \
+    rm -f $f.bed $f.bim $f.fam
     plink-1.9 --file $f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 echo "JAM, IPD"
