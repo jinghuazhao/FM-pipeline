@@ -5,7 +5,7 @@
 # working directory
 export wd=/genetics/data/gwas/6-7-17/MAGIC
 # GWAS summary statistics (the .sumstats file)
-export args=$wd/2hrglucose.txt
+export args=$1
 # filename containing list of lead SNPs
 export snplist=$wd/2.snps
 # GEN files, named chr{chr}_{start}_{end}.gen
