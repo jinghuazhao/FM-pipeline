@@ -35,7 +35,7 @@ export FM_location=/genetics/bin/FM-pipeline
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fm-pipeline.sh <input>"
     echo "where <input> is in sumstats format:"
-    echo "SNP A1 A2 freqA1 beta se N"
+    echo "SNP A1 A2 freqA1 beta se P N"
     echo "where SNP is RSid, A1 is effect allele"
     echo "and the outputs will be in <input>.out directory"
     exit
