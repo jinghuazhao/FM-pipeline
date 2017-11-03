@@ -71,7 +71,7 @@ sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | \
 join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | \
-awk -vs=${flanking} '{print $7,$8-s,$8+s}' > st.bed
+awk -vs=${flanking} '{print $7,$8-s,$8+s, $8, $1}' > st.bed
 if [ $stbed -eq 1 ]; then exit; fi
 
 ## region-specific data
