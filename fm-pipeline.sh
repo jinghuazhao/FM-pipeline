@@ -224,8 +224,9 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       sort -k4,4 $f_map | \
-       join -111 -24 $f.r -|grep -f $f.inc | \
+       sort -k4,4 ${f}_map | \
+       join -111 -24 $f.r - | \
+       grep -f $f.inc | \
        awk -f ma.awk > $f.ma'
    # --cojo-slct
    awk 'NR>1' st.bed | \
