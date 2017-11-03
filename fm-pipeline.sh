@@ -15,6 +15,10 @@ export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
+# already in PLINK formt
+export inplink=0
+# only generate st.bed
+export stbed=0
 # N
 export N=15234
 # number of threads
@@ -67,6 +71,7 @@ join -11 -23 - snp150.txt | \
 sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | awk -vs=${flanking} '{print $7,$8-s,$8+s}' > st.bed
+if [ $stbed -eq 1 ]; then exit; fi
 echo generate region-specific data
 cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_$(({8}+${flanking}));\
     awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
@@ -102,12 +107,12 @@ ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} -C' ' '\
          plink-1.9 --bfile {} --extract {}.prune.in --keep-allele-order --a2-allele {}.p 3 1 --make-bed --out {}p'
 echo "--> finemap, bcor"
 if [ $finemap -eq 1 ]; then
-   ls *.info|sed 's/\.info//g'|parallel -C' ' '\
+   ls *.info|sed 's/\.info//g'|parallel -j3 -C' ' '\
         ldstore --bcor {}.bcor --bplink {} --n-threads ${threads}; \  
         ldstore --bcor {}.bcor --merge ${threads}; \
         ldstore --bcor {}.bcor --matrix {}.ld --incl_variants {}.incl_variants; \
         sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}.ld'
-   ls *.info|sed 's/\.info//g'|parallel -C' ' '\ 
+   ls *.info|sed 's/\.info//g'|parallel -j3 -C' ' '\ 
          grep -w -f {}.prune.in {}.z > {}p.z; \
          ldstore --bcor {}p.bcor --bplink {}p --n-threads ${threads}; \
          ldstore --bcor {}p.bcor --merge ${threads}; \
