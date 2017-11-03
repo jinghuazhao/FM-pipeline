@@ -94,8 +94,13 @@ cat st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
      awk "{print \$1,\$9,\$8,\$4,\$3}" $f.incl >> $f.incl_variants'
 echo "--> bfile"
 rm *bed *bim *fam
+if [ ${sample_to_exclude} == "" ]; then 
+   export remove_sample_to_exclude=""
+else 
+   export remove_sample_to_exclude="--remove ${sample_to_exclude}"
+fi
 ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} --env wd -C' ' '\
-         plink-1.9 --file {} --missing-genotype N --extract {}.inc --remove ${sample_to_exclude} \
+         plink-1.9 --file {} --missing-genotype N --extract {}.inc ${remove_sample_to_exclude} \
          --make-bed --keep-allele-order --a2-allele {}.a 3 1 --out {}'
 echo "JAM, IPD"
 ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} -C' ' '\
