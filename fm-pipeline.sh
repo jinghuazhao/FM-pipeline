@@ -18,8 +18,6 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # set to only generate st.bed containg chr, start, end, pos, rsid, r sextuplets
 export stbed=0
-# N, study sample size as used by finemap
-export N=70000
 # number of threads
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
@@ -157,8 +155,8 @@ if [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C ' ' '\
        export f=chr{1}_{2}_{3}; \
-       sort -k7,7n $f.r | \
-       tail -n1|cut -d" " -f7| \
+       sort -k9,9g $f.r | \
+       tail -n1|cut -d" " -f9| \
        awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
    awk 'NR>1' st.bed | \
@@ -189,10 +187,11 @@ if [ $CAVIARBF -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
+       caviarbf -z ${f}.z -r ${f}.ld -n $(sort -k9,9g $f.r | \
+       tail -n1 | cut -d" " -f9) -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
 fi
 if [ $LocusZoom -eq 1 ]; then
-   echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$8,\$6,\$7}" > lz.awk
+   echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$11,\$8,\$9}" > lz.awk
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
