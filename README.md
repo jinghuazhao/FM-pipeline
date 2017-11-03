@@ -59,7 +59,7 @@ The syntax of pipeline is simply
 ```
 bash fm-pipeline.sh <input>
 ```
-Before start, settings at the beginning of the script need to be changed while change to the rest of the pipeline is at most minor.
+Before start, settings at the beginning of the script need to be changed and only minor change is expected after this.
 
 ## Inputs
 
@@ -92,7 +92,7 @@ chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  |
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. When option stbed=1 in the settings, it only generates st.bed 
 which contains chr, start, end, RSid, pos corresponding to the lead SNPs specified.
 
-We also specifies a file containing sample to be excluded from the reference panel.
+Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
 
 ## Outputs
 
