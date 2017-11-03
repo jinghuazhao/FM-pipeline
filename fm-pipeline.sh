@@ -94,15 +94,23 @@ echo "--> map/ped"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '\
     export f=chr{1}_{2}_{3}; \
-    awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $f.ord;\
-    gtool -G --g $f.ord --s ${sample_file} --ped $f.ped --map $f.map \
+    awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
+    gtool -G --g $f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
          --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr $(echo $f| \
          cut -d"_" -f1|sed "s/chr//g")'
+awk 'NR>1' st.bed | \
+parallel -j${threads} --env GEN_location -C' ' '\
+     export f=chr{1}_{2}_{3}; \
+     awk -f $FM_location/files/info.awk $f.info | \
+     sort -k2,2 > $f.tmp; \
+     sort -k2,2 $GEN_location/$f.map | \
+     join -j2 $f.tmp -| \
+     awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,sprintf(\"%010d\",\$3)}">${f}_map'
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
     export f=chr{1}_{2}_{3}; \
-    sort -k2,2 $f.map | \
+    sort -k2,2 $GEN_location/$f.map | \
     join -19 -22 $f.dat - | \
     sort -k10,10 > $f.incl'
 awk 'NR>1' st.bed | \
@@ -126,7 +134,7 @@ awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
     export f=chr{1}_{2}_{3}; \
     rm -f $f.bed $f.bim $f.fam
-    plink-1.9 --file $f --missing-genotype N --extract $f.inc ${OPTs} \
+    plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 echo "JAM, IPD"
 awk 'NR>1' st.bed | \
