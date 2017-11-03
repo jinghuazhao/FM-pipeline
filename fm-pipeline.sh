@@ -190,11 +190,90 @@ if [ $CAVIARBF -eq 1 ]; then
 fi
 if [ $LocusZoom == 1 ]; then
    echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$8,\$6,\$7}" > lz.awk
-   cat st.bed | \
+   awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
        export refsnp={5}; \
        awk -f lz.awk $f.r > $f.lz; \
        locuszoom-1.3 --metal $f.lz --refsnp $refsnp --plotonly --no-date;pdftopng $refsnp.pdf -r 300 $refsnp'
+fi
+if [ $GCTA -eq 1 ]; then
+   # setup
+   # ma for marginal effects used by GCTA
+   rm *cojo *jma *cma
+   echo "{if(NR==1) print \"SNP\",\"A1\",\"A2\",\"freq\",\"b\",\"se\",\"p\",\"N\";print \$1,\$4,\$5,\$6,\$7,\$8,\$9,int(\$10)}" > ma.awk
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       sort -k4,4 {}_map | \
+       join -111 -24 {}.r -|grep -f {}.inc | \
+       awk -f ma.awk > {}.ma'
+   # --cojo-slct
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_${2}_${3}; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f;'
+   ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
+   parallel -j${threads} -C' ' '\
+       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
+       cut -d" " -f8,9 {}.r | \
+       sort -k2,2 | \
+       sed "s/ /\t/g">{}.tmp; \
+       sort -k2,2 {}.jma.cojo | \
+       join -j2 - {}.tmp >> {}.jma'
+   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       awk "!/SNP/{gsub(/\.jma/,\"\",FILENAME);print FILENAME, \$0}" ${f}.jma >> gcta-slct.csv'
+   sed -i 's/ /,/g' gcta-slct.csv
+
+   # --cojo-top-SNPs
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr${chr}_${start}_${end}; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out ${f}.top'
+   ls *top.jma.cojo | \
+   sed 's/\.top\.jma\.cojo//g' | \
+   parallel -j${threads} -C' ' '\
+       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}top.jma; \
+       cut -d" " -f8,9 {}.r | \
+       sort -k2,2 | \
+       sed "s/ /\t/g">{}.tmp; \
+       sort -k2,2 {}.top.jma.cojo | \
+       join -j2 - {}.tmp >> {}.top.jma'
+   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
+   awk 'NR>1' | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       awk "!/SNP/{gsub(/\.top\.jma/,\"\",FILENAME);print FILENAME, \$0}" ${f}.top.jma >> gcta-top.csv'
+   sed -i 's/ /,/g' gcta-top.csv
+
+   # --cojo-cond
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       grep {5} ${f}.r | \
+       cut -d" " -f11 > ${f}.snpid; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-cond ${f}.snpid --out ${f}'
+   ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
+   parallel -j${threads} -C' ' '\
+       echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
+       cut -d" " -f8,9 {}.r | \
+       sort -k2,2 | \
+       sed "s/ /\t/g" > {}.tmp; \
+       sort -k2,2 {}.cma.cojo | \
+       join -j2 - {}.tmp >> {}.cma'
+   echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '\
+       export f=chr{1}_{2}_{3}; \
+       awk "!/SNP/{gsub(/\.cma/,\"\",FILENAME);print FILENAME, \$0}" ${f}.cma >> gcta-cond.csv'
+   sed -i 's/ /,/g' gcta-cond.csv
+
+   # dosage format
+   rt=/gen_omics/data/EPIC-Norfolk/Dosage
+   chr=22
+   # gcta64 --dosage-mach-gz ${rt}/chr${chr}.dosage.gz ${rt}/chr${chr}.mlinfo.gz --make-grm --thread-num 10 --out chr${chr}
 fi
 
