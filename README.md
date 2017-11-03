@@ -128,7 +128,7 @@ Next we show how to set up for BMI as reported by the GIANT consortium, Locke, e
 ```
 # GWAS summary statistics
 wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
-gunzp -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz | \
+gunzip -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz | \
 awk '(NR>1){$4="";$7="";print}' | \
 awk '{$1=$1};1' | \
 sort -k1,1 > bmi.txt
