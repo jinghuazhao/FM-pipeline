@@ -1,5 +1,5 @@
 #!/bin/bash
-# 2-11-2017 MRC-Epid JHZ
+# 3-11-2017 MRC-Epid JHZ
 
 # working directory
 export wd=/genetics/data/gwas/6-7-17/MAGIC
@@ -46,35 +46,42 @@ fi
 if [ ! -d $dir ]; then
    mkdir -p $dir
 fi
-# cd $dir
-cd /genetics/data/gwas/6-7-17/MAGIC/MAGIC
+cd $dir
 if $(test -f ${FM_location}/snp150.txt ); then
    echo "Chromosomal positions are ready to use"
    ln -sf ${FM_location}/snp150.txt
 else
    echo "Obtaining chromosomal positions"
    wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
-   gunzip -c snp150Common.txt.gz | cut -f2,4,5 | sort -k3,3 > snp150.txt
+   gunzip -c snp150Common.txt.gz | \
+   cut -f2,4,5 | \
+   sort -k3,3 > snp150.txt
 fi
 echo supplement .sumstats with chromosomal positions
 export rt=$dir/$(basename $args)
 awk '{
   $2=toupper($2)
   $3=toupper($3)
-};1' $args | join -11 -23 - snp150.txt | sed 's/chr//g' > $rt.input
+};1' $args | \
+join -11 -23 - snp150.txt | \
+sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | awk -vs=${flanking} '{print $7,$8-s,$8+s}' > st.bed
 echo generate region-specific data
 cat $rt.lst | parallel -j${threads} -C' ' 'export f=chr{7}_$(({8}-${flanking}))_$(({8}+${flanking}));\
     awk "(\$7==chr && \$8 >= pos-s && \$8 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-         \$0=\$0 \" \" \$7 \":\" \$8 \"_\" a1 \"_\" a2;print}" chr={7} pos={8} s=${flanking} $rt.input | sort -k9,9 > $f.dat'
+         \$0=\$0 \" \" \$7 \":\" \$8 \"_\" a1 \"_\" a2;print}" chr={7} pos={8} s=${flanking} $rt.input |\
+         sort -k9,9 > $f.dat'
 echo "--> map/ped"
 ls $gendir/chr*.gen|sed 's/\.gen//g'|parallel -j${threads} --env wd -C' ' '\
       awk -f ${FM_location}/files/order.awk {}.gen > {}.ord;\
       gtool -G --g {}.ord --s ${sample_file} --ped {}.ped --map {}.map \
-           --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles --chr $(echo {}|cut -d"_" -f1|sed "s/chr//g")'
+           --missing 0.05 --threshold 0.9 --log {}.log --snp --alleles --chr $(echo {}|\
+             cut -d"_" -f1|sed "s/chr//g")'
 echo "--> GWAS .sumstats auxiliary files"
-ls *.info|sed 's/\.info//g'| parallel -j${threads} -C' ' 'sort -k2,2 {}.map|join -19 -22 {}.dat -|sort -k10,10>{}.incl'
+ls $gendir/*.info|sed 's/\.info//g'| parallel -j${threads} -C' ' 'sort -k2,2 {}.map|\
+     join -19 -22 {}.dat -|\
+     sort -k10,10>{}.incl'
 cat st.bed | parallel -j${threads} --env wd -C' ' 'f=chr{1}_{2}_{3};\
      awk "{print \$8,\$9,\$3,\$4,\$5,\$6,\$7,\$2,\$1,\$5/\$6}" $f.incl > $f.r;\
      cut -d" " -f9,10 $f.r2>$f.z;\
@@ -128,4 +135,3 @@ if [ $CAVIARBF -eq 1 ]; then
    cat st.bed | parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3};caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
 fi
-
