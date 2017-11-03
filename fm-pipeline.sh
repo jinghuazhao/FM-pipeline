@@ -197,7 +197,9 @@ if [ $LocusZoom -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        export refsnp={5}; \
        awk -f lz.awk $f.r > $f.lz; \
-       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --plotonly --no-date;pdftopng $refsnp.pdf -r 300 $refsnp'
+       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --flank 250000 --plotonly \
+                     --build hg19 --pop EUR --no-date; \
+       pdftopng $refsnp.pdf -r 300 $refsnp'
 fi
 if [ $fm_summary -eq 1 ]; then
    echo "region chr pos A B Freq1 Effect StdErr P TOTALSAMPLESIZE SNP inCredible probNorm cumSum" | \
@@ -232,12 +234,12 @@ if [ $GCTA -eq 1 ]; then
    # --cojo-slct
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
-       export f=chr{1}_${2}_${3}; \
+       export f=chr{1}_{2}_{3}; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f'
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
        echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
-       cut -d" " -f8,9 {}.r | \
+       cut -d" " -f10,11 {}.r | \
        sort -k2,2 | \
        sed "s/ /\t/g">{}.tmp; \
        sort -k2,2 {}.jma.cojo | \
@@ -252,13 +254,13 @@ if [ $GCTA -eq 1 ]; then
    # --cojo-top-SNPs
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
-       export f=chr${chr}_${start}_${end}; \
+       export f=chr{1}_{2}_{3}; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out ${f}.top'
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
        echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}top.jma; \
-       cut -d" " -f8,9 {}.r | \
+       cut -d" " -f10,11 {}.r | \
        sort -k2,2 | \
        sed "s/ /\t/g">{}.tmp; \
        sort -k2,2 {}.top.jma.cojo | \
@@ -280,7 +282,7 @@ if [ $GCTA -eq 1 ]; then
    ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
        echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
-       cut -d" " -f8,9 {}.r | \
+       cut -d" " -f10,11 {}.r | \
        sort -k2,2 | \
        sed "s/ /\t/g" > {}.tmp; \
        sort -k2,2 {}.cma.cojo | \
@@ -293,8 +295,8 @@ if [ $GCTA -eq 1 ]; then
    sed -i 's/ /,/g' gcta-cond.csv
 
    # dosage format
-   rt=/gen_omics/data/EPIC-Norfolk/Dosage
-   chr=22
+   # rt=/gen_omics/data/EPIC-Norfolk/Dosage
+   # chr=22
    # gcta64 --dosage-mach-gz ${rt}/chr${chr}.dosage.gz ${rt}/chr${chr}.mlinfo.gz --make-grm --thread-num 10 --out chr${chr}
 fi
 if [ $fgwas -eq 1 ]; then
