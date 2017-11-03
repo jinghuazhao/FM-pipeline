@@ -30,8 +30,8 @@ export finemap=1
 export JAM=1
 export fm_summary=1
 export LocusZoom=1
+export GCTA=1
 export fgwas=0
-export GCTA=0
 export FM_location=/genetics/bin/FM-pipeline
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
