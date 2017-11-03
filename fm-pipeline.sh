@@ -75,7 +75,7 @@ join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | \
 awk -vs=${flanking} '{print $7,$8-s,$8+s, $8, $1}' > st.bed
 if [ $stbed -eq 1 ]; then
-   echo "generating st.bed"
+   echo "st.bed is generated"
    exit
 fi
 
