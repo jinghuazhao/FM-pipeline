@@ -52,7 +52,7 @@ Note that JAM requires Java 1.8 so call to Java -jar inside the function needs t
 reflect this, not straightforward with install_github() from devtools but one needs to 
 clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
 
-At the moment implementations have been done for the finemapping software along with LocusZoom; and support for for GCTA and fgwas is still alpha version.
+At the moment implementations have been done for the finemapping software along with LocusZoom; and support for GCTA and fgwas is still alpha version.
 
 ## USAGE
 
