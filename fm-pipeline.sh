@@ -66,6 +66,7 @@ awk '{
   $2=toupper($2)
   $3=toupper($3)
 };1' $args | \
+sort -k1,1 \
 join -11 -23 - snp150.txt | \
 sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | \
