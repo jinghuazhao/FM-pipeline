@@ -105,7 +105,7 @@ parallel -j${threads} --env GEN_location -C' ' '\
      sort -k2,2 > $f.tmp; \
      sort -k2,2 $GEN_location/$f.map | \
      join -j2 $f.tmp - | \
-     awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map'
+     awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12}" > ${f}_map'
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
@@ -213,8 +213,9 @@ if [ $fm_summary -eq 1 ]; then
    sed 's/ /\t/g' > FM-summary.txt
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location -C' ' '\
+       export f=chr{1}_{2}_{3}; \
        $FM_location/files/getCredible.r {6}; \
-       awk "!/SNP/{gsub(/\.cre/,\"\",FILENAME);print FILENAME, \$0}" OFS="\t" chr{1}_{2}_{3}.cre >> FM-summary.txt'
+       awk "!/SNP/{gsub(/\.cre/,\"\",FILENAME);print FILENAME, \$0}" OFS="\t" $f.cre >> FM-summary.txt'
 fi
 if [ $GCTA -eq 1 ]; then
    # setup
