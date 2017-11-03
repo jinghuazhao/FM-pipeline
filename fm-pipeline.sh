@@ -202,7 +202,7 @@ if [ $LocusZoom -eq 1 ]; then
        pdftopng $refsnp.pdf -r 300 $refsnp'
 fi
 if [ $fm_summary -eq 1 ]; then
-   echo "region chr pos A B Freq1 Effect StdErr P TOTALSAMPLESIZE SNP inCredible probNorm cumSum" | \
+   echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
    sed 's/ /\t/g' > FM-summary.txt
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location -C' ' '\
@@ -211,7 +211,7 @@ if [ $fm_summary -eq 1 ]; then
        awk "!/SNP/{gsub(/\.cre/,\"\",FILENAME);print FILENAME, \$0}" OFS="\t" $f.cre >> FM-summary.txt'
 fi
 if [ $GCTA -eq 1 ]; then
-   # setup
+   echo "--> GCTA"
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env GEN_location -C' ' '\
        export f=chr{1}_{2}_{3}; \
@@ -300,27 +300,32 @@ if [ $GCTA -eq 1 ]; then
    # gcta64 --dosage-mach-gz ${rt}/chr${chr}.dosage.gz ${rt}/chr${chr}.mlinfo.gz --make-grm --thread-num 10 --out chr${chr}
 fi
 if [ $fgwas -eq 1 ]; then
-  mkdir -p fgwas
+  echo "--> fgwas"
+  if [ ! -d "fgwas" ]; then
+     mkdir -p fgwas
+  fi
   cd fgwas
   # obtain annotations
   seq 22 | \
   parallel -j${threads} -C' ' '\
+      if [ ! -f $fgwas_location_1kg/chr{}.gen ]; then
       gunzip -c $fgwas_location_1kg/chr{}.annot.wdist.wcoding.gz | \
       awk "(NR>1){\$2=sprintf(\"%010d\",\$2); print \$1,\$2,\$3,\$(NF-6),\$(NF-5),\$(NF-2),\$(NF-1),\$NF}"|\
-      sort -k2,2 > $fgwas_location_1kg/chr{}.gene'
+      sort -k2,2 > $fgwas_location_1kg/chr{}.gene \
+      fi'
 
   # specify regions
   awk -vfl=${flanking} '{l=$2;u=$3;if(l<0) l=1;print $5,$1,$4,l,u,NR}' st.bed | \
   sort -k1,1 > fgwas.snplist
 
   # the standard fgwas data
-  awk 'NR>1' st.bed | \
-  parallel -j${threads} -C' ' '\
+  awk 'NR>1' fgwas.snplist | \
+  parallel -j${threads} --env GEN_location -C' ' '\
   read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist);\
-      export f=chr{1}_{2}_{3};\
-      awk -vsn={6} -f fgwas.awk $f.r|\
+      export f=chr{2}_{3}_{4};\
+      awk -vsn={6} -f $GEN_location/files/fgwas.awk $f.r | \
       join -13 -22 - $fgwas_location_1kg/chr{1}.gene | \
-      awk -f gene.awk | \
+      awk -f $GEN_location/files/gene.awk | \
       gzip -fc > $f.fgwas.gz'
 
   # tally for -fine option
