@@ -104,8 +104,8 @@ parallel -j${threads} --env GEN_location -C' ' '\
      awk -vchr={1} -f $FM_location/files/info.awk $GEN_location/$f.info | \
      sort -k2,2 > $f.tmp; \
      sort -k2,2 $GEN_location/$f.map | \
-     join -j2 $f.tmp -| \
-     awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,sprintf(\"%010d\",\$3)}">${f}_map'
+     join -j2 $f.tmp - | \
+     awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map'
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '\
