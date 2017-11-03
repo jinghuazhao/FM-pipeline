@@ -188,7 +188,7 @@ if [ $CAVIARBF -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        caviarbf -z ${f}.z -r ${f}.ld -n $N -t 0 -a 0.1 -c 3 --appr -o ${f}.caviarbf'
 fi
-if [ $LocusZoom == 1 ]; then
+if [ $LocusZoom -eq 1 ]; then
    echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$8,\$6,\$7}" > lz.awk
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
