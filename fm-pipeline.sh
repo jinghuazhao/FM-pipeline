@@ -19,7 +19,7 @@ export flanking=250000
 # only generate st.bed containg chr, start, end triplets
 export stbed=0
 # N, study sample size as used by finemap
-export N=15234
+export N=70000
 # number of threads
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
@@ -28,6 +28,7 @@ export CAVIAR=0
 export CAVIARBF=0
 export finemap=1
 export JAM=1
+export fm_summary=0
 export LocusZoom=1
 export fgwas=0
 export GCTA=0
@@ -72,9 +73,11 @@ join -11 -23 - snp150.txt | \
 sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | \
 join $dir/$(basename $args).input - > $rt.lst
-echo "chr start end pos rsid" > st.bed
 grep -w -f ${snplist} $rt.input | \
-awk -vs=${flanking} '{print $7,$8-s,$8+s, $8, $1}' >> st.bed
+awk -vs=${flanking} '{print $7,$8-s,$8+s, $8, $1}' > st.dat
+echo "chr start end pos rsid r" > st.bed
+awk '{$0=$0 " " NR};1' st.dat >> st.bed
+rm st.dat
 if [ $stbed -eq 1 ]; then
    echo "st.bed is generated"
    exit
@@ -196,6 +199,13 @@ if [ $LocusZoom -eq 1 ]; then
        export refsnp={5}; \
        awk -f lz.awk $f.r > $f.lz; \
        locuszoom-1.3 --metal $f.lz --refsnp $refsnp --plotonly --no-date;pdftopng $refsnp.pdf -r 300 $refsnp'
+fi
+if [ $fm_summary -eq 1 ]; then
+   echo "region chr pos A B Freq1 Effect StdErr P TOTALSAMPLESIZE SNP inCredible probNorm cumSum"|sed 's/ /\t/g' > FM-summary.txt
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env FM_location -C' ' '\
+       $FM_location/files/getCredible.r {6}; \
+       awk "!/SNP/{gsub(/\.cre/,\"\",FILENAME);print FILENAME, \$0}" OFS="\t" chr{1}_{2}_{3}.cre >> FM-summary.txt'
 fi
 if [ $GCTA -eq 1 ]; then
    # setup
