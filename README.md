@@ -63,7 +63,7 @@ Before start, settings at the beginning of the script need to be changed while c
 
 ## Inputs
 
-### * GWAS summary statistics and lead SNPs
+### * GWAS summary statistics and lead SNPs *
 
 The **first input file** will be GWAS summary statistics with the following columns,
 
@@ -75,7 +75,7 @@ The **second input file** is a list of SNPs for which finemapping will be conduc
 
 A header is required for neither file.
 
-### * Reference panel
+### * Reference panel *
 
 The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
