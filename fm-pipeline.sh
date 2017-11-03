@@ -95,12 +95,12 @@ ls chr*.info|awk '(gsub(/\.info/,""))'|parallel -j${threads} -C' ' '\
          plink-1.9 --bfile {} --extract {}.prune.in --keep-allele-order --a2-allele {}.p 3 1 --make-bed --out {}p'
 echo "--> finemap, bcor"
 if [ $finemap -eq 1 ]; then
-   ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\
+   ls *.info|sed 's/\.info//g'|parallel -C' ' '\
         ldstore --bcor {}.bcor --bplink {} --n-threads ${threads}; \  
         ldstore --bcor {}.bcor --merge ${threads}; \
         ldstore --bcor {}.bcor --matrix {}.ld --incl_variants {}.incl_variants; \
         sed -i -e "s/  */ /g; s/^ *//; /^$/d" {}.ld'
-   ls *.info|sed 's/\.info//g'|parallel -j${threads} -C' ' '\ 
+   ls *.info|sed 's/\.info//g'|parallel -C' ' '\ 
          grep -w -f {}.prune.in {}.z > {}p.z; \
          ldstore --bcor {}p.bcor --bplink {}p --n-threads ${threads}; \
          ldstore --bcor {}p.bcor --merge ${threads}; \
