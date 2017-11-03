@@ -52,7 +52,7 @@ Note that JAM requires Java 1.8 so call to Java -jar inside the function needs t
 reflect this, not straightforward with install_github() from devtools but one needs to 
 clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
 
-At the moment implementations have been done for the finemapping software along with LocusZoom, GCTA. and support for associate software fgwas will be added soon.
+At the moment implementations have been done for the finemapping software along with LocusZoom; and support for for GCTA and fgwas is still alpha version.
 
 ## USAGE
 
@@ -148,6 +148,11 @@ END
 which gives the required summary statistics as with list of 97 SNPs.
 
 In both cases, the GWAS summary data can be used togther with the reference panel in .GEN format to furnish the finemapping analysis.
+
+## ACKNOWLEDGEMENTS
+
+The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in the 
+Physalia course `Practical GWAS Using Linx and R` are greatly appreciated.
 
 ## SOFTWARE AND REFERENCES
 
