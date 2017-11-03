@@ -16,7 +16,7 @@ export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
-# only generate st.bed containg chr, start, end triplets
+# set to only generate st.bed containg chr, start, end, pos, rsid, r sextuplets
 export stbed=0
 # N, study sample size as used by finemap
 export N=70000
