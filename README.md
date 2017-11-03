@@ -107,7 +107,7 @@ JAM      | .jam/.top | the posterior summary table and top models containing sel
 
 It is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code [here](files/finemap-check.R) is now embedded in the pipeline.
 
-## EXAMPLE
+## EXAMPLES
 
 We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The data is obtained as follows,
 ```
@@ -123,6 +123,26 @@ bash fm-pipeline.sh 2hrglucose.txt
 ```
 For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
 [exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt).
+
+Next we show how to set up for BMI as reported by the GIANT consortium, Locke, et al. (2015).
+```
+# GWAS summary statistics
+wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
+gunzp -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz | \
+awk '(NR>1){$4="";$7="";print}' | \
+awk '{$1=$1};1' | \
+sort -k1,1 > bmi.txt
+
+# A list of 97 SNPs
+R --no-save <<END
+library(openxlsx)
+xlsx <- "https://www.nature.com/nature/journal/v518/n7538/extref/nature14177-s2.xlsx"
+snps <- read.xlsx(xlsxFile = xlsx, sheet = 4, colNames=FALSE, skipEmptyRows = FALSE, cols = 1, rows = 5:101)
+snplist <- sort(as.vector(snps[,1]))
+write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
+END
+```
+which gives the required summary statistics as with list of 97 SNPs.
 
 ## SOFTWARE AND REFERENCES
 
@@ -162,3 +182,7 @@ Newcombe PJ, et al. (2016). JAM: A Scalable Bayesian Framework for Joint Analysi
 **MAGIC paper**
 
 Saxena R, et al. (2010). Genetic variation in GIPR influences the glucose and insulin responses to an oral glucose challenge. Nat Genet 42:142-148
+
+**GIANT paper**
+
+Locke AE, et al. (2015). Genetic studies of body mass index yield new insights for obesity biology. Nature 518(7538):197-206. doi: 10.1038/nature14177
