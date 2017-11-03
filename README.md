@@ -68,9 +68,11 @@ Before start, settings at the beginning of the script need to be changed and onl
 
 The **first input file** will be GWAS summary statistics with the following columns,
 
-SNP | A1 | A2 | beta | se | N
------|----|----|------|----|--
-RSid | Effect allele | Other allele | effect estimate | standard error of effect | sample size
+SNP | A1 | A2 | freqA1 | beta | se | N
+----|----|----|--------|------|----|--
+RSid | Effect allele | Other allele | A1 frequency | effect estimate | standard error of effect | sample size
+
+This is to facilitate analysis as done by GCTA.
 
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
