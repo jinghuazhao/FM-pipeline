@@ -23,6 +23,8 @@ FM-summary | finemapping | .sumstats Association results | updated results | Hua
 GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
 fgwas | functional GWAS | | | Pickrell (2014)
 
+However, you can optionally use only a subset of these for a particular analysis.
+
 ## INSTALLATION
 
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
