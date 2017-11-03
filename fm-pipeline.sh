@@ -259,10 +259,10 @@ if [ $GCTA -eq 1 ]; then
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
-       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}top.jma; \
+       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.top.jma; \
        cut -d" " -f10,11 {}.r | \
        sort -k2,2 | \
-       sed "s/ /\t/g">{}.tmp; \
+       sed "s/ /\t/g" > {}.tmp; \
        sort -k2,2 {}.top.jma.cojo | \
        join -j2 - {}.tmp >> {}.top.jma'
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
