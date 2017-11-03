@@ -5,7 +5,7 @@ require(R2BGLiMS)
 require(methods)
 options(scipen=20, width=2000)
 f <- Sys.getenv("f")
-cat(fp,"\n")
+cat(f,"\n")
 # summary statistics
 sumstats.name <- c("RS_ID","A1","A2","freqA1","b","se","P","N","chr","pos","SNP_ID")
 sumstats <- read.table(paste0(f,".dat"), as.is=TRUE, col.names=sumstats.name)
@@ -14,7 +14,7 @@ rsid <- with(sumstats, RS_ID)
 snpid <- with(sumstats, SNP_ID)
 
 # reference panel
-p <- read_plink(fp)
+p <- read_plink(f)
 R <- with(p, as.matrix(bed))
 cc <- complete.cases(t(R))
 beta <- beta[cc]
@@ -26,10 +26,10 @@ names(beta) <- colnames(X.ref) <- ssnpid
 priors <- list("a"=1, "b"=length(beta), "Variables"=ssnpid)
 n <- 15234
 j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = TRUE, model.space.priors=priors)
-sink(paste0(fp, ".jam"))
+sink(paste0(f, ".jam"))
 slot(j, "posterior.summary.table")
 cbind(ssnpid, snpid[cc], rsid[cc])
 sink()
-sink(paste0(fp, ".top"))
+sink(paste0(f, ".top"))
 TopModels(j)
 sink()
