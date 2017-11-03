@@ -106,11 +106,12 @@ CAVIARBF | .caviarbf | causal configurations and their BFs
 finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 JAM      | .jam/.top | the posterior summary table and top models containing selected SNPs
 
-It is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code [here](files/finemap-check.R) is now embedded in the pipeline.
+It is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code 
+here](files/finemap-check.R) is now embedded in the pipeline.
 
 ## EXAMPLES
 
-We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The data is obtained as follows,
+We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The GWAS summary data is obtained as follows,
 ```
 wget ftp://ftp.sanger.ac.uk/pub/magic/MAGIC_2hrGlucose_AdjustedForBMI.txt
 gzip -f MAGIC_2hrGlucose_AdjustedForBMI.txt
@@ -125,7 +126,7 @@ bash fm-pipeline.sh 2hrglucose.txt
 For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
 [exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt).
 
-Next we show how to set up for BMI as reported by the GIANT consortium, Locke, et al. (2015).
+Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
 ```
 # GWAS summary statistics
 wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
@@ -144,6 +145,8 @@ write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FAL
 END
 ```
 which gives the required summary statistics as with list of 97 SNPs.
+
+In both cases, the GWAS summary data can be used togther with the reference panel in .GEN format to furnish the finemapping analysis.
 
 ## SOFTWARE AND REFERENCES
 
