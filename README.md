@@ -165,19 +165,6 @@ Physalia course `Practical GWAS Using Linx and R` are greatly appreciated. In pa
 
 ## SOFTWARE AND REFERENCES
 
-**[FM-summary](https://github.com/hailianghuang/FM-summary)**
-
-Huang H, et al (2017). Fine-mapping inflammatory bowel disease loci to single-variant resolution. Nature 547, 173–178, doi:10.1038/nature22969
-
-**[fgwas](https://github.com/joepickrell/fgwas)**
-
-Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide association studies of 18 human traits. bioRxiv 10.1101/000752
-
-**[GCTA](cnsgenomics.com/software/gcta/)**
-
-Yang J, et al. (2012). Conditional and joint multiple-SNP analysis of GWAS summary statistics identifies additional variants influencing complex traits. Nat Genet 
-44:369-375
-
 **[CAVIAR](https://github.com/fhormoz/caviar)**
 
 Hormozdiari F, et al. (2014). Identifying Causal Variants at Loci with Multiple Signals of Association. Genetics, 44, 725–731
@@ -190,13 +177,26 @@ Kichaev G, et al (2014). Integrating functional data to prioritize causal varian
 
 Kichaev, G., Pasaniuc, B. (2015). Leveraging Functional-Annotation Data in Trans-ethnic Fine-Mapping Studies. Am. J. Hum. Genet. 97, 260–271.
 
-**[finemap](http://www.christianbenner.com/#)**
+**[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
-Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data from genome-wide association studies. Bioinformatics 32, 1493-1501        
+Huang H, et al (2017). Fine-mapping inflammatory bowel disease loci to single-variant resolution. Nature 547, 173–178, doi:10.1038/nature22969
+
+**[GCTA](cnsgenomics.com/software/gcta/)**
+
+Yang J, et al. (2012). Conditional and joint multiple-SNP analysis of GWAS summary statistics identifies additional variants influencing complex traits. Nat Genet 
+44:369-375
 
 **[JAM](https://github.com/pjnewcombe/R2BGLiMS)**
 
 Newcombe PJ, et al. (2016). JAM: A Scalable Bayesian Framework for Joint Analysis of Marginal SNP Effects. Genet Epidemiol 40:188–201
+
+**[fgwas](https://github.com/joepickrell/fgwas)**
+
+Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide association studies of 18 human traits. bioRxiv 10.1101/000752
+
+**[finemap](http://www.christianbenner.com/#)**
+
+Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data from genome-wide association studies. Bioinformatics 32, 1493-1501        
 
 **MAGIC paper**
 
