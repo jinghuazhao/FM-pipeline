@@ -23,7 +23,7 @@ bed <- read.table("st.bed", col.names=c("chr","start","end","pos","rsid","r"),
                   as.is=TRUE, skip=as.numeric(args[1])+1, nrows=1)
 f <- Sys.getenv("f")
 dat <- read.table(paste0(f,".r"), col.names=c("chr","pos","A","B","freqA",
-                 "Effect","StdErr","P","N","SNP",'SNPID',"z"), as,is=TRUE)
+                 "Effect","StdErr","P","N","SNP",'SNPID',"z"), as.is=TRUE)
 select <- with(dat, P) < 0.1
 max_SCZ_P <- min(dat$P[select])
 max_SCZ_snp <- as.character(dat$SNP[select][which.min(dat$P[select])])
