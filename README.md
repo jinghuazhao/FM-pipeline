@@ -161,7 +161,7 @@ In both cases, the GWAS summary data can be used togther with the reference pane
 ## ACKNOWLEDGEMENTS
 
 The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in the 
-Physalia course `Practical GWAS Using Linx and R` are greatly appreciated.
+Physalia course `Practical GWAS Using Linx and R` are greatly appreciated. In particular, the Stata program p0.do was written by Dr Jian'an Luan.
 
 ## SOFTWARE AND REFERENCES
 
