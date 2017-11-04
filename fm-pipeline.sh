@@ -323,7 +323,6 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
-
    # --cojo-top-SNPs
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
@@ -344,7 +343,6 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.top.jma >> gcta-top.csv'
    sed -i 's/ /,/g' gcta-top.csv
-
    # --cojo-cond
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
@@ -366,11 +364,7 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
-
-   # dosage format
-   # rt=/gen_omics/data/EPIC-Norfolk/Dosage
-   # chr=22
-   # gcta64 --dosage-mach-gz ${rt}/chr${chr}.dosage.gz ${rt}/chr${chr}.mlinfo.gz --make-grm --thread-num 10 --out chr${chr}
+   # gcta64 --dosage-mach-gz chr${chr}.dosage.gz chr${chr}.mlinfo.gz
 fi
 if [ $fgwas -eq 1 ]; then
   echo "--> fgwas"
