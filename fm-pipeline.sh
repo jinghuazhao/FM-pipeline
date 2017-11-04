@@ -248,14 +248,14 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{gsub(/\.jma/,\"\",FILENAME);print FILENAME, \$0}" ${f}.jma >> gcta-slct.csv'
+       awk "!/SNP/{gsub(/\.jma/,\"\",FILENAME);print FILENAME, \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
 
    # --cojo-top-SNPs
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out ${f}.top'
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out $f.top'
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
@@ -269,16 +269,16 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{gsub(/\.top\.jma/,\"\",FILENAME);print FILENAME, \$0}" ${f}.top.jma >> gcta-top.csv'
+       awk "!/SNP/{gsub(/\.top\.jma/,\"\",FILENAME);print FILENAME, \$0}" $f.top.jma >> gcta-top.csv'
    sed -i 's/ /,/g' gcta-top.csv
 
    # --cojo-cond
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       grep {5} ${f}.r | \
-       cut -d" " -f11 > ${f}.snpid; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-cond ${f}.snpid --out ${f}'
+       grep {5} $f.r | \
+       cut -d" " -f11 > $f.snpid; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f'
    ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
    parallel -j${threads} -C' ' '\
        echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
@@ -291,7 +291,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{gsub(/\.cma/,\"\",FILENAME);print FILENAME, \$0}" ${f}.cma >> gcta-cond.csv'
+       awk "!/SNP/{gsub(/\.cma/,\"\",FILENAME);print FILENAME, \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
 
    # dosage format
