@@ -24,12 +24,12 @@ export threads=5
 # the outputs should be available individually
 export CAVIAR=0
 export CAVIARBF=0
-export finemap=1
-export JAM=1
-export fm_summary=1
-export LocusZoom=1
 export GCTA=1
+export JAM=1
+export LocusZoom=1
 export fgwas=0
+export finemap=1
+export fm_summary=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
