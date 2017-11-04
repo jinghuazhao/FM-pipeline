@@ -51,8 +51,10 @@ CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap.
 
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
 reflect this, not straightforward with `install_github()` from `devtools` but one needs to 
-clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
-
+clone the package, modify the R source code and then use
+```
+R CMD INSTALL R2BGLiMS
+```
 Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [xpdf](https://www.xpdfreader.com/) is used.
 
 ## USAGE
