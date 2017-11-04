@@ -151,7 +151,7 @@ END
 ```
 so the GWAS summary statistics from GIANT is almost ready (we only drop the header) as with the list of 97 SNPs. The positions of these SNPs were in build 36 while we used build 37.
 
-In both cases, the GWAS summary data can be used togther with the reference panel in .GEN format to furnish the finemapping analysis.
+In both cases, the GWAS summary data are used togther with the reference panel in .GEN format to furnish the finemapping analysis.
 
 ## ACKNOWLEDGEMENTS
 
