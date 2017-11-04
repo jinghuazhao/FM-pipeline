@@ -54,7 +54,7 @@ reflect this, not straightforward with `install_github()` from `devtools` but on
 clone the package, modify the R source code and then use
 ```
 git clone https://github.com/pjnewcombe/R2BGLiMS
-### modify the R source
+### change java to java-1.8 in R2BGLiMS/R/R2BGLiMS.R
 R CMD INSTALL R2BGLiMS
 ```
 Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [xpdf](https://www.xpdfreader.com/) is used.
