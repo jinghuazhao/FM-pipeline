@@ -168,7 +168,7 @@ if [ $finemap -eq 1 ]; then
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
        cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON["f"], \$0}" $f.snp | \
+       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
        sort -k3,3 | \
        join -13 -22 - $f.tmp >> finemap.K20'
    echo "chr pos log10BF prob snpid rsid region" > finemap.dat
@@ -186,7 +186,7 @@ if [ $finemap -eq 1 ]; then
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
        cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON["f"], \$0}" ${f}p.snp | \
+       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
        sort -k3,3 | \
        join -13 -22 - $f.tmp >> finemapp.K20'
    echo "chr pos log10BF prob snpid rsid region" > finemapp.dat
@@ -281,7 +281,7 @@ if [ $fm_summary -eq 1 ]; then
    parallel -j${threads} --env FM_location -C' ' '\
        export f=chr{1}_{2}_{3}; \
        $FM_location/files/getCredible.r {6}; \
-       awk "!/SNP/{gsub(/\.cre/,\"\",FILENAME);print FILENAME, \$0}" OFS="\t" $f.cre >> FM-summary.txt'
+       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" OFS="\t" $f.cre >> FM-summary.txt'
 fi
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
@@ -321,7 +321,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{gsub(/\.jma/,\"\",FILENAME);print FILENAME, \$0}" $f.jma >> gcta-slct.csv'
+       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
 
    # --cojo-top-SNPs
@@ -342,7 +342,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{gsub(/\.top\.jma/,\"\",FILENAME);print FILENAME, \$0}" $f.top.jma >> gcta-top.csv'
+       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.top.jma >> gcta-top.csv'
    sed -i 's/ /,/g' gcta-top.csv
 
    # --cojo-cond
@@ -364,7 +364,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '\
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{gsub(/\.cma/,\"\",FILENAME);print FILENAME, \$0}" $f.cma >> gcta-cond.csv'
+       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
 
    # dosage format
