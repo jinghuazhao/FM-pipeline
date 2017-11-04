@@ -84,7 +84,7 @@ Column | Name | Description
 7 | P | P-vale
 8 | N | sample size
 
-This is in line with joint/conditional analysis by GCTA.
+This format is in line with joint/conditional analysis by GCTA.
 
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
