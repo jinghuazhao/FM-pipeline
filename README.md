@@ -46,7 +46,7 @@ gunzip -c snp150Common.txt.gz | \
 cut -f2,4,5 | \
 sort -k3,3 > snp150.txt
 ```
-The software eventually included in this pipeline range from descriptive analysis via fgwas, locuszoom, GCTA to those dedicat3ed to finemapping including CAVIAR, 
+The software eventually included in this pipeline range from descriptive analysis via locuszoom, GCTA to functional annotation fgwas and those dedicated to finemapping including CAVIAR, 
 CAVIARBF, finemap, R2BGLiMS/JAM. An adapted version of FM-summary is also given.
 
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
