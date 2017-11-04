@@ -52,7 +52,7 @@ Note that JAM requires Java 1.8 so call to Java -jar inside the function needs t
 reflect this, not straightforward with install_github() from devtools but one needs to 
 clone the package, modify the R source code and then use 'R CMD INSTALL R2BGLiMS'.
 
-Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still beta version.
+Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, a utiltity called pdftopng is used.
 
 ## USAGE
 
@@ -140,10 +140,8 @@ Next we show how to set up for BMI GWAS summary data as reported by the GIANT co
 ```
 # GWAS summary statistics
 wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
-gunzip -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz | \
-awk '(NR>1){$4="";$7="";print}' | \
-awk '{$1=$1};1' | \
-sort -k1,1 > bmi.txt
+gunzip -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz |
+awk 'NR>1' > bmi.txt
 
 # A list of 97 SNPs
 R --no-save <<END
@@ -154,7 +152,7 @@ snplist <- sort(as.vector(snps[,1]))
 write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
 END
 ```
-which gives the required summary statistics as with list of 97 SNPs.
+so the GWAS summary statistics from GIANT is almost ready (we only drop the header) as with the list of 97 SNPs. The positions of these SNPs were in build 36 while we used build 37.
 
 In both cases, the GWAS summary data can be used togther with the reference panel in .GEN format to furnish the finemapping analysis.
 
