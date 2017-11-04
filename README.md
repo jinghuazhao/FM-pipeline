@@ -1,9 +1,9 @@
 # FM-pipeline
 
-This is a pipeline for finemapping using GWAS summary statistics, implemented in Bash as a series of steps to furnish an incremental analysis. As 
-sketched in the diagram below ![one](files/fm-pipeline.png) where our lead SNP
-rs4970634 is in LD with many others, the procedure attempts identify causal variants from region(s) showing significant SNP-trait 
-association.
+This is a pipeline for finemapping using GWAS summary statistics, implemented in Bash as a series of 
+steps to furnish an incremental analysis. As sketched in the diagram below 
+![one](files/fm-pipeline.png) where our lead SNP rs4970634 is in LD with many others, the procedure 
+attempts identify causal variants from region(s) showing significant SNP-trait association.
 
 The process involves the following steps,
 1. Extraction of effect (beta)/z statistics from GWAS summary statistics (.sumstats), 
