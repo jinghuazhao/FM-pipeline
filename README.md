@@ -125,17 +125,13 @@ here](files/finemap-check.R) is now embedded in the pipeline.
 We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The GWAS summary data is obtained as follows,
 ```
 wget ftp://ftp.sanger.ac.uk/pub/magic/MAGIC_2hrGlucose_AdjustedForBMI.txt
-gzip -f MAGIC_2hrGlucose_AdjustedForBMI.txt
-gunzip -c MAGIC_2hrGlucose_AdjustedForBMI.txt.gz | \
-awk -vOFS="\t" -vN=15234 '(NR>1){print $0, N}' | \
-sort -k1,1 > 2hrglucose.txt
+awk -vOFS="\t" -vN=15234 MAGIC_2hrGlucose_AdjustedForBMI.txt '(NR>1){print $0, N}' > 2hrglucose.txt
 ```
-and the command to call is
+For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
+[exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt). The command to call is
 ```
 bash fm-pipeline.sh 2hrglucose.txt
 ```
-For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
-[exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt).
 
 Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
 ```
