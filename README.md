@@ -116,7 +116,7 @@ CAVIAR   | .set/.post | causal set and probabilities in the causal set/posterior
 CAVIARBF | .caviarbf | causal configurations and their BFs
 FM-summary | .txt | additional information to the GWAS summary statistics
 JAM      | .jam/.top | the posterior summary table and top models containing selected SNPs
-finemap  | .snp/.config | The top SNPs with largest log10(BF) and top configurations as with their log10(BF)
+finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 
 It is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code 
 [here](files/finemap-check.R) is now embedded in the pipeline.
