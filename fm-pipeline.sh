@@ -1,5 +1,5 @@
 #!/bin/bash
-# 3-11-2017 MRC-Epid JHZ
+# 4-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -72,9 +72,14 @@ sed 's/chr//g' > $rt.input
 sort -k1,1 ${snplist} | \
 join $dir/$(basename $args).input - > $rt.lst
 grep -w -f ${snplist} $rt.input | \
-awk -vs=${flanking} '{print $9,$10-s,$10+s, $10, $1}' > st.dat
+awk -vs=${flanking} '{
+   l=$10-s
+   if(l<0) l=1
+   print $9, l, $10+s, $10, $1
+}' > st.dat
 echo "chr start end pos rsid r" > st.bed
-awk '{$0=$0 " " NR};1' st.dat >> st.bed
+sort -k1,1n -k4,4n st.dat | \
+awk '{$0=$0 " " NR};1' >> st.bed
 rm st.dat
 if [ $stbed -eq 1 ]; then
    echo "st.bed is generated"
