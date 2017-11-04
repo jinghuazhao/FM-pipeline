@@ -49,4 +49,3 @@ for(i in 1:22)
    }
 }
 dev.off()
-
