@@ -57,7 +57,7 @@ else
    echo "Obtaining chromosomal positions"
    wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
    gunzip -c snp150Common.txt.gz | \
-   cut -f2,4,5 | \
+   awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
    sort -k3,3 > snp150.txt
 fi
 echo Supplement .sumstats with chromosomal positions
