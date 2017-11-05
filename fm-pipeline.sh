@@ -24,12 +24,12 @@ export threads=5
 # the outputs should be available individually
 export CAVIAR=0
 export CAVIARBF=0
+export FM_summary=1
 export GCTA=1
 export JAM=1
 export LocusZoom=1
 export fgwas=0
 export finemap=1
-export fm_summary=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
@@ -86,7 +86,6 @@ if [ $stbed -eq 1 ]; then
    exit
 fi
 
-## region-specific data
 echo Generate region-specific data
 cat $rt.lst | \
 parallel -j${threads} -C' ' '
@@ -139,101 +138,26 @@ parallel -j${threads} -C' ' '
     grep -w -f $f.prune.in $f.a > $f.p; \
     grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
     plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
-echo "--> finemap, bcor"
-if [ $finemap -eq 1 ]; then
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
-       ldstore --bcor $f.bcor --merge ${threads}; \
-       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       grep -w -f $f.prune.in $f.z > ${f}p.z; \
-       ldstore --bcor ${f}p.bcor --bplink ${f}p --n-threads ${threads}; \
-       ldstore --bcor ${f}p.bcor --merge ${threads}; \
-       ldstore --bcor ${f}p.bcor --matrix ${f}p.ld; \
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
-   echo "z;ld;snp;config;log;n-ind" > finemap.cfg
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C ' ' '
-       export f=chr{1}_{2}_{3}; \
-       sort -k9,9g $f.r | \
-       tail -n1|cut -d" " -f9 | \
-       awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-   finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
-   echo "snpid region index snp_prob snp_log10bf rsid" > finemap.K20
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
-       sort -k3,3 | \
-       join -13 -22 - $f.tmp >> finemap.K20'
-   echo "chr pos log10BF prob snpid rsid region" > finemap.dat
-   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemap.K20 | \
-   sort -k1,1n -k2,2n >> finemap.dat
-   sed 's/\./p\./g' finemap.cfg > finemapp.cfg
-   finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}p; \
-       R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
-   # The pruned data
-   echo "snpid region index snp_prob snp_log10bf rsid" > finemapp.K20
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
-       sort -k3,3 | \
-       join -13 -22 - $f.tmp >> finemapp.K20'
-   echo "chr pos log10BF prob snpid rsid region" > finemapp.dat
-   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemapp.K20 | \
-   sort -k1,1n -k2,2n >> finemapp.dat
-   R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
-   if [ $LocusZoom -eq 1 ]; then
-      R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
-   fi
-fi
-echo "--> JAM"
-if [ $JAM -eq 1 ]; then
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}p; \
-       R --no-save < ${FM_location}/files/JAM.R > $f.log'
-fi
+
 if [ $CAVIAR -eq 1 ]; then
+   echo "--> CAVIAR"
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        CAVIAR -z $f.z -l $f.ld -r 0.9 -o $f'
 fi
+
 if [ $CAVIARBF -eq 1 ]; then
+   echo "--> CAVIARBF"
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        caviarbf -z $f.z -r $f.ld -n $(sort -k9,9g $f.r | \
        tail -n1 | cut -d" " -f9) -t 0 -a 0.1 -c 3 --appr -o $f.caviarbf'
 fi
-if [ $LocusZoom -eq 1 ]; then
-   echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" > lz.awk
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       export refsnp={5}; \
-       awk -f lz.awk $f.r > $f.lz; \
-       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --flank 250kb --plotonly \
-                     --source 1000G_March2012 --build hg19 --pop EUR --no-date; \
-       pdftopng $refsnp.pdf -r 300 $refsnp'
-fi
-if [ $fm_summary -eq 1 ]; then
+
+if [ $FM_summary -eq 1 ]; then
+   ecoh "--> FM-summary"
    echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
    sed 's/ /\t/g' > FM-summary.txt
    awk 'NR>1' st.bed | \
@@ -242,6 +166,7 @@ if [ $fm_summary -eq 1 ]; then
        $FM_location/files/getCredible.r {6}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" OFS="\t" $f.cre >> FM-summary.txt'
 fi
+
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
    awk 'NR>1' st.bed | \
@@ -324,6 +249,28 @@ if [ $GCTA -eq 1 ]; then
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
 fi
+
+if [ $JAM -eq 1 ]; then
+   echo "--> JAM"
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}p; \
+       R --no-save < ${FM_location}/files/JAM.R > $f.log'
+fi
+
+if [ $LocusZoom -eq 1 ]; then
+   echo "--> LocusZoom"
+   echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" > lz.awk
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       export refsnp={5}; \
+       awk -f lz.awk $f.r > $f.lz; \
+       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --flank 250kb --plotonly \
+                     --source 1000G_March2012 --build hg19 --pop EUR --no-date; \
+       pdftopng $refsnp.pdf -r 300 $refsnp'
+fi
+
 if [ $fgwas -eq 1 ]; then
    echo "--> fgwas"
    # obtain annotations
@@ -386,4 +333,68 @@ if [ $fgwas -eq 1 ]; then
    sort -k12,12n -k3,3 >> fgwas.tmp
    awk '{$12="";print}' fgwas.tmp|gzip -cf > fgwas.tmp.gz
    fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
+fi
+
+if [ $finemap -eq 1 ]; then
+   echo "--> finemap"
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+       ldstore --bcor $f.bcor --merge ${threads}; \
+       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
+       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       grep -w -f $f.prune.in $f.z > ${f}p.z; \
+       ldstore --bcor ${f}p.bcor --bplink ${f}p --n-threads ${threads}; \
+       ldstore --bcor ${f}p.bcor --merge ${threads}; \
+       ldstore --bcor ${f}p.bcor --matrix ${f}p.ld; \
+       sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
+   echo "z;ld;snp;config;log;n-ind" > finemap.cfg
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C ' ' '
+       export f=chr{1}_{2}_{3}; \
+       sort -k9,9g $f.r | \
+       tail -n1|cut -d" " -f9 | \
+       awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
+   finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
+   echo "snpid region index snp_prob snp_log10bf rsid" > finemap.K20
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       cut -d" " -f10,11 $f.r > $f.tmp; \
+       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
+       sort -k3,3 | \
+       join -13 -22 - $f.tmp >> finemap.K20'
+   echo "chr pos log10BF prob snpid rsid region" > finemap.dat
+   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemap.K20 | \
+   sort -k1,1n -k2,2n >> finemap.dat
+   sed 's/\./p\./g' finemap.cfg > finemapp.cfg
+   finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}p; \
+       R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
+   # The pruned data
+   echo "snpid region index snp_prob snp_log10bf rsid" > finemapp.K20
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       cut -d" " -f10,11 $f.r > $f.tmp; \
+       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
+       sort -k3,3 | \
+       join -13 -22 - $f.tmp >> finemapp.K20'
+   echo "chr pos log10BF prob snpid rsid region" > finemapp.dat
+   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemapp.K20 | \
+   sort -k1,1n -k2,2n >> finemapp.dat
+   R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+   if [ $LocusZoom -eq 1 ]; then
+      R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+   fi
 fi
