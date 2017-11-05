@@ -55,8 +55,8 @@ if $(test -f ${FM_location}/snp150.txt ); then
    ln -sf ${FM_location}/snp150.txt
 else
    echo "Obtaining chromosomal positions"
-   wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
-   gunzip -c snp150Common.txt.gz | \
+   wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
+   gunzip -c snp150.txt.gz | \
    awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
    sort -k3,3 > snp150.txt
 fi
