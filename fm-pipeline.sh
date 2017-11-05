@@ -325,67 +325,65 @@ if [ $GCTA -eq 1 ]; then
    sed -i 's/ /,/g' gcta-cond.csv
 fi
 if [ $fgwas -eq 1 ]; then
-  echo "--> fgwas"
-  if [ ! -d "fgwas" ]; then
-     mkdir -p fgwas
-  fi
-  cd fgwas
-  # obtain annotations
-  seq 22 | \
-  parallel -j${threads} -C' ' '
-      if [ ! -f $fgwas_location_1kg/chr{}.gen ]; then
-      gunzip -c $fgwas_location_1kg/chr{}.annot.wdist.wcoding.gz | \
-      awk "(NR>1){\$2=sprintf(\"%010d\",\$2); print \$1,\$2,\$3,\$(NF-6),\$(NF-5),\$(NF-2),\$(NF-1),\$NF}"|\
-      sort -k2,2 > $fgwas_location_1kg/chr{}.gene \
-      fi'
-
-  # specify regions
-  awk -vfl=${flanking} '{l=$2;u=$3;if(l<0) l=1;print $5,$1,$4,l,u,NR}' st.bed | \
-  sort -k1,1 > fgwas.snplist
-
-  # the standard fgwas data
-  awk 'NR>1' fgwas.snplist | \
-  parallel -j${threads} --env GEN_location -C' ' '
-  read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist);\
-      export f=chr{2}_{3}_{4};\
-      awk -vsn={6} -f $GEN_location/files/fgwas.awk $f.r | \
-      join -13 -22 - $fgwas_location_1kg/chr{1}.gene | \
-      awk -f $GEN_location/files/gene.awk | \
-      gzip -fc > $f.fgwas.gz'
-
-  # tally for -fine option
-  echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER"> fgwas.fine
-  sort -k6,6n fgwas.snplist|awk '{
-    cmd=sprintf("gunzip -c chr%d_%d_%d.fgwas.gz | awk \x27NR>1\x27|awk \x27!/INDEL/\x27>> fgwas.fine",$2,$4,$5,$6)
-    system(cmd)
-  }'
-  gzip -f fgwas.fine
-
-  # f-gwas
-  for an in ens_coding_exons ens_noncoding_exons tssdist syn nonsyn; do
-     fgwas -i fgwas.fine.gz -fine -print -o fgwas-${an} -w ${an}
-  done
-  fgwas -i fgwas.fine.gz -fine -print -o fgwas -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn
-  gunzip -c fgwas.bfs.gz | awk '(NR==1||$10>0.5)' > fgwas.PPA0.5
-
-  # generate table for md document
-  awk '(NR>1){print $1}' fgwas.PPA0.5 > fgwas.rsid
-  grep -f fgwas.rsid $wd/doc/region.dat|awk '{print $1, "*"}' |sort -k1,1 > fgwas.tmp
-  head -1 fgwas.PPA0.5 | awk '{gsub(/ /,",",$0);$0=$0 "," "index"};1' > fgwas.csv
-  awk 'NR>1' fgwas.PPA0.5 | \
-  sort -k1,1 | \
-  join -a1 - fgwas.tmp | \
-  sed 's/chr//g' | \
-  sort -k2,2n -k3,3n | \
-  sed 's/ /,/g' >> fgwas.csv
-
-  # manipulations to trick conditional analysis
-  cut -d' ' -f1 fgwas.snplist > fgwas.tmp
-  zgrep -f fgwas.tmp -v fgwas.fine.gz|awk '{if(NR==1){print $0,"hit"}else{print $0,0}}' > fgwas.cond
-  zgrep -f fgwas.tmp fgwas.fine.gz | \
-  awk '{print $0,1}' >> fgwas.cond
-  head -1 fgwas.cond > fgwas.tmp
-  awk 'NR>1' fgwas.cond|sort -k12,12n -k3,3 >> fgwas.tmp
-  awk '{$12="";print}' fgwas.tmp|gzip -cf > fgwas.tmp.gz
-  fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
+   echo "--> fgwas"
+   # obtain annotations
+   seq 22 | \
+   parallel -j${threads} -C' ' '
+       if [ ! -f $fgwas_location_1kg/chr{}.gen ]; then
+       gunzip -c $fgwas_location_1kg/chr{}.annot.wdist.wcoding.gz | \
+       awk "(NR>1){print \$1,\$2,\$3,\$(NF-6),\$(NF-5),\$(NF-2),\$(NF-1),\$NF}" | \
+       sort -k2,2 > $fgwas_location_1kg/chr{}.gene \
+       fi'
+   # specify regions
+   awk -vfl=${flanking} '{l=$2;u=$3;if(l<0) l=1;print $5,$1,$4,l,u,NR}' st.bed | \
+   sort -k1,1 > fgwas.snplist
+   # the standard fgwas data
+   awk 'NR>1' fgwas.snplist | \
+   parallel -j${threads} --env GEN_location -C' ' '
+   read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist); \
+        export f=chr{2}_{3}_{4}; \
+        awk -vsn={6} -f $GEN_location/files/fgwas.awk $f.r | \
+        join -13 -22 - $fgwas_location_1kg/chr{1}.gene | \
+        awk -f $GEN_location/files/gene.awk | \
+        gzip -fc > $f.fgwas.gz'
+   # tally for -fine option
+   echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
+   sort -k6,6n fgwas.snplist | \
+   awk '{
+     cmd=sprintf("gunzip -c chr%d_%d_%d.fgwas.gz | awk \x27NR>1\x27 | awk \x27!/INDEL/\x27 >> fgwas.fine",$2,$4,$5,$6)
+     system(cmd)
+   }'
+   gzip -f fgwas.fine
+   # fgwas
+   for an in ens_coding_exons ens_noncoding_exons tssdist syn nonsyn;
+   do
+       fgwas -i fgwas.fine.gz -fine -print -o fgwas-${an} -w ${an}
+   done
+   fgwas -i fgwas.fine.gz -fine -print -o fgwas -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn
+   gunzip -c fgwas.bfs.gz | 
+   awk '(NR==1||$10>0.5)' > fgwas.PPA0.5
+   # generate table for md document
+   awk '(NR>1){print $1}' fgwas.PPA0.5 > fgwas.rsid
+   grep -f fgwas.rsid st.bed | \
+   awk '{print $5, "*"}' | \
+   sort -k1,1 > fgwas.tmp
+   head -1 fgwas.PPA0.5 | \
+   awk '{gsub(/ /,",",$0);$0=$0 "," "index"};1' > fgwas.csv
+   awk 'NR>1' fgwas.PPA0.5 | \
+   sort -k1,1 | \
+   join -a1 - fgwas.tmp | \
+   sed 's/chr//g' | \
+   sort -k2,2n -k3,3n | \
+   sed 's/ /,/g' >> fgwas.csv
+   # manipulations to trick conditional analysis
+   cut -d' ' -f1 fgwas.snplist > fgwas.tmp
+   zgrep -f fgwas.tmp -v fgwas.fine.gz | \
+   awk '{if(NR==1){print $0,"hit"}else{print $0,0}}' > fgwas.cond
+   zgrep -f fgwas.tmp fgwas.fine.gz | \
+   awk '{print $0,1}' >> fgwas.cond
+   head -1 fgwas.cond > fgwas.tmp
+   awk 'NR>1' fgwas.cond | \
+   sort -k12,12n -k3,3 >> fgwas.tmp
+   awk '{$12="";print}' fgwas.tmp|gzip -cf > fgwas.tmp.gz
+   fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
 fi
