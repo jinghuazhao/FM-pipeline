@@ -124,7 +124,7 @@ It is helpful to examine directions of effects together with the correlation of 
 
 ## EXAMPLES
 
-We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The GWAS summary data is obtained as follows,
+1. We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The GWAS summary data is obtained as follows,
 ```
 wget ftp://ftp.sanger.ac.uk/pub/magic/MAGIC_2hrGlucose_AdjustedForBMI.txt
 awk -vOFS="\t" -vN=15234 MAGIC_2hrGlucose_AdjustedForBMI.txt '(NR>1){print $0, N}' > 2hrglucose.txt
@@ -135,7 +135,7 @@ For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](file
 bash fm-pipeline.sh 2hrglucose.txt
 ```
 
-Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
+2. Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
 ```
 # GWAS summary statistics
 wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
