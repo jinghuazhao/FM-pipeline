@@ -187,7 +187,7 @@ if [ $finemap -eq 1 ]; then
        R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
    # The pruned data
    echo "snpid region index snp_prob snp_log10bf rsid" > finemapp.K20
-   awk 'NR>1' | \
+   awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        cut -d" " -f10,11 $f.r > $f.tmp; \
