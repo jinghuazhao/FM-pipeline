@@ -273,7 +273,7 @@ if [ $GCTA -eq 1 ]; then
        sed "s/ /\t/g">{}.tmp; \
        sort -k2,2 {}.jma.cojo | \
        join -j2 - {}.tmp >> {}.jma'
-   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
+   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
