@@ -9,7 +9,7 @@ for(r in nrow(bed))
    rsid <- with(bed, rsid)[r]
    f <- paste(bed[r,1], bed[r,2],bed[r,3],sep="_")
    xlsx <- paste0("chr", f, "-", rsid, ".xlsx")
-   unlink(xlsx, recursive = FALSE, force = FALSE)
+   unlink(xlsx, recursive = FALSE, force = TRUE)
    wb <- createWorkbook(xlsx)
    if(file.exists(paste0(rsid, ".pdf")))
    {
