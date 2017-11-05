@@ -198,6 +198,9 @@ if [ $finemap -eq 1 ]; then
    awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemapp.K20 | \
    sort -k1,1n -k2,2n >> finemapp.dat
    R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+   if [ LocusZoom -eq 1 ]; then
+      R --no-save < ${FM_location}/files/xlsx.R > xlsx.log
+   fi
 fi
 echo "--> JAM"
 if [ $JAM -eq 1 ]; then
