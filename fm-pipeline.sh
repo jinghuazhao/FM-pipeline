@@ -41,9 +41,9 @@ if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     exit
 fi
 if [ $(dirname $args) == "." ]; then
-   dir=$(pwd)/$(basename $args).tmp
+   dir=$(pwd)/$(basename $args).out
 else
-   dir=$args.tmp
+   dir=$args.out
 fi
 if [ ! -d $dir ]; then
    mkdir -p $dir
