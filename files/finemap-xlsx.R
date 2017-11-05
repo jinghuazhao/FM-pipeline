@@ -4,7 +4,7 @@ options(digits=3, scipen=20, width=200)
 
 library(openxlsx)
 bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
-for(r in nrow(bed))
+for(r in 1:nrow(bed))
 {
    rsid <- with(bed, rsid)[r]
    f <- paste(bed[r,1], bed[r,2],bed[r,3],sep="_")
