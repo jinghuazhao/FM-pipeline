@@ -320,7 +320,6 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
-   # gcta64 --dosage-mach-gz chr${chr}.dosage.gz chr${chr}.mlinfo.gz
 fi
 if [ $fgwas -eq 1 ]; then
   echo "--> fgwas"
