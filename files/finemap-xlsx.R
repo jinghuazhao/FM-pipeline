@@ -7,7 +7,7 @@ bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
 for(r in nrow(bed))
 {
    rsid <- with(bed, rsid)[r]
-   f <- paste0(bed[r,1:3], sep="_")
+   f <- paste(bed[r,1], bed[r,2],bed[r,3],sep="_")
    xlsx <- paste0("chr", f, "-", rsid, ".xlsx")
    unlink(xlsx, recursive = FALSE, force = FALSE)
    wb <- createWorkbook(xlsx)
