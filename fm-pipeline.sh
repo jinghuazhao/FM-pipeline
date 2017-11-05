@@ -199,7 +199,7 @@ if [ $finemap -eq 1 ]; then
    sort -k1,1n -k2,2n >> finemapp.dat
    R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
    if [ $LocusZoom -eq 1 ]; then
-      R --no-save < ${FM_location}/files/xlsx.R > xlsx.log
+      R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
    fi
 fi
 echo "--> JAM"
