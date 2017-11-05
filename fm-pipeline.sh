@@ -294,7 +294,7 @@ if [ $GCTA -eq 1 ]; then
        sort -k2,2 {}.top.jma.cojo | \
        join -j2 - {}.tmp >> {}.top.jma'
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
-   awk 'NR>1' | \
+   awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.top.jma >> gcta-top.csv'
