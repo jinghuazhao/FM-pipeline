@@ -17,14 +17,17 @@ Software included in this pipeline are listed in the table below.
 **Name** | **Function** | **Input** | **Output** | **Reference**
 -----|----------|-------|--------|----------
 JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
-Finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
 CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | finemapping | z, correlation matrix | BF abd probabilities for all configurations | Chen, et al. (2015)
 FM-summary | finemapping | .sumstats Association results | updated results | Huang, et al. (2017)
 GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
+LocusZoom | regional plot | partial .sumstats | .pdf/.png plots | Pruim, et al. (2010)
 fgwas | functional GWAS | | | Pickrell (2014)
+finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
 
-However, you can optionally use only a subset of these for a particular analysis.
+so they range from regional association plots via LocusZoom, joint/conditional analysis via GCTA, functional annotation via fgwas to dedicated finemapping software including CAVIAR, 
+CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap. One can optionally use a subset of these for a particular analysis by specifying relevant flags from the 
+pipeline's settings.
 
 ## INSTALLATION
 
@@ -32,7 +35,6 @@ On many occasions, the pipeline takes advantage of the [GNU parallel](http://www
 
 Besides (sub)set of software listed in the table above, the pipeline requires [GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html),
 [PLINK](https://www.cog-genomics.org/plink2) 1.9, and the companion program LDstore from finemap's website need to be installed. 
-[LocusZoom](http://locuszoom.sph.umich.edu/) is also helpful with graphics.
 
 The pipeline itself can be installed in the usual way,
 ```
@@ -46,9 +48,6 @@ gunzip -c snp150Common.txt.gz | \
 cut -f2,4,5 | \
 sort -k3,3 > snp150.txt
 ```
-The software eventually included in this pipeline range from descriptive analysis via locuszoom and GCTA to functional annotation via fgwas and those dedicated to finemapping including CAVIAR, 
-CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap.
-
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
 reflect this, not straightforward with `install_github()` from `devtools` but one needs to 
 clone the package, modify the R source code and then use
@@ -189,6 +188,10 @@ Yang J, et al. (2012). Conditional and joint multiple-SNP analysis of GWAS summa
 **[JAM](https://github.com/pjnewcombe/R2BGLiMS)**
 
 Newcombe PJ, et al. (2016). JAM: A Scalable Bayesian Framework for Joint Analysis of Marginal SNP Effects. Genet Epidemiol 40:188–201
+
+**[LocusZoom](http://locuszoom.sph.umich.edu/)**
+
+Pruim RJ, et al. (2010) LocusZoom: Regional visualization of genome-wide association scan results. Bioinformatics 2010 September 15; 26(18): 2336.2337
 
 **[fgwas](https://github.com/joepickrell/fgwas)**
 
