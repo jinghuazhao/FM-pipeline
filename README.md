@@ -135,7 +135,6 @@ For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](file
 bash fm-pipeline.sh 2hrglucose.txt
 ```
 2. Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
-.
 ```
 # GWAS summary statistics
 wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
