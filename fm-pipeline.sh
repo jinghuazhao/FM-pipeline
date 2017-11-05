@@ -149,7 +149,7 @@ if [ $finemap -eq 1 ]; then
        ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
        sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' ' 
+   parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        grep -w -f $f.prune.in $f.z > ${f}p.z; \
        ldstore --bcor ${f}p.bcor --bplink ${f}p --n-threads ${threads}; \
@@ -161,7 +161,7 @@ if [ $finemap -eq 1 ]; then
    parallel -j${threads} -C ' ' '
        export f=chr{1}_{2}_{3}; \
        sort -k9,9g $f.r | \
-       tail -n1|cut -d" " -f9| \
+       tail -n1|cut -d" " -f9 | \
        awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
    awk 'NR>1' st.bed | \
