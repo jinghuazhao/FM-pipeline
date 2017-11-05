@@ -7,7 +7,7 @@ export wd=/genetics/data/gwas/1-11-17
 # GWAS summary statistics (the .sumstats file)
 export args=$1
 # filename containing list of lead SNPs
-export snplist=$wd/97.snps
+export snplist=$wd/5.snps
 # GEN files, named chr{chr}_{start}_{end}.gen
 export GEN_location=/genetics/data/gwas/6-7-17/HRC
 # sample file
