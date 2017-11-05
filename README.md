@@ -42,8 +42,8 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
 over different builds. To remedy this, we use information from UCSC, i.e.,
 ```
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150Common.txt.gz
-gunzip -c snp150Common.txt.gz | \
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
+gunzip -c snp150.txt.gz | \
 awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
 sort -k3,3 > snp150.txt
 ```
