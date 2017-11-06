@@ -271,9 +271,7 @@ if [ $LocusZoom -eq 1 ]; then
    echo "--> LocusZoom"
    echo "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" > lz.awk
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk -f lz.awk $f.r > $f.lz'
+   parallel -j${threads} -C' ' 'awk -f lz.awk chr{1}_{2}_{3}.r > chr{1}_{2}_{3}.lz'
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date; \
