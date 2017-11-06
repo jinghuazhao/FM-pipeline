@@ -83,8 +83,7 @@ else
    awk '{
      $2=toupper($2)
      $3=toupper($3)
-   };1' $args | \
-   sort -k1,1 > $rt.input
+   };1' $args > $rt.input
    ln -sf $wd/st.bed
 fi
 
