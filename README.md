@@ -84,8 +84,8 @@ Column | Name | Description
 10* | pos | position
 
 This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not normally required as they are obtained from UCSC (`use_UCSC=1). 
-However, for one of our analyses UCSC does not provide all the coordinates as in the GWAS summary statistics, so we set `use_ucsc==0` and provide`st.bed` 
-containing the (chr, start, end, pos, rsid, r) sextuplets.
+However, for one of our analyses UCSC does not have all the coordinates as in the GWAS summary statistics, so we set `use_ucsc==0` and provide `st.bed` containing 
+the (chr, start, end, pos, rsid, r) sextuplets.
 
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
