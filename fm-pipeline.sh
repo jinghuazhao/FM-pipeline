@@ -273,8 +273,10 @@ if [ $LocusZoom -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk -f lz.awk $f.r > $f.lz; \
-       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal $f.lz --plotonly --chr {1} --start {2} --end {3} --no-date; \
+       awk -f lz.awk $f.r > $f.lz'
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date; \
        pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}'
 fi
 
