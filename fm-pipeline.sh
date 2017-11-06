@@ -16,8 +16,8 @@ export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
-# set to only generate st.bed containg chr, start, end, pos, rsid, r sextuplets
-export stbed=0
+# to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
+export use_ucsc=0
 # number of threads
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
@@ -62,31 +62,35 @@ else
 fi
 echo Supplement .sumstats with chromosomal positions
 export rt=$dir/$(basename $args)
-awk '{
-  $2=toupper($2)
-  $3=toupper($3)
-};1' $args | \
-sort -k1,1 | \
-join -11 -23 - snp150.txt | \
-sed 's/chr//g' > $rt.input
-sort -k1,1 ${snplist} | \
-join $dir/$(basename $args).input - > $rt.lst
-grep -w -f ${snplist} $rt.input | \
-awk -vs=${flanking} '{
-   l=$10-s
-   if(l<0) l=1
-   print $9, l, $10+s, $10, $1
-}' > st.dat
-echo "chr start end pos rsid r" > st.bed
-sort -k1,1n -k4,4n st.dat | \
-awk '{$0=$0 " " NR};1' >> st.bed
-rm st.dat
-if [ $stbed -eq 1 ]; then
-   echo "st.bed is generated"
-   exit
+if [ $use_ucsc -eq 0 ]; then
+   awk '{
+     $2=toupper($2)
+     $3=toupper($3)
+   };1' $args | \
+   sort -k1,1 | \
+   join -11 -23 - snp150.txt > $rt.input
+   grep -w -f ${snplist} $rt.input | \
+   awk -vs=${flanking} '{
+      l=$10-s
+      if(l<0) l=1
+      print $9, l, $10+s, $10, $1
+   }' > st.dat
+   echo "chr start end pos rsid r" > st.bed
+   sort -k1,1n -k4,4n st.dat | \
+   awk '{$0=$0 " " NR};1' >> st.bed
+   rm st.dat
+else
+   awk '{
+     $2=toupper($2)
+     $3=toupper($3)
+   };1' $args | \
+   sort -k1,1 > $rt.input
+   ln -sf $wd/st.bed
 fi
 
 echo Generate region-specific data
+sort -k1,1 ${snplist} | \
+join $dir/$(basename $args).input - > $rt.lst
 cat $rt.lst | \
 parallel -j${threads} -C' ' '
     export l=$(({10}-${flanking})); \
