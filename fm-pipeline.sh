@@ -386,6 +386,12 @@ if [ $finemap -eq 1 ]; then
    echo "chr pos log10BF prob snpid rsid region" > finemap.dat
    awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemap.K20 | \
    sort -k1,1n -k2,2n >> finemap.dat
+   export f="finemap"
+   export p="PPA.pdf"
+   R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+   if [ $LocusZoom -eq 1 ]; then
+      R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+   fi
    if [ $allow_prune -eq 1 ]; then
       sed 's/\./p\./g' finemap.cfg > finemapp.cfg
       finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
@@ -403,11 +409,10 @@ if [ $finemap -eq 1 ]; then
           sort -k3,3 | \
           join -13 -22 - $f.tmp >> finemapp.K20'
       echo "chr pos log10BF prob snpid rsid region" > finemapp.dat
-     awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemapp.K20 | \
-     sort -k1,1n -k2,2n >> finemapp.dat
-   fi
-   R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
-   if [ $LocusZoom -eq 1 ]; then
-      R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemapp.K20 | \
+      sort -k1,1n -k2,2n >> finemapp.dat
+      export f="finemapp"
+      export p="PPAp.pdf"
+      R --no-save < ${FM_location}/files/finemap-plot.R > finemapp-plot.log
    fi
 fi
