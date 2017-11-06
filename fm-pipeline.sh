@@ -17,7 +17,7 @@ export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
 # to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
-export use_ucsc=0
+export use_UCSC=0
 # number of threads
 export threads=5
 # software to be included in the analysis; change flags to 1 when available
@@ -50,19 +50,19 @@ if [ ! -d $dir ]; then
 fi
 cd $dir
 ln -sf $wd/$args
-if $(test -f ${FM_location}/snp150.txt ); then
-   echo "Chromosomal positions are ready to use"
-   ln -sf ${FM_location}/snp150.txt
-else
-   echo "Obtaining chromosomal positions"
-   wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
-   gunzip -c snp150.txt.gz | \
-   awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
-   sort -k3,3 > snp150.txt
-fi
-echo Supplement .sumstats with chromosomal positions
 export rt=$dir/$(basename $args)
-if [ $use_ucsc -eq 0 ]; then
+if [ $use_UCSC -eq 0 ]; then
+   echo Supplement .sumstats with chromosomal positions
+   if $(test -f ${FM_location}/snp150.txt ); then
+      echo "Chromosomal positions are ready to use"
+      ln -sf ${FM_location}/snp150.txt
+   else
+      echo "Obtaining chromosomal positions"
+      wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
+      gunzip -c snp150.txt.gz | \
+      awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
+      sort -k3,3 > snp150.txt
+   fi
    awk '{
      $2=toupper($2)
      $3=toupper($3)
