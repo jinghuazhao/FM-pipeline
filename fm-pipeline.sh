@@ -24,9 +24,9 @@ export threads=5
 # the outputs should be available individually
 export CAVIAR=0
 export CAVIARBF=0
-export FM_summary=1
-export GCTA=1
-export JAM=1
+export FM_summary=0
+export GCTA=0
+export JAM=0
 export LocusZoom=1
 export fgwas=0
 export finemap=1
