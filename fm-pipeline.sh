@@ -272,7 +272,7 @@ if [ $LocusZoom -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        export refsnp={5}; \
        awk -f lz.awk $f.r > $f.lz; \
-       locuszoom-1.3 --metal $f.lz --refsnp $refsnp --flank 250kb --plotonly \
+       locuszoom --metal $f.lz --refsnp $refsnp --flank 250kb --plotonly \
                      --source 1000G_March2012 --build hg19 --pop EUR --no-date; \
        pdftopng $refsnp.pdf -r 300 $refsnp'
 fi
