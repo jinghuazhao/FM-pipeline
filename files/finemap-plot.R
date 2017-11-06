@@ -18,7 +18,7 @@ bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
 r <- with(bed, table(chr))
 R <- cbind(chr=1:22, n=0)
 R[as.numeric(names(r)), ] <- as.vector(r)
-pdf("finemap_snp.pdf")
+pdf(paste0(f,"_snp.pdf"))
 k <- 0
 for(i in 1:22)
 {
