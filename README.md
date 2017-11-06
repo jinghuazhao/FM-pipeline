@@ -15,11 +15,11 @@ Software included in this pipeline are listed in the table below.
 
 **Name** | **Function** | **Input** | **Output** | **Reference**
 -----|----------|-------|--------|----------
-JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
 CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
-FM-summary | finemapping | .sumstats Association results | updated results | Huang, et al. (2017)
 GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
+FM-summary | finemapping | .sumstats Association results | updated results | Huang, et al. (2017)
+JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
 LocusZoom | regional plot | partial .sumstats | .pdf/.png plots | Pruim, et al. (2010)
 fgwas | functional GWAS | | | Pickrell (2014)
 finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
