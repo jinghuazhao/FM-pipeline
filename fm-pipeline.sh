@@ -51,7 +51,7 @@ fi
 cd $dir
 ln -sf $wd/$args
 export rt=$dir/$(basename $args)
-if [ $use_UCSC -eq 0 ]; then
+if [ $use_UCSC -eq 1 ]; then
    echo Supplement .sumstats with chromosomal positions
    if $(test -f ${FM_location}/snp150.txt ); then
       echo "Chromosomal positions are ready to use"
