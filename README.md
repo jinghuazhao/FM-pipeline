@@ -80,8 +80,12 @@ Column | Name | Description
 6 | se | standard error of effect
 7 | P | P-vale
 8 | N | sample size
+9*  | chr | chromosome
+10* | pos | position
 
-This format is in line with joint/conditional analysis by GCTA.
+This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not required but were added as in one of our analyses UCSC does not 
+provide all the coordinates as in the GWAS summary statistics -- this is around by settings `use_ucsc==0` and provision of `st.bed` containing the (chr, start, 
+end, pos, rsid, r) sextuplets.
 
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
