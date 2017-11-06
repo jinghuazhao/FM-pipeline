@@ -103,7 +103,7 @@ if [ $use_UCSC -eq 1 ]; then
             \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} l=$l u=$u $rt.input |\
             sort -k11,11 > $f.dat'
 else
-   cat st.bed | \
+   awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
