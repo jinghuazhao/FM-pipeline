@@ -1,5 +1,5 @@
 #!/bin/bash
-# 5-11-2017 MRC-Epid JHZ
+# 6-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -89,7 +89,10 @@ fi
 echo Generate region-specific data
 cat $rt.lst | \
 parallel -j${threads} -C' ' '
-    export f=chr{9}_$(({10}-${flanking}))_$(({10}+${flanking}));\
+    export l=$(({10}-${flanking})); \
+    if [ $l -le 0 ]; then export l=1; fi; \
+    export u=$(({10}+${flanking})); \
+    export f=chr${9}_${l}_${u}; \
     awk "(\$9==chr && \$10 >= pos-s && \$10 <= pos+s){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
          \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} pos={10} s=${flanking} $rt.input |\
          sort -k11,11 > $f.dat'
