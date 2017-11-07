@@ -181,6 +181,7 @@ if [ $allow_prune -eq 1 ]; then
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
 fi
+
 if [ $CAVIAR -eq 1 ]; then
    echo "--> CAVIAR"
    awk 'NR>1' st.bed | \
