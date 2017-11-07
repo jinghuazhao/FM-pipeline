@@ -20,6 +20,8 @@ export flanking=250000
 export use_UCSC=0
 # regenerate ped/map instead of using existing ones
 export gen_to_ped=0
+# force to use rsid with finemap
+export force_rsid=0
 # number of threads
 export threads=5
 # also to obtain results after LD pruning
@@ -132,6 +134,11 @@ awk 'NR>1' st.bed | \
 parallel -j${threads} --env wd -C' ' '
     export f=chr{1}_{2}_{3}; \
     awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
+    cut -d" " -f11,12 $f.r > ${f}rsid.z; \
+    cut -d" " -f10,11 $f.r > $f.rsid; \
+    awk "{print \$2,\$4,\$3,\$15,\$16}" $f.incl > ${f}rsid.a; \
+    echo "RSID position chromosome A_allele B_allele" > ${f}rsid.incl_variants; \
+    awk "{print \$2,\$11,\$10,\$4,\$3}" $f.incl >> ${f}rsid.incl_variants'
     cut -d" " -f11,12 $f.r > $f.z; \
     awk "{print \$1}" $f.incl > $f.inc; \
     awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
@@ -148,11 +155,12 @@ fi
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
-    rm -f $f.bed $f.bim $f.fam
+    plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
+    --make-bed --keep-allele-order --a2-allele $f.a 3 1 --update-name $f.rsid --out ${f}rsid; \
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-echo "JAM, IPD"
 if [ $allow_prune -eq 1 ]; then
+   echo "JAM, IPD"
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -359,13 +367,23 @@ fi
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
-       ldstore --bcor $f.bcor --merge ${threads}; \
-       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
+   if [ $force_rsid -eq 1 ]; then
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C' ' '
+          export f=chr{1}_{2}_{3}; \
+          ldstore --bcor ${f}rsid.bcor --bplink ${f}rsid --n-threads ${threads}; \  
+          ldstore --bcor ${f}rsid.bcor --merge ${threads}; \
+          ldstore --bcor ${f}rsid.bcor --matrix ${f}rsid.ld --incl_variants ${f}rsid.incl_variants; \
+          sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}rsid.ld'
+   else
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C' ' '
+          export f=chr{1}_{2}_{3}; \
+          ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+          ldstore --bcor $f.bcor --merge ${threads}; \
+          ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
+          sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
+   fi
    if [ $allow_prune -eq 1 ]; then
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
@@ -376,14 +394,25 @@ if [ $finemap -eq 1 ]; then
           ldstore --bcor ${f}p.bcor --matrix ${f}p.ld; \
           sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
    fi
-   echo "z;ld;snp;config;log;n-ind" > finemap.cfg
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C ' ' '
-       export f=chr{1}_{2}_{3}; \
-       sort -k9,9g $f.r | \
-       tail -n1|cut -d" " -f9 | \
-       awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-   finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+   if [ $force_rsid -eq 1 ]; then
+      echo "z;ld;snp;config;log;n-ind" > finemap_rsid.cfg
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C ' ' '
+          export f=chr{1}_{2}_{3}; \
+          sort -k9,9g $f.r | \
+          tail -n1|cut -d" " -f9 | \
+          awk -vf=$f "{print sprintf(\"%srsid.z;%srsid.ld;%srsid.snp;%srsid.config;%srsid.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap_rsid.cfg'
+      finemap --sss --in-files finemap_rsid.cfg --n-causal-max 5 --corr-config 0.9
+   else
+      echo "z;ld;snp;config;log;n-ind" > finemap.cfg
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C ' ' '
+          export f=chr{1}_{2}_{3}; \
+          sort -k9,9g $f.r | \
+          tail -n1|cut -d" " -f9 | \
+          awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
+      finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+   fi
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
