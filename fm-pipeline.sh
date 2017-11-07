@@ -1,5 +1,5 @@
 #!/bin/bash
-# 6-11-2017 MRC-Epid JHZ
+# 7-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -18,6 +18,8 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
 export use_UCSC=0
+# regenerate ped/map instead of using existing ones
+export gen_to_ped=0
 # number of threads
 export threads=5
 # also to obtain results after LD pruning
@@ -110,13 +112,15 @@ else
             \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input |\
             sort -k11,11 > $f.dat'
 fi
-echo "--> map/ped"
-awk 'NR>1' st.bed | \
-parallel -j${threads} --env wd -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
-    gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
-         --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
+if [ $gen_to_ped -eq 1 ]; then
+   echo "--> map/ped"
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env wd -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
+       gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
+            --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
+fi
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '
@@ -285,7 +289,7 @@ if [ $LocusZoom -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 -C' ' '
        rm -f ld_cache.db; \
-       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date; \
+       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --refsnp {5} --no-date; \
        pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}'
 fi
 
