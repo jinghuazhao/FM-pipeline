@@ -387,26 +387,6 @@ if [ $finemap -eq 1 ]; then
           ldstore --bcor ${f}rsid.bcor --merge ${threads}; \
           ldstore --bcor ${f}rsid.bcor --matrix ${f}rsid.ld --incl_variants ${f}rsid.incl_variants; \
           sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}rsid.ld'
-   else
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
-          export f=chr{1}_{2}_{3}; \
-          ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
-          ldstore --bcor $f.bcor --merge ${threads}; \
-          ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-          sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
-   fi
-   if [ $allow_prune -eq 1 ]; then
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
-          export f=chr{1}_{2}_{3}; \
-          grep -w -f $f.prune.in $f.z > ${f}p.z; \
-          ldstore --bcor ${f}p.bcor --bplink ${f}p --n-threads ${threads}; \
-          ldstore --bcor ${f}p.bcor --merge ${threads}; \
-          ldstore --bcor ${f}p.bcor --matrix ${f}p.ld; \
-          sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
-   fi
-   if [ $force_rsid -eq 1 ]; then
       echo "z;ld;snp;config;log;n-ind" > finemap_rsid.cfg
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C ' ' '
@@ -416,6 +396,13 @@ if [ $finemap -eq 1 ]; then
           awk -vf=$f "{print sprintf(\"%srsid.z;%srsid.ld;%srsid.snp;%srsid.config;%srsid.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap_rsid.cfg'
       finemap --sss --in-files finemap_rsid.cfg --n-causal-max 5 --corr-config 0.9
    else
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C' ' '
+          export f=chr{1}_{2}_{3}; \
+          ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+          ldstore --bcor $f.bcor --merge ${threads}; \
+          ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
+          sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
       echo "z;ld;snp;config;log;n-ind" > finemap.cfg
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C ' ' '
@@ -457,6 +444,14 @@ if [ $finemap -eq 1 ]; then
       fi
    fi
    if [ $allow_prune -eq 1 ]; then
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C' ' '
+          export f=chr{1}_{2}_{3}; \
+          grep -w -f $f.prune.in $f.z > ${f}p.z; \
+          ldstore --bcor ${f}p.bcor --bplink ${f}p --n-threads ${threads}; \
+          ldstore --bcor ${f}p.bcor --merge ${threads}; \
+          ldstore --bcor ${f}p.bcor --matrix ${f}p.ld; \
+          sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
       sed 's/\./p\./g' finemap.cfg > finemapp.cfg
       finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
       awk 'NR>1' st.bed | \
