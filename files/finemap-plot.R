@@ -1,4 +1,4 @@
-# 6-11-2017 MRC-Epid JHZ
+# 7-11-2017 MRC-Epid JHZ
 
 options(scipen=20, width=150)
 
@@ -28,9 +28,9 @@ for(i in 1:22)
    {
       k <- k+1
       f <- paste(bed[k,1], bed[k,2], bed[k,3], sep="_")
-      dat <- read.table(paste0(f,".dat"), as.is=TRUE,
+      dat <- read.table(paste0("chr", f, ".dat"), as.is=TRUE,
              col.names=c("RS_ID","A1","A2","freqA1","b","se","P","N","chr","pos","SNP_ID"))
-      snp <- read.table(paste0(f,".snp"), as.is=TRUE, header=TRUE)
+      snp <- read.table(paste0("chr", f, ".snp"), as.is=TRUE, header=TRUE)
       dat_snp <- merge(dat, snp, by.x="RS_ID", by.y="snp")
       dat_snp_bed <- merge(dat_snp, bed, by.x="RS_ID", by.y="rsid")
       head(dat);head(snp);head(dat_snp);head(dat_snp_bed)
