@@ -412,27 +412,27 @@ if [ $finemap -eq 1 ]; then
           tail -n1|cut -d" " -f9 | \
           awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
       finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
-   fi
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
-   echo "snpid region index snp_prob snp_log10bf rsid" > finemap.K20
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
-       sort -k3,3 | \
-       join -13 -22 - $f.tmp >> finemap.K20'
-   echo "chr pos log10BF prob snpid rsid region" > finemap.dat
-   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemap.K20 | \
-   sort -k1,1n -k2,2n >> finemap.dat
-   export f="finemap"
-   export p="PPA.pdf"
-   R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
-   if [ $LocusZoom -eq 1 ]; then
-      R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C' ' '
+          export f=chr{1}_{2}_{3}; \
+          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
+      echo "snpid region index snp_prob snp_log10bf rsid" > finemap.K20
+      awk 'NR>1' st.bed | \
+      parallel -j${threads} -C' ' '
+          export f=chr{1}_{2}_{3}; \
+          cut -d" " -f10,11 $f.r > $f.tmp; \
+          awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
+          sort -k3,3 | \
+          join -13 -22 - $f.tmp >> finemap.K20'
+      echo "chr pos log10BF prob snpid rsid region" > finemap.dat
+      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemap.K20 | \
+      sort -k1,1n -k2,2n >> finemap.dat
+      export f="finemap"
+      export p="PPA.pdf"
+      R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+      if [ $LocusZoom -eq 1 ]; then
+         R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+      fi
    fi
    if [ $allow_prune -eq 1 ]; then
       sed 's/\./p\./g' finemap.cfg > finemapp.cfg
