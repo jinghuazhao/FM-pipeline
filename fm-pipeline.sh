@@ -130,13 +130,13 @@ parallel -j${threads} -C' ' '
     sort -k2,2 $GEN_location/$f.map | \
     join -111 -22 $f.dat - | \
     sort -k11,11 > $f.incl; \
+    cut -d" " -f10,11 $f.r > $f.rsid; \
     awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r'
 if [ $force_rsid -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env wd -C' ' '
        export f=chr{1}_{2}_{3}; \
        cut -d" " -f10,12 $f.r > ${f}rsid.z; \
-       cut -d" " -f10,11 $f.r > $f.rsid; \
        awk "{print \$2,\$4,\$3,\$15,\$16}" $f.incl > ${f}rsid.a; \
        echo "RSID position chromosome A_allele B_allele" > ${f}rsid.incl_variants; \
        awk "{print \$2,\$11,\$10,\$4,\$3}" $f.incl >> ${f}rsid.incl_variants'
@@ -443,6 +443,16 @@ if [ $finemap -eq 1 ]; then
       export p="PPA.pdf"
       R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
       if [ $LocusZoom -eq 1 ]; then
+         awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
+             export f=chr{1}_{2}_{3}; \
+             awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
+             awk "NR==1" $f.sav | \
+             awk "{print \$0 \" rsid\"}" > $f.snp; \
+             awk "(NR>1)" $f.sav | \
+             sort -k2,2 | \
+             join -j2 - $f.rsid | \
+             sort -k5,5n | \
+             awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
          R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
       fi
    fi
