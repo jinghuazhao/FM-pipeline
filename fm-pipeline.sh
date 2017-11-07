@@ -158,13 +158,19 @@ if [ ${sample_to_exclude} == "" ]; then
 else 
    export OPTs="--remove ${sample_to_exclude}"
 fi
-awk 'NR>1' st.bed | \
-parallel -j${threads} -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
-    --make-bed --keep-allele-order --a2-allele $f.a 3 1 --update-name $f.rsid --out ${f}rsid; \
-    plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
-    --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
+if [ $force_rsid -eq 1 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
+       --make-bed --keep-allele-order --a2-allele $f.a 3 1 --update-name $f.rsid --out ${f}rsid'
+else
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
+       --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
+fi
 if [ $allow_prune -eq 1 ]; then
    echo "JAM, IPD"
    awk 'NR>1' st.bed | \
