@@ -129,21 +129,27 @@ parallel -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
     sort -k2,2 $GEN_location/$f.map | \
     join -111 -22 $f.dat - | \
-    sort -k11,11 > $f.incl'
-awk 'NR>1' st.bed | \
-parallel -j${threads} --env wd -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
-    cut -d" " -f11,12 $f.r > ${f}rsid.z; \
-    cut -d" " -f10,11 $f.r > $f.rsid; \
-    awk "{print \$2,\$4,\$3,\$15,\$16}" $f.incl > ${f}rsid.a; \
-    echo "RSID position chromosome A_allele B_allele" > ${f}rsid.incl_variants; \
-    awk "{print \$2,\$11,\$10,\$4,\$3}" $f.incl >> ${f}rsid.incl_variants'
-    cut -d" " -f11,12 $f.r > $f.z; \
-    awk "{print \$1}" $f.incl > $f.inc; \
-    awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
-    echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
-    awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
+    sort -k11,11 > $f.incl; \
+    awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r'
+if [ $force_rsid -eq 1 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env wd -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       cut -d" " -f10,12 $f.r > ${f}rsid.z; \
+       cut -d" " -f10,11 $f.r > $f.rsid; \
+       awk "{print \$2,\$4,\$3,\$15,\$16}" $f.incl > ${f}rsid.a; \
+       echo "RSID position chromosome A_allele B_allele" > ${f}rsid.incl_variants; \
+       awk "{print \$2,\$11,\$10,\$4,\$3}" $f.incl >> ${f}rsid.incl_variants'
+else
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env wd -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       cut -d" " -f11,12 $f.r > $f.z; \
+       awk "{print \$1}" $f.incl > $f.inc; \
+       awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
+       echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
+       awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
+fi
 
 ## finemapping
 echo "--> bfile"
