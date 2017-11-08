@@ -174,10 +174,6 @@ Hormozdiari F, et al. (2014) Identifying Causal Variants at Loci with Multiple S
 
 Chen W, et al. (2015) Fine Mapping Causal Variants with an Approximate Bayesian Method Using Marginal Test Statistics. Genetics 200:719-736.
 
-Kichaev G, et al (2014). Integrating functional data to prioritize causal variants in statistical fine-mapping studies." PLoS Genetics 10:e1004722;
-
-Kichaev, G., Pasaniuc, B. (2015) Leveraging Functional-Annotation Data in Trans-ethnic Fine-Mapping Studies. Am. J. Hum. Genet. 97, 260–271.
-
 **[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
 Huang H, et al (2017) Fine-mapping inflammatory bowel disease loci to single-variant resolution. Nature 547, 173–178, doi:10.1038/nature22969
