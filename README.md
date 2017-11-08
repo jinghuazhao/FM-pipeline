@@ -138,7 +138,7 @@ awk -vOFS="\t" -vN=15234 '(NR>1){print $0, N}' MAGIC_2hrGlucose_AdjustedForBMI.t
 For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
 [exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt). The command to call is
 ```
-bash fm-pipeline.sh 2hrglucose.txt
+bash fmp.sh 2hrglucose.txt
 ```
 2. Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
 ```
