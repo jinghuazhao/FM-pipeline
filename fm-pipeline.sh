@@ -425,6 +425,8 @@ if [ $finemap -eq 1 ]; then
       export f="snpp"
       export p="PPAp.pdf"
       R --no-save < ${FM_location}/files/finemap-plot.R > finemapp-plot.log
+      export p="p"
+      R --no-save < ${FM_location}/files/finemap-top.R > finemapp-topp.log
    else
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
@@ -458,6 +460,8 @@ if [ $finemap -eq 1 ]; then
       export f="snp"
       export p="PPA.pdf"
       R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+      export p=""
+      R --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
       if [ $LocusZoom -eq 1 ]; then
          awk 'NR>1' st.bed | \
          parallel -j1 -C' ' '
