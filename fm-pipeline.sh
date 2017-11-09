@@ -412,8 +412,8 @@ if [ $finemap -eq 1 ]; then
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
           export f=chr{1}_{2}_{3}p; \
-          awk '(NR>1 && NR<5){print $0, sub(/p.config/,"",FILENAME)}' >> configp.dat
-          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk
+          awk "(NR>1 && NR<5){print \$0, sub(/p.config/,\"\",FILENAME)}" >> configp.dat; \
+          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
           export f=chr{1}_{2}_{3}; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
@@ -446,8 +446,8 @@ if [ $finemap -eq 1 ]; then
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
           export f=chr{1}_{2}_{3}; \
-          awk '(NR>1 && NR<5){print $0, sub(/.config/,"",FILENAME)}' >> config.dat
-          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk
+          awk "(NR>1 && NR<5){print \$0, sub(/.config/,\"\",FILENAME)}" $f.config >> config.dat; \
+          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
           sort -k3,3 | \
