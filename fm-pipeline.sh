@@ -410,7 +410,7 @@ if [ $finemap -eq 1 ]; then
       echo "snpid region index snp_prob snp_log10bf rsid" > snpp.K20
       echo "rank config config_prob config_log10bf region" > configp.dat
       awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
+      parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}p; \
           awk "(NR>1 && NR<5){sub(/p.config/,\"\",FILENAME);print \$0,FILENAME}" >> configp.dat; \
           R --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
@@ -444,7 +444,7 @@ if [ $finemap -eq 1 ]; then
       echo "snpid region index snp_prob snp_log10bf rsid" > snp.K20
       echo "rank config config_prob config_log10bf region" > config.dat
       awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
+      parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}; \
           awk "(NR>1 && NR<5){sub(/.config/,\"\",FILENAME);print \$0,FILENAME}" $f.config >> config.dat; \
           R --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
@@ -460,7 +460,7 @@ if [ $finemap -eq 1 ]; then
       R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
       if [ $LocusZoom -eq 1 ]; then
          awk 'NR>1' st.bed | \
-         parallel -j${threads} -C' ' '
+         parallel -j1 -C' ' '
              export f=chr{1}_{2}_{3}; \
              awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
              awk "NR==1" $f.sav | \
