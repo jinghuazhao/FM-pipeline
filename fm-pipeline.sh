@@ -1,5 +1,5 @@
 #!/bin/bash
-# 7-11-2017 MRC-Epid JHZ
+# 9-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -412,22 +412,21 @@ if [ $finemap -eq 1 ]; then
           tail -n1|cut -d" " -f9 | \
           awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
       finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+      echo "snpid region index snp_prob snp_log10bf rsid" > snp.K20
+      echo "rank config config_prob config_log10bf region" > config.dat
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
           export f=chr{1}_{2}_{3}; \
-          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
-      echo "snpid region index snp_prob snp_log10bf rsid" > finemap.K20
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
-          export f=chr{1}_{2}_{3}; \
+          awk '(NR>1 && NR<5){print $0, sub(/.config/,"",FILENAME)}' >> config.dat
+          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
           sort -k3,3 | \
-          join -13 -22 - $f.tmp >> finemap.K20'
-      echo "chr pos log10BF prob snpid rsid region" > finemap.dat
-      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemap.K20 | \
-      sort -k1,1n -k2,2n >> finemap.dat
-      export f="finemap"
+          join -13 -22 - $f.tmp >> snp.K20'
+      echo "chr pos log10BF prob snpid rsid region" > snp.dat
+      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' snp.K20 | \
+      sort -k1,1n -k2,2n >> snp.dat
+      export f="snp"
       export p="PPA.pdf"
       R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
       if [ $LocusZoom -eq 1 ]; then
@@ -455,23 +454,22 @@ if [ $finemap -eq 1 ]; then
           sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
       sed 's/\./p\./g' finemap.cfg > finemapp.cfg
       finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
+      echo "snpid region index snp_prob snp_log10bf rsid" > snpp.K20
+      echo "rank config config_prob config_log10bf region" > configp.dat
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
           export f=chr{1}_{2}_{3}p; \
-          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk'
-      # The pruned data
-      echo "snpid region index snp_prob snp_log10bf rsid" > finemapp.K20
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
+          awk '(NR>1 && NR<5){print $0, sub(/p.config/,"",FILENAME)}' >> configp.dat
+          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk
           export f=chr{1}_{2}_{3}; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
           sort -k3,3 | \
-          join -13 -22 - $f.tmp >> finemapp.K20'
-      echo "chr pos log10BF prob snpid rsid region" > finemapp.dat
-      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' finemapp.K20 | \
-      sort -k1,1n -k2,2n >> finemapp.dat
-      export f="finemapp"
+          join -13 -22 - $f.tmp >> snpp.K20'
+      echo "chr pos log10BF prob snpid rsid region" > snpp.dat
+      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' snpp.K20 | \
+      sort -k1,1n -k2,2n >> snpp.dat
+      export f="snpp"
       export p="PPAp.pdf"
       R --no-save < ${FM_location}/files/finemap-plot.R > finemapp-plot.log
    fi
