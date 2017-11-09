@@ -430,7 +430,8 @@ if [ $finemap -eq 1 ]; then
       export p="PPA.pdf"
       R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
       if [ $LocusZoom -eq 1 ]; then
-         awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
+         awk 'NR>1' st.bed | \
+         parallel -j${threads} -C' ' '
              export f=chr{1}_{2}_{3}; \
              awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
              awk "NR==1" $f.sav | \
