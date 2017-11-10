@@ -298,7 +298,7 @@ if [ $JAM -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}p; \
-       R --no-save < ${FM_location}/files/JAM.R > $f.log'
+       R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
 fi
 
 if [ $LocusZoom -eq 1 ]; then
@@ -413,7 +413,7 @@ if [ $finemap -eq 1 ]; then
       parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}p; \
           awk "(NR>1 && NR<5){sub(/p.config/,\"\",FILENAME);print \$0,FILENAME}" >> configp.dat; \
-          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
+          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
           export f=chr{1}_{2}_{3}; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
@@ -424,9 +424,9 @@ if [ $finemap -eq 1 ]; then
       sort -k1,1n -k2,2n >> snpp.dat
       export f="snpp"
       export p="PPAp.pdf"
-      R --no-save < ${FM_location}/files/finemap-plot.R > finemapp-plot.log
+      R -q --no-save < ${FM_location}/files/finemap-plot.R > finemapp-plot.log
       export p="p"
-      R --no-save < ${FM_location}/files/finemap-top.R > finemapp-topp.log
+      R -q --no-save < ${FM_location}/files/finemap-top.R > finemapp-topp.log
    else
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
@@ -449,7 +449,7 @@ if [ $finemap -eq 1 ]; then
       parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}; \
           awk "(NR>1 && NR<5){sub(/.config/,\"\",FILENAME);print \$0,FILENAME}" $f.config >> config.dat; \
-          R --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
+          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
           sort -k3,3 | \
@@ -459,9 +459,9 @@ if [ $finemap -eq 1 ]; then
       sort -k1,1n -k2,2n >> snp.dat
       export f="snp"
       export p="PPA.pdf"
-      R --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+      R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
       export p=""
-      R --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
+      R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
       if [ $LocusZoom -eq 1 ]; then
          awk 'NR>1' st.bed | \
          parallel -j1 -C' ' '
@@ -474,7 +474,7 @@ if [ $finemap -eq 1 ]; then
              join -j2 - $f.rsid | \
              sort -k5,5n | \
              awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
-         R --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+         R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
       fi
    fi
 fi
