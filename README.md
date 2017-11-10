@@ -2,7 +2,7 @@
 
 This is a pipeline for finemapping using GWAS summary statistics, implemented in Bash as a series of steps to furnish an incremental analysis. As depicted in the diagram below 
 
-![Regional association of chr1:39114617-39614617](files/fm.png)
+![LocusZoom plot showing Regional association for chr1:39114617-39614617](files/fm.png)
 
 where our lead SNP rs4970634 is in LD with many others, the procedure attempts to identify causal variants from region(s) showing significant SNP-trait association.
 
