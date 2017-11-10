@@ -24,6 +24,6 @@ for(r in 1:nrow(bed))
    writeDataTable(wb, paste0(f, ".cfg"), config)
    chk <- readLines(paste0("chr", f, ".chk"))
    addWorksheet(wb, paste0(f, ".chk"))
-   writeDataTable(wb, paste0(f, ".chk", noquote(chk)))
+   writeDataTable(wb, paste0(f, ".chk"), noquote(chk)))
    saveWorkbook(wb, file=xlsx, overwrite=TRUE)
 }
