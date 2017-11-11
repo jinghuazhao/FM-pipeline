@@ -63,7 +63,7 @@ Implementations have been done for the finemapping software along with LocusZoom
 
 Before start, settings at the beginning of the script need to be changed and only minor change is expected after this. The syntax of pipeline is then simply
 ```
-bash fm-pipeline.sh <input>
+bash fmp.sh <input>
 ```
 
 ## Inputs
