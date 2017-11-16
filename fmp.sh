@@ -1,5 +1,5 @@
 #!/bin/bash
-# 9-11-2017 MRC-Epid JHZ
+# 16-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -231,6 +231,11 @@ if [ $GCTA -eq 1 ]; then
        join -111 -24 $f.r - | \
        grep -f $f.inc | \
        awk -f ma.awk > $f.ma'
+   # --cojo-joint
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --out $f'
    # --cojo-slct
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
