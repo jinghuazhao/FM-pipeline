@@ -1,5 +1,5 @@
 #!/bin/bash
-# 16-11-2017 MRC-Epid JHZ
+# 22-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -418,7 +418,7 @@ if [ $finemap -eq 1 ]; then
       parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}p; \
           awk "(NR>1 && NR<5){sub(/p.config/,\"\",FILENAME);print \$0,FILENAME}" >> configp.dat; \
-          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
+          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
           export f=chr{1}_{2}_{3}; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
