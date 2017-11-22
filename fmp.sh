@@ -454,7 +454,7 @@ if [ $finemap -eq 1 ]; then
       parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}; \
           awk "(NR>1 && NR<5){sub(/.config/,\"\",FILENAME);print \$0,FILENAME}" $f.config >> config.dat; \
-          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.chk; \
+          R -q --no-save < ${FM_location}/files/finemap-check.R > finemap-check.log; \
           cut -d" " -f10,11 $f.r > $f.tmp; \
           awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
           sort -k3,3 | \
