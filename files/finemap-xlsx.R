@@ -1,4 +1,4 @@
-# 11-11-2017 MRC-Epid JHZ
+# 22-11-2017 MRC-Epid JHZ
 
 options(digits=3, scipen=20, width=200)
 
@@ -22,8 +22,8 @@ for(r in 1:nrow(bed))
    config <- read.table(paste0("chr", f, ".config"), as.is=TRUE, header=TRUE)
    addWorksheet(wb, paste0(f, ".cfg"))
    writeDataTable(wb, paste0(f, ".cfg"), config)
-   chk <- readLines(paste0("chr", f, ".chk"))
+   load(paste0("chr", f, ".chk"))
    addWorksheet(wb, paste0(f, ".chk"))
-   writeDataTable(wb, paste0(f, ".chk"), data.frame(chk))
+   writeDataTable(wb, paste0(f, ".chk"), chk)
    saveWorkbook(wb, file=xlsx, overwrite=TRUE)
 }

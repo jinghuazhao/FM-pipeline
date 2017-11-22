@@ -1,4 +1,4 @@
-# 21-11-2017 MRC-Epid JHZ
+# 22-11-2017 MRC-Epid JHZ
 
 options(echo=FALSE, width=200)
 
@@ -11,4 +11,6 @@ index <- with(subset(snp, snp_log10bf>0), index)
 config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
 options(echo=TRUE)
 subset(config,config_prob>0.01)
-cbind(z[index, ], snp[1:length(index), -c(1,2)], ld[index, index])
+chk <- cbind(z[index, ], snp[1:length(index), -c(1,2)], ld[index, index])
+chk
+save(chk, file=paste0(f,".chk"))
