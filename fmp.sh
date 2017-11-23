@@ -19,7 +19,7 @@ export flanking=250000
 # to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
 export use_UCSC=0
 # regenerate ped/map instead of using existing ones
-export gen_to_ped=0
+export gen_to_ped=1
 # force to use rsid with finemap
 export force_rsid=0
 # number of threads
