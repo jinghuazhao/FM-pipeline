@@ -130,8 +130,8 @@ parallel -j${threads} -C' ' '
     sort -k2,2 $GEN_location/$f.map | \
     join -111 -22 $f.dat - | \
     sort -k11,11 > $f.incl; \
-    cut -d" " -f10,11 $f.r > $f.rsid; \
-    awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r'
+    awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
+    cut -d" " -f10,11 $f.r > $f.rsid'
 if [ $force_rsid -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env wd -C' ' '
