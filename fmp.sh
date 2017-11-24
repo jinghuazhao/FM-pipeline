@@ -1,5 +1,5 @@
 #!/bin/bash
-# 23-11-2017 MRC-Epid JHZ
+# 24-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
 # working directory
@@ -39,10 +39,11 @@ export finemap=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
-    echo "Usage: fm-pipeline.sh <input>"
+    echo "Usage: fmp.sh <input>"
     echo "where <input> is in sumstats format:"
-    echo "SNP A1 A2 freqA1 beta se P N"
+    echo "SNP A1 A2 freqA1 beta se P N chr* pos*"
     echo "where SNP is RSid, A1 is effect allele"
+    echo "chr* and pos* can optionally be obtained from UCSC by setting use_UCSC=1"
     echo "and the outputs will be in <input>.out directory"
     exit
 fi
