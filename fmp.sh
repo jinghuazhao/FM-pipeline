@@ -228,50 +228,44 @@ if [ $GCTA -eq 1 ]; then
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out $f.top'
-# --cojo-slct ==> jma.cojo, ldr.cojo
-   ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
-   parallel -j${threads} -C' ' '
-       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
-       cut -d" " -f10,11 {}.r | \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out $f.top; \
+       cut -d" " -f10,11 $f.r | \
        sort -k2,2 | \
-       sed "s/ /\t/g">{}.tmp; \
+       sed "s/ /\t/g">$f.tmp'
+# --cojo-slct ==> jma.cojo, ldr.cojo
+   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
+   ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
+   parallel -j1 -C' ' '
+       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
        sort -k2,2 {}.jma.cojo | \
        join -j2 - {}.tmp >> {}.jma'
-   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
+   parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
 # --cojo-cond ==> given.cojo, cma.cojo
+   echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
    ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
-   parallel -j${threads} -C' ' '
+   parallel -j1 -C' ' '
        echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
-       cut -d" " -f10,11 {}.r | \
-       sort -k2,2 | \
-       sed "s/ /\t/g" > {}.tmp; \
        sort -k2,2 {}.cma.cojo | \
        join -j2 - {}.tmp >> {}.cma'
-   echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
+   parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
 # --cojo-top-SNPs ==> top.jma.cojo, top.ldr.cojo
+   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | \
-   parallel -j${threads} -C' ' '
+   parallel -j1 -C' ' '
        echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.top.jma; \
-       cut -d" " -f10,11 {}.r | \
-       sort -k2,2 | \
-       sed "s/ /\t/g" > {}.tmp; \
        sort -k2,2 {}.top.jma.cojo | \
        join -j2 - {}.tmp >> {}.top.jma'
-   echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
+   parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.top.jma >> gcta-top.csv'
    sed -i 's/ /,/g' gcta-top.csv
