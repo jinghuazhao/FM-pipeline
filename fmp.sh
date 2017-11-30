@@ -213,36 +213,26 @@ fi
 
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
+# ma for marginal effects used by GCTA --cojo-joint --cojo-slct --cojo-cond --cojo-top-SNPs
    awk 'NR>1' st.bed | \
-   parallel -j${threads} --env GEN_location -C' ' '
+   parallel -j${threads} --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk -vchr={1} -f $FM_location/files/info.awk $GEN_location/$f.info | \
        sort -k2,2 > $f.tmp; \
        sort -k2,2 $GEN_location/$f.map | \
        join -j2 $f.tmp - | \
-       awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map'
-# ma for marginal effects used by GCTA
-   rm -f *cojo *jma *cma
-   echo "{if(NR==1) print \"SNP\",\"A1\",\"A2\",\"freq\",\"b\",\"se\",\"p\",\"N\";\
-         print \$1,\$4,\$5,\$6,\$7,\$8,\$9,int(\$10)}" > ma.awk
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
+       awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map; \
        sort -k4,4 ${f}_map | \
        join -111 -24 $f.r - | \
        grep -f $f.inc | \
-       awk -f ma.awk > $f.ma'
-# --cojo-joint --cojo-slct --cojo-cond --cojo-top-SNPs
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
+       awk -f $GEN_location/files/ma.awk > $f.ma; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --out $f; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f; \
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out $f.top'
-# --cojo-slct
+# --cojo-slct ==> jma.cojo, ldr.cojo
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '
        echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
@@ -257,7 +247,22 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
-# --cojo-top-SNPs
+# --cojo-cond ==> geven.cojo, cma.cojo
+   ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
+   parallel -j${threads} -C' ' '
+       echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
+       cut -d" " -f10,11 {}.r | \
+       sort -k2,2 | \
+       sed "s/ /\t/g" > {}.tmp; \
+       sort -k2,2 {}.cma.cojo | \
+       join -j2 - {}.tmp >> {}.cma'
+   echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
+   sed -i 's/ /,/g' gcta-cond.csv
+# --cojo-top-SNPs ==> top.jma.cojo, top.ldr.cojo
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | \
    parallel -j${threads} -C' ' '
@@ -273,21 +278,6 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.top.jma >> gcta-top.csv'
    sed -i 's/ /,/g' gcta-top.csv
-# --cojo-cond
-   ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
-   parallel -j${threads} -C' ' '
-       echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
-       cut -d" " -f10,11 {}.r | \
-       sort -k2,2 | \
-       sed "s/ /\t/g" > {}.tmp; \
-       sort -k2,2 {}.cma.cojo | \
-       join -j2 - {}.tmp >> {}.cma'
-   echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
-   sed -i 's/ /,/g' gcta-cond.csv
 fi
 
 if [ $JAM -eq 1 ]; then
