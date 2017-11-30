@@ -1,6 +1,7 @@
 {
-  gsub(/:|_/," ",$2)
-  split($2,a," ")
+  t=$1
+  gsub(/:|_/," ",t)
+  split(t,a," ")
   chr=a[1]
   pos=a[2]
   if(NR>1) {
