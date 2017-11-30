@@ -222,7 +222,7 @@ if [ $GCTA -eq 1 ]; then
        sort -k4,4 ${f}_map | \
        join -111 -24 $f.r - | \
        grep -f $f.inc | \
-       awk -f $GEN_location/files/ma.awk > $f.ma; \
+       awk -f $FM_location/files/ma.awk > $f.ma; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --out $f; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f; \
        grep {5} $f.r | \
@@ -244,7 +244,7 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
-# --cojo-cond ==> geven.cojo, cma.cojo
+# --cojo-cond ==> given.cojo, cma.cojo
    ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
    parallel -j${threads} -C' ' '
        echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
