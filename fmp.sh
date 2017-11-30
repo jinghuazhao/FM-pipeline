@@ -1,7 +1,18 @@
 #!/bin/bash
-# 24-11-2017 MRC-Epid JHZ
+# 30-11-2017 MRC-Epid JHZ
 
-## settings -- change as apporopriate
+if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
+    echo "Usage: fmp.sh <input>"
+    echo "where <input> is in sumstats format:"
+    echo "SNP A1 A2 freqA1 beta se P N chr* pos*"
+    echo "where SNP is RSid, A1 is effect allele"
+    echo "chr* and pos* can optionally be obtained from UCSC by setting use_UCSC=1"
+    echo "and the outputs will be in <input>.out directory"
+    exit
+fi
+export args=$1
+
+# software for analysis; set flags to 1 to enable and check outputs
 
 export CAVIAR=0
 export CAVIARBF=0
@@ -15,16 +26,14 @@ export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 
 # working directory
-export wd=/genetics/data/gwas/1-11-17
-# GWAS summary statistics (the .sumstats file)
-export args=$1
-# filename containing list of lead SNPs
-export snplist=$wd/97.snps
+export wd=$(pwd)
+# lead SNPs
+export snplist=97.snps
 # GEN files, named chr{chr}_{start}_{end}.gen
 export GEN_location=/genetics/data/gwas/6-7-17/HRC
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
-# sample for exclusion
+# sample exclusion list
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
@@ -34,19 +43,9 @@ export use_UCSC=0
 export force_rsid=0
 # number of threads
 export threads=5
-# also to obtain results after LD pruning
+# results after LD pruning
 export allow_prune=0
-# software to be included in the analysis; change flags to 1 when available
-# the outputs should be available individually
-if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
-    echo "Usage: fmp.sh <input>"
-    echo "where <input> is in sumstats format:"
-    echo "SNP A1 A2 freqA1 beta se P N chr* pos*"
-    echo "where SNP is RSid, A1 is effect allele"
-    echo "chr* and pos* can optionally be obtained from UCSC by setting use_UCSC=1"
-    echo "and the outputs will be in <input>.out directory"
-    exit
-fi
+
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
 else
