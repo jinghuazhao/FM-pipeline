@@ -221,7 +221,7 @@ if [ $GCTA -eq 1 ]; then
        sort -k2,2 > $f.tmp; \
        sort -k2,2 $GEN_location/$f.map | \
        join -j2 $f.tmp - | \
-       awk -vOFS="\t" "{print \$8,\$7,0,\$1,\$11,\$12,\$3}" > ${f}_map; \
+       awk -vOFS="\t" "{print \$7,\$6,0,\$2,\$10,\$11,\$9}" > ${f}_map; \
        sort -k4,4 ${f}_map | \
        join -111 -24 $f.r - | \
        grep -f $f.inc | \
