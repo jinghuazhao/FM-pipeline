@@ -2,6 +2,18 @@
 # 24-11-2017 MRC-Epid JHZ
 
 ## settings -- change as apporopriate
+
+export CAVIAR=0
+export CAVIARBF=0
+export FM_summary=0
+export GCTA=0
+export JAM=0
+export LocusZoom=1
+export fgwas=0
+export finemap=1
+export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
+export FM_location=/genetics/bin/FM-pipeline
+
 # working directory
 export wd=/genetics/data/gwas/1-11-17
 # GWAS summary statistics (the .sumstats file)
@@ -18,8 +30,6 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
 export use_UCSC=0
-# regenerate ped/map instead of using existing ones
-export gen_to_ped=0
 # force to use rsid with finemap
 export force_rsid=0
 # number of threads
@@ -28,16 +38,6 @@ export threads=5
 export allow_prune=0
 # software to be included in the analysis; change flags to 1 when available
 # the outputs should be available individually
-export CAVIAR=0
-export CAVIARBF=0
-export FM_summary=0
-export GCTA=0
-export JAM=0
-export LocusZoom=1
-export fgwas=0
-export finemap=1
-export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
-export FM_location=/genetics/bin/FM-pipeline
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
     echo "where <input> is in sumstats format:"
@@ -115,15 +115,13 @@ else
             \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input |\
             sort -k11,11 > $f.dat'
 fi
-if [ $gen_to_ped -eq 1 ]; then
-   echo "--> map/ped"
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} --env wd -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
-       gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
-            --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
-fi
+echo "--> map/ped"
+awk 'NR>1' st.bed | \
+parallel -j${threads} --env wd -C' ' '
+    export f=chr{1}_{2}_{3}; \
+    awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
+    gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
+          --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' '
