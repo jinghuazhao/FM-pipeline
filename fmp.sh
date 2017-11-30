@@ -232,7 +232,7 @@ if [ $GCTA -eq 1 ]; then
        cut -d" " -f10,11 $f.r | \
        sort -k2,2 | \
        sed "s/ /\t/g">$f.tmp'
-# --cojo-slct ==> jma.cojo, ldr.cojo
+# --cojo-slct <==> jma.cojo, ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | \
    parallel -j1 -C' ' '
@@ -244,7 +244,7 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
-# --cojo-cond ==> given.cojo, cma.cojo
+# --cojo-cond <==> given.cojo, cma.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
    ls *cma.cojo|sed 's/\.cma\.cojo//g' | \
    parallel -j1 -C' ' '
@@ -256,7 +256,7 @@ if [ $GCTA -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
-# --cojo-top-SNPs ==> top.jma.cojo, top.ldr.cojo
+# --cojo-top-SNPs <==> top.jma.cojo, top.ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | \
