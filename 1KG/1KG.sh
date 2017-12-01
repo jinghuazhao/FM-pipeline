@@ -1,7 +1,6 @@
 #1-12-2017 MRC-Epid JHZ
 
-wget https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2
-tar xfj LDREF.tar.bz2
+wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
 seq 22|awk -vp=1000G.EUR. '{print p $1 ".bed " p $1 ".bim " p $1 ".fam"}' > merge-list
 plink-1.9 --merge-list merge-list --make-bed --out EUR
 plink-1.9 --bfile EUR --freq --out EUR
