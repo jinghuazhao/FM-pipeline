@@ -3,7 +3,9 @@
    pos=$3
    a1=$4
    a2=$5
-   if(a1>a2) snpid=chr ":" pos "_" a2 "_" a1 else snpid=chr ":" pos "_" a1 "_" a2
+   if(a1>a2) {
+     snpid=chr ":" pos "_" a2 "_" a1 
+   } else snpid=chr ":" pos "_" a1 "_" a2
    printf snpid, $2, pos, a1, a2
    for(i=0;i<(NF-5)/3;i++) {
      i3=i*3
