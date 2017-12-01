@@ -116,14 +116,14 @@ else
 fi
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
-parallel -j${threads} --env wd -C' ' '
+parallel -j${threads} --env FM_location --env GEN_location --env wd -C' ' '
     export f=chr{1}_{2}_{3}; \
     awk -f ${FM_location}/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
     gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
           --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
 echo "--> GWAS .sumstats auxiliary files"
 awk 'NR>1' st.bed | \
-parallel -j${threads} -C' ' '
+parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     sort -k2,2 $GEN_location/$f.map | \
     join -111 -22 $f.dat - | \
@@ -158,13 +158,13 @@ else
 fi
 if [ $force_rsid -eq 1 ]; then
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
+   parallel -j${threads} --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
        --make-bed --keep-allele-order --a2-allele $f.a 3 1 --update-name $f.rsid --out ${f}rsid'
 else
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
+   parallel -j${threads} --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
        --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
@@ -274,7 +274,7 @@ fi
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
+   parallel -j${threads} --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}p; \
        R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
 fi
@@ -296,7 +296,7 @@ if [ $fgwas -eq 1 ]; then
    echo "--> fgwas"
    # obtain annotations
    seq 22 | \
-   parallel -j${threads} -C' ' '
+   parallel -j${threads} --env fgwas_location_1kg -C' ' '
        if [ ! -f $fgwas_location_1kg/chr{}.gen ]; then
        gunzip -c $fgwas_location_1kg/chr{}.annot.wdist.wcoding.gz | \
        awk "(NR>1){print \$1,\$2,\$3,\$(NF-6),\$(NF-5),\$(NF-2),\$(NF-1),\$NF}" | \
@@ -307,7 +307,7 @@ if [ $fgwas -eq 1 ]; then
    sort -k1,1 > fgwas.snplist
    # the standard fgwas data
    awk 'NR>1' fgwas.snplist | \
-   parallel -j${threads} --env GEN_location -C' ' '
+   parallel -j${threads} --env GEN_location --env fgwas_location_1kg -C' ' '
    read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist); \
         export f=chr{2}_{3}_{4}; \
         awk -vsn={6} -f $GEN_location/files/fgwas.awk $f.r | \
@@ -388,7 +388,7 @@ if [ $finemap -eq 1 ]; then
       echo "snpid region index snp_prob snp_log10bf rsid" > snpp.K20
       echo "rank config config_prob config_log10bf region" > configp.dat
       awk 'NR>1' st.bed | \
-      parallel -j1 -C' ' '
+      parallel -j1 -C' --env FM_location ' '
           export f=chr{1}_{2}_{3}p; \
           awk "(NR>1 && NR<5){sub(/p.config/,\"\",FILENAME);print \$0,FILENAME}" >> configp.dat; \
           R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
@@ -407,7 +407,7 @@ if [ $finemap -eq 1 ]; then
       R -q --no-save < ${FM_location}/files/finemap-top.R > finemapp-topp.log
    else
       awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
+      parallel -j${threads} --env threads -C' ' '
           export f=chr{1}_{2}_{3}; \
           ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
           ldstore --bcor $f.bcor --merge ${threads}; \
@@ -424,7 +424,7 @@ if [ $finemap -eq 1 ]; then
       echo "snpid region index snp_prob snp_log10bf rsid" > snp.K20
       echo "rank config config_prob config_log10bf region" > config.dat
       awk 'NR>1' st.bed | \
-      parallel -j1 -C' ' '
+      parallel -j1 --env FM_location -C' ' '
           export f=chr{1}_{2}_{3}; \
           awk "(NR>1 && NR<5){sub(/.config/,\"\",FILENAME);print \$0,FILENAME}" $f.config >> config.dat; \
           R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
