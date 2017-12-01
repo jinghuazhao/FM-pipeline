@@ -159,6 +159,33 @@ so the GWAS summary statistics from GIANT is almost ready (we only drop the head
 
 In both cases, the GWAS summary data are used togther with the reference panel in .GEN format to furnish the finemapping analysis.
 
+Lastly, we illustrate use of 1000Genomes reference panel, available as [FUSION LD reference 
+panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`
+```
+wget https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2
+tar xfj LDREF.tar.bz2
+seq 22|awk -vp=1000G.EUR. '{print p $1 ".bed " p $1 ".bim " p $1 ".fam"}' > merge-list
+plink-1.9 --merge-list merge-list --make-bed --out EUR
+plink-1.9 --bfile EUR --freq --out EUR
+awk -vOFS="\t" '(NR>1){print $2,$5}' EUR.frq > EUR.dat
+stata <<END
+  insheet rsid FreqA2 using EUR.dat, case
+  sort rsid
+  gzsave EUR, replace
+  insheet chr rsid m pos A1 A2 using EUR.bim, case clear
+  gen RSnum=rsid
+  gen info=1
+  gen type=2
+  sort rsid
+  gzmerge using EUR
+  sort chr pos
+  drop _merge
+  gzsave SNPinfo, replace
+END
+seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
+```
+and associate [p0.do](1KG/p0.do)
+
 ## ACKNOWLEDGEMENTS
 
 The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in the 
