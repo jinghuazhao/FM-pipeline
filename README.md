@@ -162,8 +162,7 @@ In both cases, the GWAS summary data are used togther with the reference panel i
 Lastly, we illustrate use of 1000Genomes reference panel, available as [FUSION LD reference 
 panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`
 ```
-wget https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2
-tar xfj LDREF.tar.bz2
+wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
 seq 22|awk -vp=1000G.EUR. '{print p $1 ".bed " p $1 ".bim " p $1 ".fam"}' > merge-list
 plink-1.9 --merge-list merge-list --make-bed --out EUR
 plink-1.9 --bfile EUR --freq --out EUR
@@ -184,7 +183,7 @@ stata <<END
 END
 seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
 ```
-and associate [p0.do](1KG/p0.do)
+where we download and extract the data on the fly. The associate [p0.do](1KG/p0.do) is also given.
 
 ## ACKNOWLEDGEMENTS
 
