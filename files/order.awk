@@ -6,7 +6,7 @@
    if(a1>a2) {
      snpid=chr ":" pos "_" a2 "_" a1 
    } else snpid=chr ":" pos "_" a1 "_" a2
-   printf snpid " " rsid " " pos " " a1 " " a2
+   printf rsid " " snpid " " pos " " a1 " " a2
    for(i=0;i<(NF-5)/3;i++) {
      i3=i*3
      printf " "
