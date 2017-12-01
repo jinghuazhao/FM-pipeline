@@ -118,7 +118,7 @@ echo "--> map/ped"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env FM_location --env GEN_location --env wd -C' ' '
     export f=chr{1}_{2}_{3}; \
-    awk -vchr={1} -f $FM_location/files/order.awk $GEN_location/$f.gen > $GEN_location/$f.ord;\
+    awk -f $FM_location/files/order.awk chr={1} $GEN_location/$f.gen > $GEN_location/$f.ord;\
     gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
           --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
 echo "--> GWAS .sumstats auxiliary files"
@@ -151,7 +151,7 @@ fi
 
 ## finemapping
 echo "--> bfile"
-if [ ${sample_to_exclude} == "" ]; then 
+if [ "${sample_to_exclude}" == "" ]; then 
    export OPTs=""
 else 
    export OPTs="--remove ${sample_to_exclude}"
