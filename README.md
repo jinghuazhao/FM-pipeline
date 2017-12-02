@@ -115,6 +115,8 @@ Optionally, a file is specified which contains sample to be excluded from the re
 We illustrate use of 1000Genomes reference panel, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), 
 the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`
 ```
+#2-12-2017 MRC-Epid JHZ
+
 wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
 seq 22|awk -vp=1000G.EUR. '{print p $1 ".bed " p $1 ".bim " p $1 ".fam"}' > merge-list
 plink-1.9 --merge-list merge-list --make-bed --out EUR
@@ -130,6 +132,7 @@ stata <<END
   gen type=2
   sort rsid
   gzmerge using EUR
+  gen snpid=string(chr)+":"+string(pos,"%12.0f")+"_"+cond(A1<A2,A1,A2)+"_"+cond(A1<A2,A2,A1)
   sort chr pos
   drop _merge
   gzsave SNPinfo, replace
