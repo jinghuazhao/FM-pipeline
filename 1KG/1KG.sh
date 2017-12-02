@@ -1,4 +1,4 @@
-#1-12-2017 MRC-Epid JHZ
+#2-12-2017 MRC-Epid JHZ
 
 wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
 seq 22|awk -vp=1000G.EUR. '{print p $1 ".bed " p $1 ".bim " p $1 ".fam"}' > merge-list
@@ -15,6 +15,7 @@ stata <<END
   gen type=2
   sort rsid
   gzmerge using EUR
+  replace rsid=string(chr)+":"+string(pos,"%12.0f")+"_"+cond(A1<A2,A1,A2)+"_"+cond(A1<A2,A2,A1)
   sort chr pos
   drop _merge
   gzsave SNPinfo, replace
