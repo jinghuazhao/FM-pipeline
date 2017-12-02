@@ -1,5 +1,5 @@
 #!/bin/bash
-# 1-12-2017 MRC-Epid JHZ
+# 2-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -214,7 +214,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk -vchr={1} -f $FM_location/files/info.awk $GEN_location/$f.info | \
+       awk -f $FM_location/files/info.awk chr={1} $GEN_location/$f.info | \
        sort -k2,2 > $f.tmp; \
        sort -k2,2 $GEN_location/$f.map | \
        join -j2 $f.tmp - | \
