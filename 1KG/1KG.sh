@@ -17,7 +17,7 @@ stata <<END
   gzmerge using EUR
   gen snpid=string(chr)+":"+string(pos,"%12.0f")+"_"+cond(A1<A2,A1,A2)+"_"+cond(A1<A2,A2,A1)
   sort chr pos
-  drop _merge rsid
+  drop _merge
   gzsave SNPinfo, replace
 END
 seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
