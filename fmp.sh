@@ -194,7 +194,7 @@ if [ $allow_prune -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        plink-1.9 --bfile $f --indep-pairwise 500kb 5 0.80 --maf 0.05 --out $f; \
        grep -w -f $f.prune.in $f.a > $f.p; \
-       grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
+       grep -w -f $f.prune.in $f.txt > ${f}p.txt; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
 fi
 
