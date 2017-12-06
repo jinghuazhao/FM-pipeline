@@ -1,4 +1,4 @@
-# 3-11-2017 MRC-Epid JHZ
+# 6-12-2017 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -8,7 +8,7 @@ f <- Sys.getenv("f")
 cat(f,"\n")
 # summary statistics
 sumstats.name <- c("RS_ID","A1","A2","freqA1","b","se","P","N","chr","pos","SNP_ID")
-sumstats <- read.table(paste0(f,".dat"), as.is=TRUE, col.names=sumstats.name)
+sumstats <- read.table(paste0(f,".txt"), as.is=TRUE, col.names=sumstats.name)
 beta <- with(sumstats, b)
 rsid <- with(sumstats, RS_ID)
 snpid <- with(sumstats, SNP_ID)
