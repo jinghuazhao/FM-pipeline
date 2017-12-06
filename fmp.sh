@@ -94,6 +94,26 @@ else
 fi
 
 echo Generate region-specific data
+if [ $use_UCSC -eq 1 ]; then  
+   sort -k1,1 ${snplist} | \
+   join $dir/$(basename $args).input - > $rt.lst
+   cat $rt.lst | \
+   parallel -j${threads} -C' ' '
+       export l=$(({10}-${flanking})); \
+       if [ $l -le 0 ]; then export l=1; fi; \
+       export u=$(({10}+${flanking})); \
+       export f=chr{9}_${l}_${u}; \
+       awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
+            \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} l=$l u=$u $rt.input | \
+            sort -k11,11 > $f.dat'
+else
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
+            \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
+            sort -k11,11 > $f.dat'
+fi
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env FM_location --env GEN_location --env wd -C' ' '
@@ -137,18 +157,14 @@ if [ $use_UCSC -eq 1 ]; then
        if [ $l -le 0 ]; then export l=1; fi; \
        export u=$(({10}+${flanking})); \
        export f=chr{9}_${l}_${u}; \
-       awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-            \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} l=$l u=$u $rt.input | \
-            grep -f $f.inc | \
-            sort -k11,11 > $f.dat'
+            grep -f $f.inc $f.dat | \
+            sort -k11,11 > $f.txt'
 else
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-            \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
-            grep -f $f.inc | \
-            sort -k11,11 > $f.dat'
+            grep -f $f.inc $f.dat | \
+            sort -k11,11 > $f.txt'
 fi
 
 ## finemapping
