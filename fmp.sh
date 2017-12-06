@@ -105,14 +105,14 @@ if [ $use_UCSC -eq 1 ]; then
        export f=chr{9}_${l}_${u}; \
        awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
             \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} l=$l u=$u $rt.input | \
-            sort -k11,11 > $f.dat'
+            sort -k11,11 > $f.txt'
 else
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
             \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
-            sort -k11,11 > $f.dat'
+            sort -k11,11 > $f.txt'
 fi
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
@@ -126,7 +126,7 @@ awk 'NR>1' st.bed | \
 parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     sort -k2,2 $GEN_location/$f.map | \
-    join -111 -22 $f.dat - | \
+    join -111 -22 $f.txt - | \
     sort -k11,11 > $f.incl; \
     awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
     cut -d" " -f10,11 $f.r > $f.rsid'
@@ -157,14 +157,14 @@ if [ $use_UCSC -eq 1 ]; then
        if [ $l -le 0 ]; then export l=1; fi; \
        export u=$(({10}+${flanking})); \
        export f=chr{9}_${l}_${u}; \
-            grep -f $f.inc $f.dat | \
-            sort -k11,11 > $f.txt'
+            grep -f $f.inc $f.txt | \
+            sort -k11,11 > $f.dat'
 else
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
-            grep -f $f.inc $f.dat | \
-            sort -k11,11 > $f.txt'
+            grep -f $f.inc $f.txt | \
+            sort -k11,11 > $f.dat'
 fi
 
 ## finemapping
@@ -194,7 +194,7 @@ if [ $allow_prune -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        plink-1.9 --bfile $f --indep-pairwise 500kb 5 0.80 --maf 0.05 --out $f; \
        grep -w -f $f.prune.in $f.a > $f.p; \
-       grep -w -f $f.prune.in $f.txt > ${f}p.txt; \
+       grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
 fi
 
