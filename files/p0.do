@@ -4,7 +4,7 @@ set more off
 tempfile f0
 
 local DIRGEN /gen_omics/data/EPIC-Norfolk/HRC
-local DIRBGEN /scratch/tempjhz22/LDcalc/MAGIC
+local DIRBGEN /scratch/tempjhz22/LDcalc/HRC
 
 gzuse `DIRGEN'/SNPinfo.dta.gz, clear
 drop if chr==25
