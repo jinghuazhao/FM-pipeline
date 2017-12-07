@@ -1,5 +1,5 @@
 #!/bin/bash
-# 5-12-2017 MRC-Epid JHZ
+# 7-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -30,7 +30,7 @@ export wd=$(pwd)
 # lead SNPs
 export snplist=97.snps
 # GEN files, named chr{chr}_{start}_{end}.gen
-export GEN_location=/genetics/data/gwas/6-7-17/HRC
+export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample exclusion list
