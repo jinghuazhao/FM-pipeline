@@ -36,7 +36,7 @@ forval k=1/22 {
       local lowr=start[`j']
       local uppr=end[`j']
       outsheet rsid if position>=`lowr' & position<=`uppr' & (MAC<3 | info<0.4) using `DIRBGEN'/exc`k'_`lowr'_`uppr'.txt, nonames noquote replace nolab
-      outsheet rsid position exp_freq_a1 info type RSnum if position>=`lowr' & position<=`uppr' & MAC>=3 & info>=0.4 using `DIRBGEN'/chr`k'_`lowr'_`uppr'.info, names noquote replace nolab delim(" ")
+      outsheet rsid position exp_freq_a1 info type rsid if position>=`lowr' & position<=`uppr' & MAC>=3 & info>=0.4 using `DIRBGEN'/chr`k'_`lowr'_`uppr'.info, names noquote replace nolab delim(" ")
       !echo -e "sge \"/genetics/bin/qctool -g `DIRGEN'/chr`k'.gen.gz -og chr`k'_`lowr'_`uppr'.bgen -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`k'_`lowr'_`uppr'.txt -sort; /genetics/bin/qctool -g chr`k'_`lowr'_`uppr'.bgen -og chr`k'_`lowr'_`uppr'.gen -omit-chromosome; rm chr`k'_`lowr'_`uppr'.bgen\"" >> `DIRBGEN'/Extract.sh
    }
    restore
