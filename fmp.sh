@@ -39,8 +39,6 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
 export use_UCSC=0
-# force to use rsid with finemap
-export force_rsid=0
 # number of threads
 export threads=5
 # results after LD pruning
@@ -130,24 +128,14 @@ parallel -j${threads} --env GEN_location -C' ' '
     sort -k11,11 > $f.incl; \
     awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
     cut -d" " -f10,11 $f.r > $f.rsid'
-if [ $force_rsid -eq 1 ]; then
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} --env wd -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       cut -d" " -f10,12 $f.r > ${f}rsid.z; \
-       awk "{print \$2,\$4,\$3,\$15,\$16}" $f.incl > ${f}rsid.a; \
-       echo "RSID position chromosome A_allele B_allele" > ${f}rsid.incl_variants; \
-       awk "{print \$2,\$11,\$10,\$4,\$3}" $f.incl >> ${f}rsid.incl_variants'
-else
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} --env wd -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       cut -d" " -f11,12 $f.r > $f.z; \
-       awk "{print \$1}" $f.incl > $f.inc; \
-       awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
-       echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
-       awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
-fi
+awk 'NR>1' st.bed | \
+parallel -j${threads} --env wd -C' ' '
+    export f=chr{1}_{2}_{3}; \
+    cut -d" " -f11,12 $f.r > $f.z; \
+    awk "{print \$1}" $f.incl > $f.inc; \
+    awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
+    echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
+    awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
 if [ $use_UCSC -eq 1 ]; then
    sort -k1,1 ${snplist} | \
    join $dir/$(basename $args).input - > $rt.lst
@@ -174,19 +162,11 @@ if [ "${sample_to_exclude}" == "" ]; then
 else 
    export OPTs="--remove ${sample_to_exclude}"
 fi
-if [ $force_rsid -eq 1 ]; then
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} --env GEN_location -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
-       --make-bed --keep-allele-order --a2-allele $f.a 3 1 --update-name $f.rsid --out ${f}rsid'
-else
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} --env GEN_location -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
-       --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-fi
+awk 'NR>1' st.bed | \
+parallel -j${threads} --env GEN_location -C' ' '
+    export f=chr{1}_{2}_{3}; \
+    plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
+    --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 if [ $allow_prune -eq 1 ]; then
    echo "JAM, IPD"
    awk 'NR>1' st.bed | \
@@ -376,23 +356,7 @@ fi
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
-   if [ $force_rsid -eq 1 ]; then
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
-          export f=chr{1}_{2}_{3}; \
-          ldstore --bcor ${f}rsid.bcor --bplink ${f}rsid --n-threads ${threads}; \  
-          ldstore --bcor ${f}rsid.bcor --merge ${threads}; \
-          ldstore --bcor ${f}rsid.bcor --matrix ${f}rsid.ld --incl_variants ${f}rsid.incl_variants; \
-          sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}rsid.ld'
-      echo "z;ld;snp;config;log;n-ind" > finemap_rsid.cfg
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C ' ' '
-          export f=chr{1}_{2}_{3}; \
-          sort -k9,9g $f.r | \
-          tail -n1|cut -d" " -f9 | \
-          awk -vf=$f "{print sprintf(\"%srsid.z;%srsid.ld;%srsid.snp;%srsid.config;%srsid.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap_rsid.cfg'
-      finemap --sss --in-files finemap_rsid.cfg --n-causal-max 5 --corr-config 0.9
-   elif [ $allow_prune -eq 1 ]; then
+   if [ $allow_prune -eq 1 ]; then
       awk 'NR>1' st.bed | \
       parallel -j${threads} -C' ' '
           export f=chr{1}_{2}_{3}; \
