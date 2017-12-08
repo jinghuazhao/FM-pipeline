@@ -226,7 +226,7 @@ if [ $GCTA -eq 1 ]; then
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 3 --out $f.top; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 1 --out $f.top; \
        cut -d" " -f10,11 $f.r | \
        sort -k2,2 | \
        sed "s/ /\t/g">$f.tmp'
