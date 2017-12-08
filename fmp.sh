@@ -269,7 +269,7 @@ if [ $GCTA -eq 1 ]; then
    sed -i 's/ /,/g' gcta-top.csv
 fi
 
-if [ $JAM -eq 1 ]; then
+if [ $JAM -eq 1 ] && [ $allow_prune -eq 1 ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location -C' ' '
