@@ -221,7 +221,7 @@ if [ $GCTA -eq 1 ]; then
        join -111 -24 $f.r - | \
        grep -f $f.inc | \
        awk -f $FM_location/files/ma.awk > $f.ma; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --out $f; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --cojo-collinear 0.9 --out $f; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --out $f; \
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
