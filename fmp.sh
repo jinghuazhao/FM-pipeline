@@ -167,8 +167,8 @@ parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-if [ $allow_prune -eq 1 ]; then
-   echo "JAM, IPD"
+if [ $allow_prune -eq 1 ] || [ $JAM -eq 1 ]; then
+   echo " --> pruned data"
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -269,7 +269,7 @@ if [ $GCTA -eq 1 ]; then
    sed -i 's/ /,/g' gcta-top.csv
 fi
 
-if [ $JAM -eq 1 ] && [ $allow_prune -eq 1 ]; then
+if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location -C' ' '
