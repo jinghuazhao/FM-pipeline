@@ -1,13 +1,12 @@
 #!/bin/bash
-# 7-12-2017 MRC-Epid JHZ
+# 9-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
     echo "where <input> is in sumstats format:"
     echo "SNP A1 A2 freqA1 beta se P N chr* pos*"
     echo "where SNP is RSid, A1 is effect allele"
-    echo "chr* and pos* can optionally be obtained from UCSC by setting use_UCSC=1"
-    echo "and the outputs will be in <input>.out directory"
+    echo "chr* and pos* can optionally be obtained from UCSC"
     exit
 fi
 export args=$1
@@ -25,24 +24,22 @@ export finemap=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 
-# working directory
-export wd=$(pwd)
-# lead SNPs
-export snplist=97.snps
-# GEN files, named chr{chr}_{start}_{end}.gen
+# GEN files named chr{chr}_{start}_{end}.gen
 export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample exclusion list
 export sample_to_exclude=$wd/exclude.dat
+# lead SNPs
+export snplist=97.snps
 # -/+ flanking position
 export flanking=250000
-# to generate st.bed containg chr, start, end, pos, rsid, r sextuplets
-export use_UCSC=0
 # number of threads
-export threads=5
+export threads=5 for parallel processing
 # results after LD pruning
 export allow_prune=0
+# working directory
+export wd=$(pwd)
 
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
@@ -55,63 +52,13 @@ fi
 cd $dir
 ln -sf $wd/$args
 export rt=$dir/$(basename $args)
-if [ $use_UCSC -eq 1 ]; then
-   echo Supplement .sumstats with chromosomal positions
-   if $(test -f ${FM_location}/snp150.txt ); then
-      echo "Chromosomal positions are ready to use"
-      ln -sf ${FM_location}/snp150.txt
-   else
-      echo "Obtaining chromosomal positions"
-      wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
-      gunzip -c snp150.txt.gz | \
-      awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
-      sort -k3,3 > snp150.txt
-   fi
-   awk '{
-     $2=toupper($2)
-     $3=toupper($3)
-   };1' $args | \
-   sort -k1,1 | \
-   join -11 -23 - snp150.txt > $rt.input
-   grep -w -f ${snplist} $rt.input | \
-   awk -vs=${flanking} '{
-      l=$10-s
-      if(l<0) l=1
-      print $9, l, $10+s, $10, $1
-   }' > st.dat
-   echo "chr start end pos rsid r" > st.bed
-   sort -k1,1n -k4,4n st.dat | \
-   awk '{$0=$0 " " NR};1' >> st.bed
-   rm st.dat
-else
-   awk '{
-     $2=toupper($2)
-     $3=toupper($3)
-   };1' $args > $rt.input
-   ln -sf $wd/st.bed
-fi
+echo "--> st.bed"
+awk '{
+  $2=toupper($2)
+  $3=toupper($3)
+};1' $args > $rt.input
+ln -sf $wd/st.bed
 
-echo Generate region-specific data
-if [ $use_UCSC -eq 1 ]; then  
-   sort -k1,1 ${snplist} | \
-   join $dir/$(basename $args).input - > $rt.lst
-   cat $rt.lst | \
-   parallel -j${threads} -C' ' '
-       export l=$(({10}-${flanking})); \
-       if [ $l -le 0 ]; then export l=1; fi; \
-       export u=$(({10}+${flanking})); \
-       export f=chr{9}_${l}_${u}; \
-       awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-            \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={9} l=$l u=$u $rt.input | \
-            sort -k11,11 > $f.txt'
-else
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-            \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
-            sort -k11,11 > $f.txt'
-fi
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env FM_location --env GEN_location --env wd -C' ' '
@@ -119,7 +66,14 @@ parallel -j${threads} --env FM_location --env GEN_location --env wd -C' ' '
     awk -f $FM_location/files/order.awk chr={1} $GEN_location/$f.gen > $GEN_location/$f.ord;\
     gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
           --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
-echo "--> GWAS .sumstats auxiliary files"
+echo "region-specific data"
+awk 'NR>1' st.bed | \
+parallel -j${threads} -C' ' '
+    export f=chr{1}_{2}_{3}; \
+    awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
+         \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
+         sort -k11,11 > $f.txt'
+echo "--> GWAS auxiliary files"
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
@@ -136,24 +90,11 @@ parallel -j${threads} --env wd -C' ' '
     awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
     echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
     awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
-if [ $use_UCSC -eq 1 ]; then
-   sort -k1,1 ${snplist} | \
-   join $dir/$(basename $args).input - > $rt.lst
-   cat $rt.lst | \
-   parallel -j${threads} -C' ' '
-       export l=$(({10}-${flanking})); \
-       if [ $l -le 0 ]; then export l=1; fi; \
-       export u=$(({10}+${flanking})); \
-       export f=chr{9}_${l}_${u}; \
-            grep -f $f.inc $f.txt | \
-            sort -k11,11 > $f.dat'
-else
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-            grep -f $f.inc $f.txt | \
-            sort -k11,11 > $f.dat'
-fi
+awk 'NR>1' st.bed | \
+parallel -j${threads} -C' ' '
+    export f=chr{1}_{2}_{3}; \
+         grep -f $f.inc $f.txt | \
+         sort -k11,11 > $f.dat'
 
 ## finemapping
 echo "--> bfile"
