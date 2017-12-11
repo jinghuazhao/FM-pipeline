@@ -29,6 +29,7 @@ export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample exclusion list
+export wd=$(pwd)
 export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
@@ -36,8 +37,6 @@ export flanking=250000
 export threads=5 for parallel processing
 # results after LD pruning
 export allow_prune=0
-# working directory
-export wd=$(pwd)
 
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
