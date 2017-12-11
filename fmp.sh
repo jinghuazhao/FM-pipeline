@@ -1,5 +1,5 @@
 #!/bin/bash
-# 10-12-2017 MRC-Epid JHZ
+# 11-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -16,9 +16,9 @@ export args=$1
 export CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
-export GCTA=0
+export GCTA=1
 export JAM=0
-export LocusZoom=1
+export LocusZoom=0
 export fgwas=0
 export finemap=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
@@ -50,7 +50,7 @@ fi
 cd $dir
 ln -sf $wd/$args
 export rt=$dir/$(basename $args)
-echo "--> st.bed"
+echo "--> $rt.input, st.bed"
 awk '{
   $2=toupper($2)
   $3=toupper($3)
