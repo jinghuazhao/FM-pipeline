@@ -85,9 +85,7 @@ Column | Name | Description
 9*  | chr | chromosome
 10* | pos | position
 
-This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not normally required as they are obtained from UCSC (`use_UCSC=1`). 
-However, for one of our analyses UCSC does not have all the coordinates as in the GWAS summary statistics, so we set `use_ucsc==0` and provide `st.bed` containing 
-the (chr, start, end, pos, rsid, r) sextuplets.
+This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not normally required but can obtained from UCSC.
 
 The **second input file** is a list of SNPs for which finemapping will be conducted.
 
@@ -99,7 +97,7 @@ The pipeline uses a reference panel in a .GEN format, taking into account direct
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
 A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, a [utility program in 
-Stata](files/p0.do) is written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
+Stata](files/st.do) is written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
 chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
@@ -107,39 +105,15 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. When option stbed=1 in the settings, it only generates st.bed 
-which contains chr, start, end, RSid, pos corresponding to the lead SNPs specified.
+Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. When option stbed=1 in the settings, it only generates st.bed which 
+contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA conditional/joint analysis requires 
+whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid and rsid variables are called rsid and RSnum instead; both porgrams 
+filter SNPs on minor allele count and measure of imputation quality.
 
 Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
 
 We illustrate use of 1000Genomes reference panel, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), 
-the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`
-```
-#2-12-2017 MRC-Epid JHZ
-
-wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
-seq 22|awk -vp=1000G.EUR. '{print p $1 ".bed " p $1 ".bim " p $1 ".fam"}' > merge-list
-plink-1.9 --merge-list merge-list --make-bed --out EUR
-plink-1.9 --bfile EUR --freq --out EUR
-awk -vOFS="\t" '(NR>1){print $2,$5}' EUR.frq > EUR.dat
-stata <<END
-  insheet rsid FreqA2 using EUR.dat, case
-  sort rsid
-  gzsave EUR, replace
-  insheet chr rsid m pos A1 A2 using EUR.bim, case clear
-  gen RSnum=rsid
-  gen info=1
-  gen type=2
-  sort rsid
-  gzmerge using EUR
-  gen snpid=string(chr)+":"+string(pos,"%12.0f")+"_"+cond(A1<A2,A1,A2)+"_"+cond(A1<A2,A2,A1)
-  sort chr pos
-  drop _merge
-  gzsave SNPinfo, replace
-END
-seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
-```
-where we download and extract the data on the fly. The associate [p0.do](1KG/p0.do) is also given.
+the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`, where we download and extract the data on the fly. The associate [p0.do](1KG/p0.do) is also given.
 
 ## Outputs
 
@@ -157,24 +131,17 @@ finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations
 It is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code 
 [here](files/finemap-check.R) is now embedded in the pipeline as with [an example](files/finemap-gold.xlsx).
 
-## EXAMPLES
+## EXAMPLE
 
-1. We use GWAS on 2-hr glucose level as reported by the MAGIC consortium, Saxena, et al. (2010). The GWAS summary data is obtained as follows,
-```
-wget ftp://ftp.sanger.ac.uk/pub/magic/MAGIC_2hrGlucose_AdjustedForBMI.txt
-awk -vOFS="\t" -vN=15234 '(NR>1){print $0, N}' MAGIC_2hrGlucose_AdjustedForBMI.txt > 2hrglucose.txt
-```
-For two SNPs contained in [2.snps](files/2.snps), the Stata program [p0.do](files/p0.do) generates [Extract.sh](files/Extract.sh) excluding SNPs in 
-[exc3_122844451_123344451.txt](files/exc3_122844451_123344451.txt) and [exc3_122881254_123381254.txt](files/exc3_122881254_123381254.txt). The command to call is
-```
-bash fmp.sh 2hrglucose.txt
-```
-2. Next we show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
+We show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
 ```
 # GWAS summary statistics
 wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
 gunzip -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz |
-awk 'NR>1' > bmi.txt
+awk 'NR>1' | \
+join -11 -23 - snp150.txt | \
+awk '($9!="X" && $9!="Un")' > bmi.txt
+
 # A list of 97 SNPs
 R --no-save <<END
 library(openxlsx)
@@ -184,9 +151,7 @@ snplist <- sort(as.vector(snps[,1]))
 write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
 END
 ```
-so the GWAS summary statistics from GIANT is almost ready (we only drop the header) as with the list of 97 SNPs. The positions of these SNPs were in build 36 while we used build 37.
-
-In both cases, the GWAS summary data are used togther with the reference panel in .GEN format to furnish the finemapping analysis.
+where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
 
 ## ACKNOWLEDGEMENTS
 
@@ -234,7 +199,3 @@ Genet 101(4):539-551
 **GIANT paper**
 
 Locke AE, et al. (2015) Genetic studies of body mass index yield new insights for obesity biology. Nature 518(7538):197-206. doi: 10.1038/nature14177
-
-**MAGIC paper**
-
-Saxena R, et al. (2010) Genetic variation in GIPR influences the glucose and insulin responses to an oral glucose challenge. Nat Genet 42:142-148

@@ -1,24 +1,19 @@
 // extract GEN file for each LD region in EPIC-Omics HRC imputed data
 
 set more off
-tempfile f0
 
-local DIRGEN /genetics/bin/FUSION/LDREF
-local DIRBGEN /scratch/tempjhz22/LDcalc/1KG
+local F /genetics/bin/FUSION/LDREF
+local T /scratch/tempjhz22/LDcalc/1KG
 
-gzuse `DIRGEN'/SNPinfo.dta.gz, clear
-drop if chr==25
+gzuse `F'/SNPinfo.dta.gz, clear
 gen maf=cond(FreqA2<=0.5, FreqA2, 1-FreqA2)
 sort chr pos snpid
 gen MAC=2*489*maf
-
-rename pos position
 rename FreqA2 exp_freq_a1
-order snpid position exp_freq_a1 info type
-tostring chr, gen(CHR)
+order snpid pos exp_freq_a1 info type
 
-!rm -f `DIRBGEN'/Extract.sh
-
+!rm -f `T'/Extract.sh
+tempfile f0
 forval k=1/22 {
    preserve
    keep if chr==`k'
@@ -35,13 +30,13 @@ forval k=1/22 {
    forval j=1/`nclus' {
       local lowr=start[`j']
       local uppr=end[`j']
-      outsheet snpid if position>=`lowr' & position<=`uppr' & (MAC<3 | info<0.4) using `DIRBGEN'/exc`k'_`lowr'_`uppr'.txt, nonames noquote replace nolab
-      outsheet snpid position exp_freq_a1 info type rsid if position>=`lowr' & position<=`uppr' & MAC>=3 & info>=0.4 using `DIRBGEN'/chr`k'_`lowr'_`uppr'.info, names noquote replace nolab delim(" ")
-      !echo -e "sge \"/genetics/bin/qctool -g `DIRGEN'/chr`k'.gen.gz -og chr`k'_`lowr'_`uppr'.bgen -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`k'_`lowr'_`uppr'.txt -sort; /genetics/bin/qctool -g chr`k'_`lowr'_`uppr'.bgen -og chr`k'_`lowr'_`uppr'.gen -omit-chromosome; rm chr`k'_`lowr'_`uppr'.bgen\"" >> `DIRBGEN'/Extract.sh
+      outsheet snpid if pos>=`lowr' & pos<=`uppr' & (MAC<3 | info<0.4) using `T'/exc`k'_`lowr'_`uppr'.txt, nonames noquote replace nolab
+      outsheet snpid pos exp_freq_a1 info type rsid if pos>=`lowr' & position<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`k'_`lowr'_`uppr'.info, names noquote replace nolab delim(" ")
+      !echo -e "sge \"/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og chr`k'_`lowr'_`uppr'.gen -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`k'_`lowr'_`uppr'.txt -sort\"" >> `T'/Extract.sh
    }
    restore
 }
 
-cd `DIRBGEN'
+cd `T'
 !chmod u+x Extract.sh
 !./Extract.sh
