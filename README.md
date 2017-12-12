@@ -80,7 +80,7 @@ Column | Name | Description
 4 | freqA1 | A1 frequency
 5 | beta | effect estimate
 6 | se | standard error of effect
-7 | P | P-vale
+7 | P | P-value
 8 | N | sample size
 9*  | chr | chromosome
 10* | pos | position
