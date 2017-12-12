@@ -107,8 +107,8 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
 
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. When option stbed=1 in the settings, it only generates st.bed which 
 contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA conditional/joint analysis requires 
-whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid and rsid are called rsid and RSnum, both filter SNPs on minor 
-allele count and measure of imputation quality.
+whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid and rsid variables are called rsid and RSnum instead, both filter 
+SNPs on minor allele count and measure of imputation quality.
 
 Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
 
