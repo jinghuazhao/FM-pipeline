@@ -99,7 +99,7 @@ development will facilitate summary statistics from a variety of consortiua as w
 A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, a [utility program in 
 Stata](files/st.do) is written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
-chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
+chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
  1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
@@ -107,7 +107,8 @@ chr |        rsid  |       RSnum |    pos |    FreqA2 |    info  | type |  A1  |
 
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. When option stbed=1 in the settings, it only generates st.bed which 
 contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA conditional/joint analysis requires 
-whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note both filter SNPs on minor allele count and measure of imputation quality.
+whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid and rsid are called rsid and RSnum, both filter SNPs on minor 
+allele count and measure of imputation quality.
 
 Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
 
