@@ -30,7 +30,7 @@ forval k=1/22 {
    forval j=1/`nclus' {
       local lowr=start[`j']
       local uppr=end[`j']
-      local f=`k'_`lowr'_`uppr'
+      local f="`k'_`lowr'_`uppr'"
       outsheet rsid if pos>=`lowr' & pos<=`uppr' & (MAC<3 | info<0.4) using `T'/exc`f'.txt, nonames noquote replace nolab
       outsheet rsid pos exp_freq_a1 info type RSnum if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`f'.info, names noquote replace nolab delim(" ")
       !echo -e "sge \"/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og chr`f'.gen -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`f'.txt -sort\"" >> `T'/Extract.sh
