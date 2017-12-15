@@ -35,8 +35,6 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # number of threads
 export threads=5 for parallel processing
-# results after LD pruning
-export allow_prune=0
 
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
@@ -105,7 +103,7 @@ parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-if [ $allow_prune -eq 1 ] || [ $JAM -eq 1 ]; then
+if [ $JAM -eq 1 ]; then
    echo " --> pruned data"
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
