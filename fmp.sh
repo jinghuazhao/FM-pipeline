@@ -1,5 +1,5 @@
 #!/bin/bash
-# 11-12-2017 MRC-Epid JHZ
+# 16-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
