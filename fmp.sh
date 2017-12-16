@@ -301,7 +301,7 @@ if [ $finemap -eq 1 ]; then
        ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
        sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld; \
        plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
-       awk "($2<0.0001){print $2}" $f.frq > $f.excl; \
+       awk "(\$2<0.0001){print \$2}" $f.frq > $f.excl; \
        cp $f.z $f.sav; \
        grep -w -v -f $f.excl $f.sav > $f.z; \
        plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
