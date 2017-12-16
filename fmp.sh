@@ -299,8 +299,9 @@ if [ $finemap -eq 1 ]; then
        ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
        ldstore --bcor $f.bcor --merge ${threads}; \
        ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-       plink-1.9 --bfile $f --r square --threads 1 --out $f
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
+       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld; \
+       plink-1.9 --bfile $f --r square --threads 3 --out $f; \
+       sed -i "s/\t/ /g" $f.ld'
    echo "z;ld;snp;config;log;n-ind" > finemap.cfg
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C ' ' '
