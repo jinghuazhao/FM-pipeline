@@ -10,6 +10,7 @@ if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     exit
 fi
 export args=$1
+export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library
 
 # software for analysis; set flags to 1 to enable and check outputs
 
@@ -35,8 +36,6 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # number of threads
 export threads=5 for parallel processing
-# results after LD pruning
-export allow_prune=0
 
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
@@ -105,7 +104,7 @@ parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-if [ $allow_prune -eq 1 ] || [ $JAM -eq 1 ]; then
+if [ $JAM -eq 1 ]; then
    echo " --> pruned data"
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C' ' '
@@ -294,85 +293,51 @@ fi
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
-   if [ $allow_prune -eq 1 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env threads -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+       ldstore --bcor $f.bcor --merge ${threads}; \
+       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
+       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
+   echo "z;ld;snp;config;log;n-ind" > finemap.cfg
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} -C ' ' '
+       export f=chr{1}_{2}_{3}; \
+       sort -k9,9g $f.r | \
+       tail -n1|cut -d" " -f9 | \
+       awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
+   finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+   echo "snpid region index snp_prob snp_log10bf rsid" > snp.K20
+   echo "rank config config_prob config_log10bf region" > config.dat
+   awk 'NR>1' st.bed | \
+   parallel -j1 --env FM_location -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       awk "(NR>1 && NR<5){sub(/.config/,\"\",FILENAME);print \$0,FILENAME}" $f.config >> config.dat; \
+       R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
+       cut -d" " -f10,11 $f.r > $f.tmp; \
+       awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
+       sort -k3,3 | \
+       join -13 -22 - $f.tmp >> snp.K20'
+   echo "chr pos log10BF prob snpid rsid region" > snp.dat
+   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' snp.K20 | \
+   sort -k1,1n -k2,2n >> snp.dat
+   export f="snp"
+   export p="PPA.pdf"
+   R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
+   R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
+   if [ $LocusZoom -eq 1 ]; then
       awk 'NR>1' st.bed | \
-      parallel -j${threads} -C' ' '
+      parallel -j1 -C' ' '
           export f=chr{1}_{2}_{3}; \
-          grep -w -f $f.prune.in $f.z > ${f}p.z; \
-          ldstore --bcor ${f}p.bcor --bplink ${f}p --n-threads ${threads}; \
-          ldstore --bcor ${f}p.bcor --merge ${threads}; \
-          ldstore --bcor ${f}p.bcor --matrix ${f}p.ld; \
-          sed -i -e "s/  */ /g; s/^ *//; /^$/d" ${f}p.ld'
-      sed 's/\./p\./g' finemap.cfg > finemapp.cfg
-      finemap --sss --in-files finemapp.cfg --n-causal-max 5 --corr-config 0.9
-      echo "snpid region index snp_prob snp_log10bf rsid" > snpp.K20
-      echo "rank config config_prob config_log10bf region" > configp.dat
-      awk 'NR>1' st.bed | \
-      parallel -j1 -C' --env FM_location ' '
-          export f=chr{1}_{2}_{3}p; \
-          awk "(NR>1 && NR<5){sub(/p.config/,\"\",FILENAME);print \$0,FILENAME}" >> configp.dat; \
-          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
-          export f=chr{1}_{2}_{3}; \
-          cut -d" " -f10,11 $f.r > $f.tmp; \
-          awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" ${f}p.snp | \
-          sort -k3,3 | \
-          join -13 -22 - $f.tmp >> snpp.K20'
-      echo "chr pos log10BF prob snpid rsid region" > snpp.dat
-      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' snpp.K20 | \
-      sort -k1,1n -k2,2n >> snpp.dat
-      export f="snpp"
-      export p="PPAp.pdf"
-      R -q --no-save < ${FM_location}/files/finemap-plot.R > finemapp-plot.log
-      export p="p"
-      R -q --no-save < ${FM_location}/files/finemap-top.R > finemapp-topp.log
-   else
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} --env threads -C' ' '
-          export f=chr{1}_{2}_{3}; \
-          ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
-          ldstore --bcor $f.bcor --merge ${threads}; \
-          ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-          sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
-      echo "z;ld;snp;config;log;n-ind" > finemap.cfg
-      awk 'NR>1' st.bed | \
-      parallel -j${threads} -C ' ' '
-          export f=chr{1}_{2}_{3}; \
-          sort -k9,9g $f.r | \
-          tail -n1|cut -d" " -f9 | \
-          awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-      finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
-      echo "snpid region index snp_prob snp_log10bf rsid" > snp.K20
-      echo "rank config config_prob config_log10bf region" > config.dat
-      awk 'NR>1' st.bed | \
-      parallel -j1 --env FM_location -C' ' '
-          export f=chr{1}_{2}_{3}; \
-          awk "(NR>1 && NR<5){sub(/.config/,\"\",FILENAME);print \$0,FILENAME}" $f.config >> config.dat; \
-          R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
-          cut -d" " -f10,11 $f.r > $f.tmp; \
-          awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
-          sort -k3,3 | \
-          join -13 -22 - $f.tmp >> snp.K20'
-      echo "chr pos log10BF prob snpid rsid region" > snp.dat
-      awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' snp.K20 | \
-      sort -k1,1n -k2,2n >> snp.dat
-      export f="snp"
-      export p="PPA.pdf"
-      R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
-      export p=""
-      R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
-      if [ $LocusZoom -eq 1 ]; then
-         awk 'NR>1' st.bed | \
-         parallel -j1 -C' ' '
-             export f=chr{1}_{2}_{3}; \
-             awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
-             awk "NR==1" $f.sav | \
-             awk "{print \$0 \" rsid\"}" > $f.snp; \
-             awk "(NR>1)" $f.sav | \
-             sort -k2,2 | \
-             join -j2 - $f.rsid | \
-             sort -k5,5n | \
-             awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
-         R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
-      fi
+          awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
+          awk "NR==1" $f.sav | \
+          awk "{print \$0 \" rsid\"}" > $f.snp; \
+          awk "(NR>1)" $f.sav | \
+          sort -k2,2 | \
+          join -j2 - $f.rsid | \
+          sort -k5,5n | \
+          awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
+      R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
    fi
 fi
