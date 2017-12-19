@@ -19,7 +19,7 @@ forval k=1/22 {
    keep if chr==`k'
    outsheet rsid if (MAC<3 | info<0.4) using `T'/exc`k'.txt, nonames noquote replace nolab
    outsheet rsid pos exp_freq_a1 info type RSnum if MAC>=3 & info>=0.4 using `T'/chr`k'.info, names noquote replace nolab delim(" ")
-   !echo -e "sge \"/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og chr`k'.gen.gz -omit-chromosome -excl-rsids exc`k'.txt -sort\"" >> `T'/Extract.sh
+   !echo -e "sge \"zgrep -w -v -f exc`k'.txt `F'/chr`k'.gen.gz | gzip -cf > chr`k'.gen.gz \"" >> `T'/Extract.sh
    restore
 }
 
