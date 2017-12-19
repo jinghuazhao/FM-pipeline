@@ -39,7 +39,7 @@
 #                                             #
 # Usage : Rscript \                           #
 #         --vanilla \                         #
-#         computeCorrelationsMinimac12.r \    #
+# computeCorrelationsImpute2forFINEMAP.r \    #
 #         myfile_info \                       #
 #         myfile.gen.gz \                     #
 #         10 \                                #
