@@ -155,8 +155,9 @@ where we download the GWAS summary statistics adding SNP positions in build 37 r
 
 ## ACKNOWLEDGEMENTS
 
-The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in the 
-Physalia course `Practical GWAS Using Linux and R` are greatly appreciated. In particular, the Stata program p0.do was adapted from code originally written by Dr Jian'an Luan.
+The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in 
+the Physalia course `Practical GWAS Using Linux and R` are greatly appreciated. In particular, the Stata program p0.do was adapted from code originally 
+written by Dr Jian'an Luan and computeCorrelationsImpute2forFINEMAP.r from the MAGIC consortium.
 
 ## SOFTWARE AND REFERENCES
 
