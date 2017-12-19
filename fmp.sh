@@ -1,5 +1,5 @@
 #!/bin/bash
-# 16-12-2017 MRC-Epid JHZ
+# 19-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -94,11 +94,15 @@ parallel -j${threads} -C' ' '
 
 ## finemapping
 echo "--> bfile"
+export N0=$(wc -l $sample_file | cut -d" " -f1)
 if [ "${sample_to_exclude}" == "" ]; then 
    export OPTs=""
+   export N1=0
 else 
    export OPTs="--remove ${sample_to_exclude}"
+   export N1=$(wc -l $sample_to_exclude | cut -d" " -f1)
 fi
+export N=$(bc -l <<<$N0-2-$N1)
 awk 'NR>1' st.bed | \
 parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
@@ -113,6 +117,24 @@ if [ $JAM -eq 1 ]; then
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
+fi
+
+if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env FM_location --env GEN_location -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       Rscript --vanilla $FM_location/files/computeCorrelationsMinimac12.r \
+               $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic 1; \
+       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+       ldstore --bcor $f.bcor --merge ${threads}; \
+       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
+       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld; \
+       plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
+       awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
+       cp $f.z $f.sav; \
+       grep -w -v -f $f.excl $f.sav > $f.z; \
+       plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
+       sed -i "s/\t/ /g" $f.ld'
 fi
 
 if [ $CAVIAR -eq 1 ]; then
@@ -293,19 +315,6 @@ fi
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} --env threads -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
-       ldstore --bcor $f.bcor --merge ${threads}; \
-       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld; \
-       plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
-       awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
-       cp $f.z $f.sav; \
-       grep -w -v -f $f.excl $f.sav > $f.z; \
-       plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
-       sed -i "s/\t/ /g" $f.ld'
    echo "z;ld;snp;config;log;n-ind" > finemap.cfg
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C ' ' '
