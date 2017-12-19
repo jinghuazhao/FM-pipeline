@@ -5,7 +5,7 @@
    a2=$5
    if (a1>a2) {
       snpid=chr ":" pos "_" a2 "_" a1 
-      printf rsid " " snpid " " pos " " a1 " " a2
+      printf rsid " " snpid " " pos " " a2 " " a1
       for (i=0;i<(NF-5)/3;i++)
       {
           i3=i*3
