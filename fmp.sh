@@ -121,7 +121,7 @@ fi
 
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
-   parallel -j${threads} --env FM_location --env GEN_location -C' ' '
+   parallel -j${threads} --env threads --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        Rscript --vanilla $FM_location/files/computeCorrelationsMinimac12.r \
                $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic 1; \
