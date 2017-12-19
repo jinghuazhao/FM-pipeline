@@ -11,7 +11,8 @@ sort chr pos rsid
 gen MAC=2*21044*maf
 rename FreqA2 exp_freq_a1
 order rsid pos exp_freq_a1 info type RSnum
-
+rename rsid snp_id
+rename pos position
 tempfile f0
 !rm -f `T'/Extract.sh
 forval k=1/22 {
@@ -31,8 +32,8 @@ forval k=1/22 {
       local lowr=start[`j']
       local uppr=end[`j']
       local f="`k'_`lowr'_`uppr'"
-      outsheet rsid if pos>=`lowr' & pos<=`uppr' & (MAC<3 | info<0.4) using `T'/exc`f'.txt, nonames noquote replace nolab
-      outsheet rsid pos exp_freq_a1 info type RSnum if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`f'.info, names noquote replace nolab delim(" ")
+      outsheet snp_id if position>=`lowr' & position<=`uppr' & (MAC<3 | info<0.4) using `T'/exc`f'.txt, nonames noquote replace nolab
+      outsheet snp_id position exp_freq_a1 info type RSnum if position>=`lowr' & position<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`f'.info, names noquote replace nolab delim(" ")
       !echo -e "sge \"/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og chr`f'.gen.gz -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`f'.txt -sort\"" >> `T'/Extract.sh
    }
    restore
