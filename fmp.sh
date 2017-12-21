@@ -108,16 +108,6 @@ parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-if [ $JAM -eq 1 ]; then
-   echo " --> pruned data"
-   awk 'NR>1' st.bed | \
-   parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       plink-1.9 --bfile $f --indep-pairwise 500kb 5 0.80 --maf 0.05 --out $f; \
-       grep -w -f $f.prune.in $f.a > $f.p; \
-       grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
-       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
-fi
 
 if [ 0 ]; then
    awk 'NR>1' st.bed | \
@@ -244,6 +234,11 @@ if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       plink-1.9 --bfile $f --indep-pairwise 500kb 5 0.80 --maf 0.05 --out $f; \
+       grep -w -f $f.prune.in $f.a > $f.p; \
+       grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
+       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p; \
        export f=chr{1}_{2}_{3}p; \
        R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
 fi
