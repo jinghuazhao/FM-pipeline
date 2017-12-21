@@ -127,7 +127,7 @@ if [ $ld_plink -eq 1 ]; then
        cp $f.z $f.sav; \
        grep -w -v -f $f.excl $f.sav > $f.z; \
        plink-1.9 --bfile $f --maf 0.001 --r square --threads 3 --out $f; \
-       sed -i "s/\t/ /g" $f.ld'
+       sed "s/\t/ /g" $f.ld > $f.plink'
 fi
 
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
