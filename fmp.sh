@@ -351,18 +351,19 @@ if [ $finemap -eq 1 ]; then
    export p="PPA.pdf"
    R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
    R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
-   if [ $LocusZoom -eq 1 ]; then
-      awk 'NR>1' st.bed | \
-      parallel -j1 -C' ' '
-          export f=chr{1}_{2}_{3}; \
-          awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
-          awk "NR==1" $f.sav | \
-          awk "{print \$0 \" rsid\"}" > $f.snp; \
-          awk "(NR>1)" $f.sav | \
-          sort -k2,2 | \
-          join -j2 - $f.rsid | \
-          sort -k5,5n | \
-          awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
-      R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
-   fi
 fi
+if [ $LocusZoom -eq 1 ] && [ $finemap -eq 1 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j1 -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
+       awk "NR==1" $f.sav | \
+       awk "{print \$0 \" rsid\"}" > $f.snp; \
+       awk "(NR>1)" $f.sav | \
+       sort -k2,2 | \
+       join -j2 - $f.rsid | \
+       sort -k5,5n | \
+       awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
+   R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+fi
+
