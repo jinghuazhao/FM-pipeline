@@ -7,7 +7,7 @@ cat(f, "\n")
 z <- read.table(paste0(f, ".z"), as.is=TRUE, col.names=c("snp","z"))
 ld <- read.table(paste0(f, ".ld"))
 snp <- read.table(paste0(f, ".snp"), as.is=TRUE, header=TRUE)
-index <- with(subset(snp, 4.60517*snp_log10bf>2), index)
+index <- with(subset(snp, 4.60517*snp_log10bf>9.21034), index)
 config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
 ord <- with(config,order(config_log10bf))
 config <- config[ord,]
