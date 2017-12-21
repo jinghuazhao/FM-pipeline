@@ -328,7 +328,8 @@ if [ $finemap -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        grep -w -v -f $f.excl $f.r | \
        sort -k9,9g | \
-       tail -n1|cut -d" " -f9 | \
+       tail -n1 | \
+       cut -d" " -f9 | \
        awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
    echo "snpid region index snp_prob snp_log10bf rsid" > snp.K20
@@ -352,6 +353,7 @@ if [ $finemap -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
    R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
 fi
+
 if [ $LocusZoom -eq 1 ] && [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 -C' ' '
