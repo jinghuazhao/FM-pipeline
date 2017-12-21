@@ -35,6 +35,8 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # number of threads
 export threads=5 for parallel processing
+export magic=0
+export ld_plink=0
 
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
@@ -115,7 +117,7 @@ if [ $magic -eq 1 ]; then
                $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic $threads'
 fi
 
-if [ $plinkld -eq 1 ]; then
+if [ $ld_plink -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
