@@ -36,7 +36,7 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # number of threads
 export threads=5 for parallel processing
-export magic=0
+export ld_magic=0
 export ld_plink=0
 
 if [ $(dirname $args) == "." ]; then
@@ -110,7 +110,7 @@ parallel -j${threads} --env GEN_location -C' ' '
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 
-if [ $magic -eq 1 ]; then
+if [ $ld_magic -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
