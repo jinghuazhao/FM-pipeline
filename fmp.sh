@@ -10,6 +10,7 @@ if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
 fi
 export args=$1
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
 # software for analysis; set flags to 1 to enable
 
