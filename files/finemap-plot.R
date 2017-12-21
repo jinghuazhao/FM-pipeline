@@ -1,12 +1,10 @@
-# 9-11-2017 MRC-Epid JHZ
+# 21-12-2017 MRC-Epid JHZ
 
 options(scipen=20, width=150)
-
 require(gap)
 f <- Sys.getenv("f")
-p <- Sys.getenv("p")
 fm <- read.table(paste0(f,".dat"), as.is=TRUE, header=TRUE)
-pdf(p)
+pdf("PPA.pdf")
 par(xpd=TRUE, cex=0.6, srt=180)
 ops <- mht.control(colors=rep(c("lightgray", "lightblue"), 11), srt=0, yline=2.5, xline=2, logscale=FALSE)
 mhtplot2(data.frame(fm[,c("chr","pos","log10BF")], gene=NA, color=NA), ops, xlab="", ylab="", srt=0)

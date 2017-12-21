@@ -9,8 +9,6 @@ ld <- read.table(paste0(f, ".ld"))
 snp <- read.table(paste0(f, ".snp"), as.is=TRUE, header=TRUE)
 index <- with(subset(snp, 4.60517*snp_log10bf>9.21034), index)
 config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
-ord <- with(config,order(config_log10bf,decreasing=TRUE))
-config <- config[ord,]
 options(echo=TRUE)
 subset(config,config_prob>0.01)
 chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
