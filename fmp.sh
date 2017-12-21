@@ -24,7 +24,7 @@ export finemap=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 
-# GEN files named chr{chr}_{start}_{end}.gen
+# GEN files named chr{chr}_{start}_{end}.gen.gz
 export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 # sample file
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
