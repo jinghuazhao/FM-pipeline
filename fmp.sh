@@ -11,7 +11,7 @@ fi
 export args=$1
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 
-# software for analysis; set flags to 1 to enable and check outputs
+# software for analysis; set flags to 1 to enable
 
 export CAVIAR=0
 export CAVIARBF=0
@@ -92,13 +92,11 @@ parallel -j${threads} -C' ' '
          grep -f $f.inc $f.txt | \
          sort -k11,11 > $f.dat'
 
-## finemapping
 echo "--> bfile"
 export N0=$(wc -l $sample_file | cut -d" " -f1)
-if [ "${sample_to_exclude}" == "" ]; then 
-   export OPTs=""
-   export N1=0
-else 
+export OPTs=""
+export N1=0
+if [ "${sample_to_exclude}" != "" ]; then 
    export OPTs="--remove ${sample_to_exclude}"
    export N1=$(wc -l $sample_to_exclude | cut -d" " -f1)
 fi
@@ -109,7 +107,7 @@ parallel -j${threads} --env GEN_location -C' ' '
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 
-if [ 0 ]; then
+if [ $magic -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -117,7 +115,7 @@ if [ 0 ]; then
                $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic $threads'
 fi
 
-if [ 0 ]; then
+if [ $plinkld -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -169,7 +167,6 @@ fi
 
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
-# ma for marginal effects used by GCTA --cojo-joint --cojo-slct --cojo-cond --cojo-top-SNPs
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -368,4 +365,3 @@ if [ $LocusZoom -eq 1 ] && [ $finemap -eq 1 ]; then
        awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
    R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
 fi
-
