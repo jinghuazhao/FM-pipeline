@@ -121,11 +121,11 @@ if [ 0 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
-       plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
+       plink-1.9 --bfile $f --maf 0.001 --freq --threads 3 --out $f; \
        awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
        cp $f.z $f.sav; \
        grep -w -v -f $f.excl $f.sav > $f.z; \
-       plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
+       plink-1.9 --bfile $f --maf 0.001 --r square --threads 3 --out $f; \
        sed -i "s/\t/ /g" $f.ld'
 fi
 
