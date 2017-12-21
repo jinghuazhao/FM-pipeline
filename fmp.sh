@@ -4,9 +4,8 @@
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
     echo "where <input> is in sumstats format:"
-    echo "SNP A1 A2 freqA1 beta se P N chr* pos*"
+    echo "SNP A1 A2 freqA1 beta se P N chr pos"
     echo "where SNP is RSid, A1 is effect allele"
-    echo "chr* and pos* can optionally be obtained from UCSC"
     exit
 fi
 export args=$1
@@ -120,22 +119,34 @@ if [ $JAM -eq 1 ]; then
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
 fi
 
-if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
+if [ 0 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
-#       Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-#               $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic 1; \
-       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
-       ldstore --bcor $f.bcor --merge ${threads}; \
-       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld; \
+       Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
+               $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic $threads'
+fi
+
+if [ 0 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env threads -C' ' '
+       export f=chr{1}_{2}_{3}; \
        plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
        awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
        cp $f.z $f.sav; \
        grep -w -v -f $f.excl $f.sav > $f.z; \
        plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
        sed -i "s/\t/ /g" $f.ld'
+fi
+
+if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
+   awk 'NR>1' st.bed | \
+   parallel -j${threads} --env threads -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+       ldstore --bcor $f.bcor --merge ${threads}; \
+       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
+       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
 fi
 
 if [ $CAVIAR -eq 1 ]; then
