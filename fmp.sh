@@ -337,9 +337,9 @@ if [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk 'NR>1' $f.config | \
+       awk "NR>1" $f.config | \
        sort -k4,4g | \
-       awk "{print \$0,f}" $f.config >> config.dat; \
+       awk "{print \$0,f}" f=$f $f.config >> config.dat; \
        R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
        cut -d" " -f10,11 $f.r > $f.tmp; \
        awk "(NR>1&&\$3>0.8&&\$4>1.3){print ENVIRON[\"f\"], \$0}" $f.snp | \
