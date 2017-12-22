@@ -129,6 +129,7 @@ if [ $ld_plink -eq 1 ]; then
        grep -w -v -f $f.excl $f.sav > $f.z; \
        plink-1.9 --bfile $f --maf 0.001 --r square --threads 3 --out $f; \
        sed "s/\t/ /g" $f.ld > $f.plink'
+     # grep -w -v -f $f.excl $f.r below
 fi
 
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
@@ -327,8 +328,7 @@ if [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} -C ' ' '
        export f=chr{1}_{2}_{3}; \
-       grep -w -v -f $f.excl $f.r | \
-       sort -k9,9g | \
+       sort -k9,9g $f.r | \
        tail -n1 | \
        cut -d" " -f9 | \
        awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
