@@ -166,7 +166,7 @@ if [ $FM_summary -eq 1 ]; then
    parallel -j${threads} --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        $FM_location/files/getCredible.r {6}; \
-       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" OFS="\t" $f.cre >> FM-summary.txt'
+       awk "!/SNP/{print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
 fi
 
 if [ $GCTA -eq 1 ]; then
@@ -202,7 +202,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.jma >> gcta-slct.csv'
+       awk "!/SNP/{print f], \$0}" f=$f $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
 # --cojo-cond <==> given.cojo, cma.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
@@ -214,7 +214,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.cma >> gcta-cond.csv'
+       awk "!/SNP/{print f, \$0}" f=$f $f.cma >> gcta-cond.csv'
    sed -i 's/ /,/g' gcta-cond.csv
 # --cojo-top-SNPs <==> top.jma.cojo, top.ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
@@ -227,7 +227,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print ENVIRON[\"f\"], \$0}" $f.top.jma >> gcta-top.csv'
+       awk "!/SNP/{print f, \$0}" f=$f $f.top.jma >> gcta-top.csv'
    sed -i 's/ /,/g' gcta-top.csv
 fi
 
@@ -341,7 +341,7 @@ if [ $finemap -eq 1 ]; then
        awk "(NR>1 && \$3>0.01){print \$0,f}" f=$f $f.config >> config.dat; \
        R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
        cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>2){print ENVIRON[\"f\"], \$0}" $f.snp | \
+       awk "(NR>1&&\$3>0.8&&\$4>2){print f, \$0}" f=$f $f.snp | \
        sort -k3,3 | \
        join -13 -22 - $f.tmp >> snp.100'
    echo "chr pos log10BF prob snpid rsid region" > snp.dat
