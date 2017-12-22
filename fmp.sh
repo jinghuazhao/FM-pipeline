@@ -1,5 +1,5 @@
 #!/bin/bash
-# 21-12-2017 MRC-Epid JHZ
+# 22-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -9,6 +9,7 @@ if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     exit
 fi
 export args=$1
+export PATH=/genetics/bin:$PATH
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
