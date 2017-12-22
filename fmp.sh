@@ -159,7 +159,7 @@ if [ $CAVIARBF -eq 1 ]; then
 fi
 
 if [ $FM_summary -eq 1 ]; then
-   ecoh "--> FM-summary"
+   echo "--> FM-summary"
    echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
    sed 's/ /\t/g' > FM-summary.txt
    awk 'NR>1' st.bed | \
