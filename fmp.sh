@@ -8,7 +8,6 @@ if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "where SNP is RSid, A1 is effect allele"
     exit
 fi
-export args=$1
 export PATH=/genetics/bin:$PATH
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
@@ -40,6 +39,7 @@ export threads=5 for parallel processing
 export ld_magic=0
 export ld_plink=0
 
+export args=$1
 if [ $(dirname $args) == "." ]; then
    dir=$(pwd)/$(basename $args).out
 else
