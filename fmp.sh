@@ -126,7 +126,7 @@ if [ $LD_PLINK -eq 1 ]; then
        plink-1.9 --bfile $f --maf 0.001 --freq --threads 3 --out $f; \
        awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
        cp $f.z $f.sav; \
-       grep -w -v -f $f.excl $f.sav > $f.z; \
+     # grep -w -v -f $f.excl $f.sav > $f.z; \
        plink-1.9 --bfile $f --maf 0.001 --r square --threads 3 --out $f; \
        sed "s/\t/ /g" $f.ld > $f.plink'
      # grep -w -v -f $f.excl $f.r below
