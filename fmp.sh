@@ -1,5 +1,5 @@
 #!/bin/bash
-# 22-12-2017 MRC-Epid JHZ
+# 23-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -36,8 +36,8 @@ export sample_to_exclude=$wd/exclude.dat
 export flanking=250000
 # number of threads
 export threads=5 for parallel processing
-export ld_magic=0
-export ld_plink=0
+export LD_MAGIC=0
+export LD_PLINK=0
 
 export args=$1
 if [ $(dirname $args) == "." ]; then
@@ -111,7 +111,7 @@ parallel -j${threads} --env GEN_location -C' ' '
     plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 
-if [ $ld_magic -eq 1 ]; then
+if [ $LD_MAGIC -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -119,7 +119,7 @@ if [ $ld_magic -eq 1 ]; then
                $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic $threads'
 fi
 
-if [ $ld_plink -eq 1 ]; then
+if [ $LD_PLINK -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
