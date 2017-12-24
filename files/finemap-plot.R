@@ -1,4 +1,4 @@
-# 21-12-2017 MRC-Epid JHZ
+# 24-12-2017 MRC-Epid JHZ
 
 options(scipen=20, width=150)
 require(gap)
@@ -15,7 +15,7 @@ bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
 r <- with(bed, table(chr))
 R <- cbind(chr=1:22, n=0)
 R[as.numeric(names(r)), ] <- as.vector(r)
-pdf(paste0(f,"_snp.pdf"))
+pdf(paste0(snp_snp.pdf"))
 k <- 0
 for(i in 1:22)
 {
