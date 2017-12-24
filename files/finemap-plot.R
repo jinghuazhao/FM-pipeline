@@ -2,8 +2,8 @@
 
 options(scipen=20, width=150)
 require(gap)
-fm <- read.table(paste0("snp.dat"), as.is=TRUE, header=TRUE)
-pdf("PPA.pdf")
+fm <- read.table("snp.dat", as.is=TRUE, header=TRUE)
+pdf("snp_PPA.pdf")
 par(xpd=TRUE, cex=0.6, srt=180)
 ops <- mht.control(colors=rep(c("lightgray", "lightblue"), 11), srt=0, yline=2.5, xline=2, logscale=FALSE)
 mhtplot2(data.frame(fm[,c("chr","pos","log10BF")], gene=NA, color=NA), ops, xlab="", ylab="", srt=0)
@@ -15,7 +15,7 @@ bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
 r <- with(bed, table(chr))
 R <- cbind(chr=1:22, n=0)
 R[as.numeric(names(r)), ] <- as.vector(r)
-pdf(paste0(snp_snp.pdf"))
+pdf("snp_snp.pdf")
 k <- 0
 for(i in 1:22)
 {
