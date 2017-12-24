@@ -1,5 +1,5 @@
 #!/bin/bash
-# 23-12-2017 MRC-Epid JHZ
+# 24-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -100,7 +100,7 @@ echo "--> bfile"
 export N0=$(wc -l $sample_file | cut -d" " -f1)
 export OPTs=""
 export N1=0
-if [ ! -z "${sample_to_exclude}" ] && [ -f ${sample_to_exclude} ] ; then 
+if [ -f ${sample_to_exclude} ]; then 
    export OPTs="--remove ${sample_to_exclude}"
    export N1=$(wc -l $sample_to_exclude | cut -d" " -f1)
 fi
