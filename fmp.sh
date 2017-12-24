@@ -35,7 +35,7 @@ export sample_to_exclude=$wd/exclude.dat
 # -/+ flanking position
 export flanking=250000
 # number of threads
-export threads=5 for parallel processing
+export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
 
