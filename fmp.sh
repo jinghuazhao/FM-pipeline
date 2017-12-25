@@ -1,5 +1,5 @@
 #!/bin/bash
-# 24-12-2017 MRC-Epid JHZ
+# 25-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -203,7 +203,7 @@ if [ $GCTA -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print f], \$0}" f=$f $f.jma >> gcta-slct.csv'
+       awk "!/SNP/{print f, \$0}" f=$f $f.jma >> gcta-slct.csv'
    sed -i 's/ /,/g' gcta-slct.csv
 # --cojo-cond <==> given.cojo, cma.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
