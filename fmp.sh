@@ -1,5 +1,5 @@
 #!/bin/bash
-# 25-12-2017 MRC-Epid JHZ
+# 27-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -31,7 +31,7 @@ export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample exclusion list
 export wd=$(pwd)
-export sample_to_exclude=$wd/exclude.dat
+export sample_to_exclude=$wd/exclude.id
 # -/+ flanking position
 export flanking=250000
 # number of threads
