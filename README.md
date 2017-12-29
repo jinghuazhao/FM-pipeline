@@ -70,7 +70,7 @@ bash fmp.sh <input>
 
 ### --- GWAS summary statistics and lead SNPs ---
 
-The **first input file** will be GWAS summary statistics with the following columns,
+The GWAS summary statistics include the following columns,
 
 Column | Name | Description
 -------|------|------------
@@ -87,10 +87,6 @@ Column | Name | Description
 
 This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not normally required but can obtained from UCSC.
 
-The **second input file** is a list of SNPs for which finemapping will be conducted.
-
-A header is required for neither file.
-
 ### --- Reference panel ---
 
 The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
@@ -105,10 +101,11 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. When option stbed=1 in the settings, it only generates st.bed which 
-contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA conditional/joint analysis requires 
-whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid and rsid variables are called rsid and RSnum instead; both porgrams 
-filter SNPs on minor allele count and measure of imputation quality.
+Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxilliary file called `st.bed` 
+contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA 
+conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
+and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
+quality.
 
 Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
 
