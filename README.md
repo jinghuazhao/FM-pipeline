@@ -68,9 +68,9 @@ bash fmp.sh <input>
 
 ## Inputs
 
-### --- GWAS summary statistics and lead SNPs ---
+### --- GWAS summary statistics ---
 
-The GWAS summary statistics include the following columns,
+These include the following columns,
 
 Column | Name | Description
 -------|------|------------
@@ -100,6 +100,8 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
  1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
+
+### --- The lead SNPs ---
 
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxilliary file called `st.bed` 
 contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA 
