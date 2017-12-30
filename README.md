@@ -101,6 +101,9 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
+We illustrate use of 1000Genomes reference panel, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), 
+the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`, where we download and extract the data on the fly. The associate [p0.do](1KG/p0.do) is also given.
+
 ### --- The lead SNPs ---
 
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxiliary file called `st.bed` 
@@ -110,9 +113,6 @@ and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs 
 quality.
 
 Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
-
-We illustrate use of 1000Genomes reference panel, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), 
-the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`, where we download and extract the data on the fly. The associate [p0.do](1KG/p0.do) is also given.
 
 ## Outputs
 
