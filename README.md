@@ -103,7 +103,7 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
 
 ### --- The lead SNPs ---
 
-Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxilliary file called `st.bed` 
+Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxiliary file called `st.bed` 
 contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA 
 conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
 and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
