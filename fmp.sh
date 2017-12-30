@@ -1,5 +1,5 @@
 #!/bin/bash
-# 27-12-2017 MRC-Epid JHZ
+# 30-12-2017 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -32,8 +32,6 @@ export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample exclusion list
 export wd=$(pwd)
 export sample_to_exclude=$wd/exclude.id
-# -/+ flanking position
-export flanking=250000
 # number of threads
 export threads=5
 export LD_MAGIC=0
@@ -269,6 +267,8 @@ if [ $fgwas -eq 1 ]; then
        sort -k2,2 > $fgwas_location_1kg/chr{}.gene \
        fi'
    # specify regions
+   # -/+ flanking position
+   export flanking=250000
    awk -vfl=${flanking} '{l=$2;u=$3;if(l<0) l=1;print $5,$1,$4,l,u,NR}' st.bed | \
    sort -k1,1 > fgwas.snplist
    # the standard fgwas data
