@@ -1,5 +1,5 @@
 #!/bin/bash
-# 30-12-2017 MRC-Epid JHZ
+# 3-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -353,7 +353,7 @@ fi
 
 if [ $LocusZoom -eq 1 ] && [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
-   parallel -j1 -C' ' '
+   parallel -j1 --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
        awk "NR==1" $f.sav | \
