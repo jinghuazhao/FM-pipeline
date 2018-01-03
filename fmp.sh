@@ -349,9 +349,6 @@ if [ $finemap -eq 1 ]; then
    sort -k1,1n -k2,2n >> snp.dat
    R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
    R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
-fi
-
-if [ $LocusZoom -eq 1 ] && [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | \
    parallel -j1 --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
