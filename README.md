@@ -109,7 +109,7 @@ Given these, one can do away with Stata and work on a text version for instance 
 contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA 
 conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
 and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
-quality.
+quality. As it is very slow, we use [counterparts](files/gcta.sh) for .bgen instead.
 
 Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
 
