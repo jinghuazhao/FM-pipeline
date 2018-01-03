@@ -59,7 +59,7 @@ R CMD INSTALL R2BGLiMS
 ```
 Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [xpdf](https://www.xpdfreader.com/) is used.
 
-We use [Stata](https://www.stata.com/) for some of the data preparation, which would become handy when available.
+We use [Stata](https://www.stata.com/) and Sun grid engine (sge) for some of the data preparation, which would become handy when available.
 
 ## USAGE
 
