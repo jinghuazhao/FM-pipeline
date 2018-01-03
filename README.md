@@ -157,7 +157,7 @@ awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
 
 We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[code](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [p0.do](1KG/p0.do) to generate the required data.
+[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [p0.do](1KG/p0.do) to generate the required data.
 
 ## ACKNOWLEDGEMENTS
 
