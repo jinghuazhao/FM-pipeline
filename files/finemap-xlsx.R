@@ -1,7 +1,8 @@
-# 22-11-2017 MRC-Epid JHZ
+# 3-11-2018 MRC-Epid JHZ
 
 options(digits=3, scipen=20, width=200)
 
+lz <- Sys.getenv("LocusZoom")
 library(openxlsx)
 bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
 for(r in 1:nrow(bed))
