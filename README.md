@@ -59,6 +59,8 @@ R CMD INSTALL R2BGLiMS
 ```
 Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [xpdf](https://www.xpdfreader.com/) is used.
 
+We use [Stata](https://www.stata.com/) for some of the data preparation, which would become handy when available.
+
 ## USAGE
 
 Before start, settings at the beginning of the script need to be changed and only minor change is expected after this. The syntax of pipeline is then simply
@@ -100,9 +102,6 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
  1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
-
-We illustrate use of 1000Genomes reference panel, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), 
-the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`, where we download and extract the data on the fly. The associate [p0.do](1KG/p0.do) is also given.
 
 ### --- The lead SNPs ---
 
@@ -156,6 +155,10 @@ sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 ```
 where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
+
+We illustrate use of 1000Genomes reference panel, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), 
+the [code](1KG/1KG.sh) to generate `SNPinfo.dta.gz`, where we download and extract the data on the fly. The associate file [p0.do](1KG/p0.do) is used to
+generate the required data.
 
 ## ACKNOWLEDGEMENTS
 
