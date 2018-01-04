@@ -1,5 +1,5 @@
 #!/bin/bash
-# 3-1-2018 MRC-Epid JHZ
+# 4-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -58,7 +58,7 @@ ln -sf $wd/st.bed
 
 echo "--> map/ped"
 awk 'NR>1' st.bed | \
-parallel -j${threads} --env FM_location --env GEN_location --env wd -C' ' '
+parallel -j${threads} --env sample_file --env FM_location --env GEN_location --env wd -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
