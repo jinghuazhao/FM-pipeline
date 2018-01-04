@@ -111,7 +111,8 @@ conditional/joint analysis requires whole chromosome reference the counterpart i
 and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
 quality. As it is very slow, we use [counterparts](files/gcta.sh) for .bgen instead.
 
-Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed
+Optionally, a file is specified which contains sample to be excluded from the reference panel; one leaves it unspecified when not needed.
+In line with qctool -excl-samples option, it contains a list of individuals corresponding to ID_1 of sample file rather than ID_1 and ID_2.
 
 ## Outputs
 
