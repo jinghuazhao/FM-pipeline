@@ -42,7 +42,7 @@ The pipeline itself can be installed in the usual way,
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
 The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
-over different builds. To remedy this, we use information from UCSC, i.e.,
+over different builds. To remedy this, we use information from UCSC, e.g.,
 ```
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
 gunzip -c snp150.txt.gz | \
