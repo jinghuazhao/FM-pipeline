@@ -31,7 +31,7 @@ export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 # sample exclusion list
 export wd=$(pwd)
-export sample_to_exclude=$wd/exclude.id
+export sample_to_exclude=$wd/exclude.dat
 # number of threads
 export threads=5
 export LD_MAGIC=0
@@ -57,12 +57,16 @@ awk '{
 ln -sf $wd/st.bed
 
 echo "--> binary_ped"
-awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location --env wd -C' ' '
+export OPTs=""
+if [ -f ${sample_to_exclude} ]; then 
+   export OPTs="-excl-samples ${sample_to_exclude}"
+fi
+awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location --env OPTs -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
     qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
-          -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1}'
+          -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1} $OPTs'
 echo "region-specific data"
 awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
@@ -90,17 +94,9 @@ awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
          sort -k11,11 > $f.dat'
 
 echo "--> bfile"
-export N0=$(wc -l $sample_file | cut -d" " -f1)
-export OPTs=""
-export N1=0
-if [ -f ${sample_to_exclude} ]; then 
-   export OPTs="--remove ${sample_to_exclude}"
-   export N1=$(wc -l $sample_to_exclude | cut -d" " -f1)
-fi
-export N=$(bc -l <<<$N0-2-$N1)
 awk 'NR>1' st.bed | parallel -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
-    plink-1.9 --bfile $GEN_location/$f --extract $f.inc ${OPTs} \
+    plink-1.9 --bfile $GEN_location/$f --extract $f.inc \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 
 if [ $LD_MAGIC -eq 1 ]; then
