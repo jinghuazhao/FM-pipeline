@@ -34,7 +34,7 @@ pipeline's settings.
 
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
 
-Besides (sub)set of software listed in the table above, the pipeline requires [qctool](http://www.well.ox.ac.uk/~gav/qctool/#overview),
+Besides (sub)set of software listed in the table above, the pipeline requires [qctool 2.0](http://www.well.ox.ac.uk/~gav/qctool/#overview),
 [PLINK](https://www.cog-genomics.org/plink2) 1.9, and the companion program LDstore from finemap's website need to be installed. 
 
 The pipeline itself can be installed in the usual way,
