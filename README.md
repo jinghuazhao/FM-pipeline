@@ -34,7 +34,7 @@ pipeline's settings.
 
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
 
-Besides (sub)set of software listed in the table above, the pipeline requires [GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html),
+Besides (sub)set of software listed in the table above, the pipeline requires [qctool](http://www.well.ox.ac.uk/~gav/qctool/#overview),
 [PLINK](https://www.cog-genomics.org/plink2) 1.9, and the companion program LDstore from finemap's website need to be installed. 
 
 The pipeline itself can be installed in the usual way,
@@ -163,7 +163,8 @@ We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](
 
 The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in 
 the Physalia course `Practical GWAS Using Linux and R` are greatly appreciated. In particular, the [utility program in Stata](files/st.do) was adapted from
-code originally written by Dr Jian'an Luan and computeCorrelationsImpute2forFINEMAP.r from the MAGIC consortium.
+code originally written by Dr Jian'an Luan and computeCorrelationsImpute2forFINEMAP.r from the MAGIC consortium. Earlier version of the pipeline also used
+[GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html).
 
 ## SOFTWARE AND REFERENCES
 
