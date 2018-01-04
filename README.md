@@ -87,7 +87,8 @@ Column | Name | Description
 9*  | chr | chromosome
 10* | pos | position
 
-This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not normally required but can obtained from UCSC.
+This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not always available but can 
+be obtained from UCSC as above; see below for example use.
 
 ### --- Reference panel ---
 
