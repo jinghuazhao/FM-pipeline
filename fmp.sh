@@ -220,10 +220,10 @@ if [ $JAM -eq 1 ]; then
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p; \
        export f=chr{1}_{2}_{3}p; \
        R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
-       rm -f jam.top jam.txt
-       touch jam.top jam.txt
-       awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum' >> jam.top
-       cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {} >> jam.txt;cat {}p.top {}p.jam >> jam.txt'
+   rm -f jam.top jam.txt
+   touch jam.top jam.txt
+   awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum' >> jam.top
+   cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {} >> jam.txt;cat {}p.top {}p.jam >> jam.txt'
 fi
 
 if [ $LocusZoom -eq 1 ]; then
