@@ -117,7 +117,7 @@ ld_filename <- sprintf( "%s.ld.gz", args[ 8 ] )
 # Filter            #
 #-------------------#
 
-chromosome <- as.numeric( args[ 3 ] )
+chromosome <- args[ 3 ]
 start_position <- as.numeric( args[ 4 ] )
 end_position <- as.numeric( args[ 5 ] )
 maf_filter <- as.numeric( args[ 6 ] )
@@ -181,11 +181,12 @@ info_data <- info_data[ indexes_variants_to_include, ]
 
 # Read first line only
 file_handle <- gzfile( gen_filename, 'r' )
-first_line <- strsplit( readLines( file_handle, n = 1 ), split = " |\t" )[[ 1 ]]
+first_line <- strsplit( readLines( file_handle, n = 1 ), split = " " )[[ 1 ]]
 close( file_handle )
 
 # Save number of individuals
 n_samples <- ( length( first_line ) - 5 ) / 3
+# n_samples <- ( length( first_line ) - 6 ) / 3#For files from qctool
 if ( n_samples != ceiling( n_samples ) ) {
 	stop( "The gen.gz file is not correct for sample size!", call. = FALSE )
 }
@@ -199,15 +200,17 @@ for ( ii in 6:length( first_line ) ){
 
 # Read gen of variants within
 # the specified genomic range
-start_position_index <- min( which( indexes_variants_to_include ) ) - 1
+start_position_index <- min( which( indexes_variants_to_include ) )
+m1_variants <- max( which( indexes_variants_to_include ) ) - start_position_index + 1
 file_handle <- gzfile( gen_filename, 'r' )
-gen_data <- scan( file_handle, what, skip = start_position_index, nlines = m0_variants, quiet = TRUE )
+gen_data <- scan( file_handle, what, skip = start_position_index - 1, nlines = m1_variants, quiet = TRUE )
 close( file_handle )
 
 # Check that there are gens for as
 # many variants as there are in the
 # .info file
-if( any( gen_data[[ 3 ]] != info_data$position ) ) {
+indexes_variants_to_include <- which( indexes_variants_to_include ) - start_position_index + 1
+if( any( gen_data[[ 3 ]][ indexes_variants_to_include ] != info_data$position ) ) {
 	stop( 
 		sprintf( 
 			"The positions of variants in '%s' and '%s' are not the same!", 
@@ -218,13 +221,13 @@ if( any( gen_data[[ 3 ]] != info_data$position ) ) {
 	)
 }
 
-ref <- gen_data[[ 4 ]]
-alt <- gen_data[[ 5 ]]
+ref <- gen_data[[ 4 ]][ indexes_variants_to_include ]
+alt <- gen_data[[ 5 ]][ indexes_variants_to_include ]
 gen_data[ 3 ] <- gen_data[ 4 ] <- gen_data[ 5 ] <- NULL
 gen_data <- do.call( cbind,  gen_data )
 dosages <- ( gen_data[ , ( 1:n_samples ) * 3 - 1 ] + 2 * gen_data[ , ( 1:n_samples ) * 3 ] ) / ( gen_data[ , ( 1:n_samples ) * 3 - 2 ] + gen_data[ , ( 1:n_samples ) * 3 - 1 ] + gen_data[ , ( 1:n_samples ) * 3 ] )
 rm( gen_data )
-dosages <- t( dosages )
+dosages <- t( dosages[ indexes_variants_to_include, ] )
 
 # Check that there are no missing dosages
 missdosage <- is.na( dosages )
@@ -266,7 +269,7 @@ file_handle <- file( map_filename, 'wt' )
 writeLines( sprintf( "## Info               : %s", info_filename ), file_handle )
 writeLines( sprintf( "## Gen                : %s", gen_filename ), file_handle )
 writeLines( sprintf( "## Correlations       : %s", ld_filename ), file_handle )
-writeLines( sprintf( "## Chromosome         : %d", chromosome ), file_handle )
+writeLines( sprintf( "## Chromosome         : %s", chromosome ), file_handle )
 writeLines( sprintf( "## Genomic range      : %d-%d", start_position, end_position ), file_handle )
 writeLines( sprintf( "## Minor allele freq  : %.2f", maf_filter ), file_handle )
 writeLines( sprintf( "## Imputation quality : %.2f", imputation_filter ), file_handle )
