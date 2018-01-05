@@ -16,10 +16,11 @@ chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
 chk
 save(chk, file=paste0(f,".chk"))
 
+## Code below is courtesy of Ji Chen 
+
 ## Read config file
 configs <- config
 
-## Courtesy of Ji Chen 
 ## Find number of configs that
 ## account for 99% probability
 ## mass
