@@ -1,4 +1,4 @@
-# 2-1-2018 MRC-Epid JHZ
+# 5-1-2018 MRC-Epid JHZ
 
 options(echo=FALSE, width=200)
 
@@ -15,3 +15,16 @@ subset(config,config_prob>0.01)
 chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
 chk
 save(chk, file=paste0(f,".chk"))
+## Read config file
+configs <- config
+
+## Courtesy of Ji Chen 
+## Find number of configs that
+## account for 99% probability
+## mass
+end <- which( cumsum( configs$config_prob ) >= 0.99 )[ 1 ]
+
+## Get variants in p%
+## credible set
+cred_set <- unique( strsplit( paste( configs$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
+cred_set
