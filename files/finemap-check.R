@@ -15,6 +15,7 @@ subset(config,config_prob>0.01)
 chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
 chk
 save(chk, file=paste0(f,".chk"))
+
 ## Read config file
 configs <- config
 
