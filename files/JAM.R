@@ -1,4 +1,4 @@
-# 6-12-2017 MRC-Epid JHZ
+# 5-1-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -30,6 +30,14 @@ sink(paste0(f, ".jam"))
 slot(j, "posterior.summary.table")
 cbind(ssnpid, snpid[cc], rsid[cc])
 sink()
+tm <- TopModels(j)
 sink(paste0(f, ".top"))
-TopModels(j)
+tm
+sink()
+n.col <- ncol(tm)
+n.snps <- n.col-1
+post.prob <- tm[,n.col]
+n.sel <- apply(tm[,1:n.snps],1,sum)
+sink(paste0(f,".sum"))
+cbind(n.sel,post.prob)
 sink()
