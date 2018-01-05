@@ -1,5 +1,5 @@
 #!/bin/bash
-# 4-1-2018 MRC-Epid JHZ
+# 5-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -58,7 +58,7 @@ ln -sf $wd/st.bed
 
 echo "--> binary_ped"
 export OPTs=""
-if [ -f ${sample_to_exclude} ]; then 
+if [ -f $sample_to_exclude ] && [ ! -z "$sample_to_exclude" ]; then 
    export OPTs="-excl-samples ${sample_to_exclude}"
 fi
 awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location --env OPTs -C' ' '
