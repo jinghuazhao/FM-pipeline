@@ -1,4 +1,4 @@
-# 5-1-2018 MRC-Epid JHZ
+# 6-1-2018 MRC-Epid JHZ
 
 options(echo=FALSE, width=200)
 
@@ -16,7 +16,7 @@ chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
 chk
 save(chk, file=paste0(f,".chk"))
 
-## Code below is courtesy of Ji Chen 
+## Code below is partly by Ji Chen 
 
 ## Read config file
 configs <- config
@@ -29,4 +29,8 @@ end <- which( cumsum( configs$config_prob ) >= 0.99 )[ 1 ]
 ## Get variants in p%
 ## credible set
 cred_set <- unique( strsplit( paste( configs$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
-cred_set
+
+index <- with(subset(snp, snp%in%cred_set), index)
+head(configs, length(index))
+chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
+
