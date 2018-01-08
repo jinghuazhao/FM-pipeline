@@ -1,4 +1,4 @@
-# 6-1-2018 MRC-Epid JHZ
+# 8-1-2018 MRC-Epid JHZ
 
 options(echo=FALSE, width=200)
 
@@ -12,7 +12,7 @@ config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
 options(echo=TRUE)
 subset(snp, snp_prob>0.01)
 subset(config,config_prob>0.01)
-chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
+chk <- cbind(z[index, c("snp","z")], snp[1:length(index), -2], ld[index, index])
 chk
 save(chk, file=paste0(f,".chk"))
 
