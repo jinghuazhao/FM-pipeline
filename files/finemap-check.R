@@ -12,7 +12,7 @@ config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
 options(echo=TRUE)
 subset(snp, snp_prob>0.01)
 subset(config,config_prob>0.01)
-chk <- cbind(z[index, c("snp","z")], snp[1:length(index), -2], ld[index, index])
+chk <- cbind(z[index, ], snp[1:length(index), c(3,4)], ld[index, index])
 chk
 save(chk, file=paste0(f,".chk"))
 
@@ -32,5 +32,5 @@ cred_set <- unique( strsplit( paste( configs$config[ seq( end ) ], collapse = ',
 
 index <- with(subset(snp, snp%in%cred_set), index)
 head(configs, length(index))
-chk <- cbind(z[index, ], snp[1:length(index), -2], ld[index, index])
+chk <- cbind(z[index, ], snp[1:length(index), c(3,4)], ld[index, index])
 chk
