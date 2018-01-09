@@ -19,6 +19,7 @@ forval k=1/22 {
    keep if chr==`k'
    save `f0', replace
    import delimited using st.bed, asdouble delim(" ") clear
+   keep chr start end
    drop if end<=start
    destring chr, replace
    keep if chr==`k'
