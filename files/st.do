@@ -14,6 +14,7 @@ order rsid pos exp_freq_a1 info type RSnum
 
 tempfile f0
 !rm -f `T'/Extract.sh
+!touch `T'/Extract.sh
 forval k=1/22 {
    preserve
    keep if chr==`k'
