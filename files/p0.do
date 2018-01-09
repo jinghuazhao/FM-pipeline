@@ -26,6 +26,7 @@ forval k=1/22 {
 	keep if chr==`k'
 	save `f0', replace
 	import delimited using doc/st.sav, varnames(nonames) asdouble delim(" ") clear
+	keep chr start end
 	drop if v3<=v2
 //	replace v1="23" if v1=="X"
 	destring v1, replace
