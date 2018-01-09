@@ -104,12 +104,12 @@ if [ $LD_MAGIC -eq 1 ]; then
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
-    qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f \
-          -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1} $OPTs;\
-    awk -f $FM_location/files/LD_MAGIC.awk $GEN_location/$f.info > $GEN_location/$f.magic; \
-    gzip -f $GEN_location/$f.ord; \
+    qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f.magic.gen \
+          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome {1} $OPTs;\
+    awk -f $FM_location/files/LD_MAGIC.awk $GEN_location/$f.info > $GEN_location/$f.magic.info; \
+    gzip -f $GEN_location/$f.magic.gen; \
     Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-            $GEN_location/$f.magic $GEN_location/$f.ord.gz {1} {2} {3} 0.05 0.4 $f.magic $threads'
+            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.05 0.4 $f.magic $threads'
 fi
 
 if [ $LD_PLINK -eq 1 ]; then
