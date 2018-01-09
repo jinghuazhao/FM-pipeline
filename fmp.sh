@@ -105,7 +105,7 @@ if [ $LD_MAGIC -eq 1 ]; then
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
     qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f.magic.gen \
-          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome {1} $OPTs;\
+          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome $OPTs;\
     awk -f $FM_location/files/LD_MAGIC.awk $GEN_location/$f.info > $GEN_location/$f.magic.info; \
     gzip -f $GEN_location/$f.magic.gen; \
     Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
