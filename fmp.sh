@@ -102,8 +102,10 @@ awk 'NR>1' st.bed | parallel -j${threads} --env GEN_location -C' ' '
 if [ $LD_MAGIC -eq 1 ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
+       awk -f $FM_location/files/LD_MAGIC.awk $GEN_location/$f.info > $GEN_location/$f.magic; \
+       gzip -f $GEN_location/$f.ord; \
        Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-               $GEN_location/$f.info $GEN_location/$f.gen.gz {1} {2} {3} 0.05 0.9 $f.magic $threads'
+               $GEN_location/$f.magic $GEN_location/$f.ord.gz {1} {2} {3} 0.05 0.4 $f.magic $threads'
 fi
 
 if [ $LD_PLINK -eq 1 ]; then
