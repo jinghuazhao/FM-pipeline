@@ -104,9 +104,10 @@ chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  |
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-Optionally, a file is specified which contains samples to be excluded from the reference panel; one leaves it unspecified when 
-not needed. In line with qctool -excl-samples option, it contains a list of individuals corresponding to ID_1 of [sample 
-file](http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html) rather than ID_1 and ID_2.
+Optionally, a file is specified which contains samples to be excluded from the reference panel; one leaves it 
+unspecified when not needed. In line with qctool -excl-samples option, it contains a list of individuals corresponding 
+to ID_2 of the [sample file](http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html) rather than ID_1 and 
+ID_2.
 
 ### --- The lead SNPs ---
 
