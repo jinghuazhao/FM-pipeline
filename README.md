@@ -165,11 +165,12 @@ We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](
 
 ## ACKNOWLEDGEMENTS
 
-The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, 
-FM-summary as with participants in the Physalia course `Practical GWAS Using Linux and R` are greatly appreciated. In 
-particular, the [utility program in Stata](files/st.do) was adapted from code originally written by Dr Jian'an Luan and 
-computeCorrelationsImpute2forFINEMAP.r by Ji Chen from the MAGIC consortium who also provides code the credible set. Earlier 
-version of the pipeline also used [GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html).
+The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, 
+JAM, FM-summary as with participants in the Physalia course `Practical GWAS Using Linux and R` are greatly 
+appreciated. In particular, the [utility program in Stata](files/st.do) was adapted from code originally written by Dr 
+Jian'an Luan and computeCorrelationsImpute2forFINEMAP.r by Ji Chen from the MAGIC consortium who also provides code 
+calculating the credible set based on finemap configurations. Earlier version of the pipeline also used 
+[GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html).
 
 ## SOFTWARE AND REFERENCES
 
