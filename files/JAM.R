@@ -29,7 +29,6 @@ j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampli
 pst <- slot(j, "posterior.summary.table")
 tm <- TopModels(j)
 ssr <- data.frame(ssnpid=ssnpid, snpid=snpid[cc], rsid=rsid[cc])
-pst <- as.data.frame(pst)
 sink(paste0(f, ".jam"))
 pst
 ssr
@@ -46,6 +45,8 @@ cbind(n.sel,post.prob)
 sink()
 tm1 <- tm[1,-n.col]
 selected <- names(tm1[tm1==1])
-if(length(selected)>0&length(selected)!=n.snps)
-  t <- cbind(SNP=selected, subset(ssr,snpid%in%selected), subset(pst,rownames(pst)%in%selected))
-write.table(t,paste0(f,".sel"),row.names=FALSE,quote=FALSE)
+if(n.sel[1]>0&n.sel[1]!=n.snps)
+{
+   t <- cbind(subset(ssr,ssnpid%in%selected), rep(post.prob[1],n.sel[1]), subset(pst,rownames(pst)%in%selected))
+   write.table(t,paste0(f,".sel"),row.names=FALSE,quote=FALSE)
+}
