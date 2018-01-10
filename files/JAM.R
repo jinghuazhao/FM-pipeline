@@ -45,4 +45,5 @@ cbind(n.sel,post.prob)
 sink()
 tm1 <- tm[1,-n.col]
 selected <- names(tm1[tm1==1])
-if(length(selected)>0&length(selected)!=n.col-1) cbind(selected,post.prob[1],ssr[ssr[,2]%in%selected,],pst[rownames(pst)%in%selected,])
+if(length(selected)>0&length(selected)!=n.snps) 
+  cbind(selected,post.prob[1],ssr[ssr[,2]%in%selected,],pst[rownames(pst)%in%selected,])
