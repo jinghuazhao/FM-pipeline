@@ -26,7 +26,8 @@ names(beta) <- colnames(X.ref) <- ssnpid
 priors <- list("a"=1, "b"=length(beta), "Variables"=ssnpid)
 n <- 15234
 j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = TRUE, model.space.priors=priors)
-pst <- as.data.frame(slot(j, "posterior.summary.table"))
+pst <- slot(j, "posterior.summary.table")
+pst <- as.data.frame(pst)
 ssr <- data.frame(ssnpid=ssnpid, snpid=snpid[cc], rsid=rsid[cc])
 sink(paste0(f, ".jam"))
 pst
