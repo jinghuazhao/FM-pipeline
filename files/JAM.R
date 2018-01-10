@@ -26,8 +26,8 @@ names(beta) <- colnames(X.ref) <- ssnpid
 priors <- list("a"=1, "b"=length(beta), "Variables"=ssnpid)
 n <- 15234
 j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = TRUE, model.space.priors=priors)
-pst <- slot(j, "posterior.summary.table")
-ssr <- cbind(ssnpid, snpid[cc], rsid[cc])
+pst <- as.data.frame(slot(j, "posterior.summary.table"))
+ssr <- data.frame(ssnpid=ssnpid, snpid=snpid[cc], rsid=rsid[cc])
 sink(paste0(f, ".jam"))
 pst
 ssr
@@ -45,5 +45,6 @@ cbind(n.sel,post.prob)
 sink()
 tm1 <- tm[1,-n.col]
 selected <- names(tm1[tm1==1])
-if(length(selected)>0&length(selected)!=n.snps) 
-  cbind(selected,post.prob[1],ssr[ssr[,2]%in%selected,],pst[rownames(pst)%in%selected,])
+if(length(selected)>0&length(selected)!=n.snps)
+   t <- data.frame(SNP=selected, subset(ssr,snpid%in%selected), subset(pst,rownames(pst)%in%selected))
+write.table(t,paste0(f,".sel"),row.names=FALSE,quote=FALSE)
