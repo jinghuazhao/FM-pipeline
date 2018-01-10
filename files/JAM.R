@@ -26,9 +26,11 @@ names(beta) <- colnames(X.ref) <- ssnpid
 priors <- list("a"=1, "b"=length(beta), "Variables"=ssnpid)
 n <- 15234
 j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = TRUE, model.space.priors=priors)
+pst <- slot(j, "posterior.summary.table")
+ssr <- cbind(ssnpid, snpid[cc], rsid[cc])
 sink(paste0(f, ".jam"))
-slot(j, "posterior.summary.table")
-cbind(ssnpid, snpid[cc], rsid[cc])
+pst
+ssr
 sink()
 tm <- TopModels(j)
 sink(paste0(f, ".top"))
@@ -41,3 +43,6 @@ n.sel <- apply(tm[,1:n.snps],1,sum)
 sink(paste0(f,".sum"))
 cbind(n.sel,post.prob)
 sink()
+tm1 <- tm[1,-n.col]
+selected <- names(tm1[tm1==1])
+if(length(selected)>0&length(selected)!=n.col-1) cbind(selected,post.prob[1],ssr[ssr[,2]%in%selected,],pst[rownames(pst)%in%selected,])
