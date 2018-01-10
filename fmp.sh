@@ -1,5 +1,5 @@
 #!/bin/bash
-# 9-1-2018 MRC-Epid JHZ
+# 10-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -106,7 +106,7 @@ if [ $LD_MAGIC -eq 1 ]; then
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
     qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f.magic.gen \
           -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome $OPTs;\
-    awk -f $FM_location/files/LD_MAGIC.awk $GEN_location/$f.info > $GEN_location/$f.magic.info; \
+    awk -f $FM_location/files/info.awk c=2 $GEN_location/$f.info > $GEN_location/$f.magic.info; \
     gzip -f $GEN_location/$f.magic.gen; \
     Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
             $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.05 0.4 $f.magic $threads'
@@ -162,7 +162,7 @@ if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
    awk 'NR>1' st.bed | parallel -j${threads} --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk -f $FM_location/files/info.awk chr={1} $GEN_location/$f.info | \
+       awk -f $FM_location/files/info.awk c=1 chr={1} $GEN_location/$f.info | \
        sort -k2,2 > $f.tmp; \
        sort -k2,2 $GEN_location/$f.bim | \
        join -j2 $f.tmp - | \
