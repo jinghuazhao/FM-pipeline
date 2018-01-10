@@ -27,13 +27,13 @@ priors <- list("a"=1, "b"=length(beta), "Variables"=ssnpid)
 n <- 15234
 j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = TRUE, model.space.priors=priors)
 pst <- slot(j, "posterior.summary.table")
-pst <- as.data.frame(pst)
+tm <- TopModels(j)
 ssr <- data.frame(ssnpid=ssnpid, snpid=snpid[cc], rsid=rsid[cc])
+pst <- as.data.frame(pst)
 sink(paste0(f, ".jam"))
 pst
 ssr
 sink()
-tm <- TopModels(j)
 sink(paste0(f, ".top"))
 tm
 sink()
@@ -47,5 +47,5 @@ sink()
 tm1 <- tm[1,-n.col]
 selected <- names(tm1[tm1==1])
 if(length(selected)>0&length(selected)!=n.snps)
-   t <- data.frame(SNP=selected, subset(ssr,snpid%in%selected), subset(pst,rownames(pst)%in%selected))
+  t <- cbind(SNP=selected, subset(ssr,snpid%in%selected), subset(pst,rownames(pst)%in%selected))
 write.table(t,paste0(f,".sel"),row.names=FALSE,quote=FALSE)
