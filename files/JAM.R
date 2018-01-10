@@ -1,4 +1,4 @@
-# 5-1-2018 MRC-Epid JHZ
+# 10-1-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
