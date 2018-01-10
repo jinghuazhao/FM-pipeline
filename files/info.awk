@@ -1,5 +1,5 @@
 {
-  t=$1
+  t=$c
   gsub(/:|_/," ",t)
   split(t,a," ")
   chr=a[1]
