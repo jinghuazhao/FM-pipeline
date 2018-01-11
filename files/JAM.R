@@ -25,7 +25,7 @@ ssnpid <- paste0("snp", 1:length(beta[cc]))
 names(beta) <- colnames(X.ref) <- ssnpid
 priors <- list("a"=1, "b"=length(beta), "Variables"=ssnpid)
 n <- 15234
-j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = TRUE, model.space.priors=priors)
+j <- JAM(marginal.betas=beta, n=n, X.ref=X.ref, n.mil=5, tau=n, full.mcmc.sampling = FALSE, model.space.priors=priors)
 pst <- slot(j, "posterior.summary.table")
 tm <- TopModels(j)
 ssr <- data.frame(ssnpid=ssnpid, snpid=snpid[cc], rsid=rsid[cc])
