@@ -1,4 +1,4 @@
-# 10-1-2018 MRC-Epid JHZ
+# 11-1-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -47,6 +47,7 @@ tm1 <- tm[1,-n.col]
 selected <- names(tm1[tm1==1])
 if(n.sel[1]>0&n.sel[1]!=n.snps)
 {
-   t <- cbind(subset(ssr,ssnpid%in%selected), rep(post.prob[1],n.sel[1]), subset(pst,rownames(pst)%in%selected))
+   pp_model <- rep(post.prob[1],n.sel[1])
+   t <- cbind(subset(ssr,ssnpid%in%selected), pp_model, subset(pst,rownames(pst)%in%selected))
    write.table(t,paste0(f,".sel"),row.names=FALSE,quote=FALSE)
 }
