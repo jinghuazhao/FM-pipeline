@@ -318,21 +318,6 @@ if [ $finemap -eq 1 ]; then
        cut -d" " -f9 | \
        awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
-   echo "snpid region index snp_prob snp_log10bf rsid" > snp.100
-   echo "rank config config_prob config_log10bf region" > config.dat
-   awk 'NR>1' st.bed | parallel -j1 --env FM_location -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk "(NR>1 && \$3>0.01){print \$0,f}" f=$f $f.config >> config.dat; \
-       R -q --no-save < ${FM_location}/files/finemap-check.R > $f.check; \
-       cut -d" " -f10,11 $f.r > $f.tmp; \
-       awk "(NR>1&&\$3>0.8&&\$4>2){print f, \$0}" f=$f $f.snp | \
-       sort -k3,3 | \
-       join -13 -22 - $f.tmp >> snp.100'
-   echo "chr pos log10BF prob snpid rsid region" > snp.dat
-   awk '(NR>1){snpid=$1;gsub(/:|_/," ",$1);split($1,a," ");print a[1],a[2],$5,$4,snpid,$6,$2}' snp.100 | \
-   sort -k1,1n -k2,2n >> snp.dat
-   R -q --no-save < ${FM_location}/files/finemap-plot.R > finemap-plot.log
-   R -q --no-save < ${FM_location}/files/finemap-top.R > finemap-top.log
    awk 'NR>1' st.bed | parallel -j1 --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
@@ -342,8 +327,8 @@ if [ $finemap -eq 1 ]; then
        sort -k2,2 | \
        join -j2 - $f.rsid | \
        sort -k5,5n | \
-       awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp'
-   R -q --no-save < ${FM_location}/files/finemap-xlsx.R > finemap-xlsx.log
+       awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp; \
+       R -q --no-save < ${FM_location}/files/finemap.R > $f.out'
 fi
 
 # obsolete with gtool/plink-1.9 handling gen/ped
