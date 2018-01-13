@@ -22,7 +22,7 @@ head(config, end)
 ## Get variants in 99% credible set
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
 
-index <- with(subset(snp, snp%in%credible_set), index)
+index <- with(subset(snp, snp%in%credible_set&snp_prob>0), index)
 cs <- cbind(z[index, ], snp[index, c(3,4)])
 cs
 
