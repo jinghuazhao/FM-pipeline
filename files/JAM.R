@@ -1,4 +1,4 @@
-# 12-1-2018 MRC-Epid JHZ
+# 13-1-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -69,10 +69,10 @@ dev.off()
 
 xlsx <- paste0(f,".xlsx")
 wb <- createWorkbook(xlsx)
-addWorksheet(wb, "TopModels")
-writeDataTable(wb, "TopModels", as.data.frame(tm))
 addWorksheet(wb, "ID")
 writeDataTable(wb, "ID", ssr)
+addWorksheet(wb, "TopModels")
+writeDataTable(wb, "TopModels", as.data.frame(tm))
 addWorksheet(wb, "Model.1")
 PostProb_model <- rep(post.prob[1],n.sel[1])
 writeDataTable(wb, "Model.1", cbind(subset(ssr,ssnpid%in%selected),PostProb_model,subset(pst,rownames(pst)%in%selected)))
@@ -80,10 +80,10 @@ addWorksheet(wb, "CredibleSet")
 writeDataTable(wb, "CredibleSet", cbind(subset(ssr,ssnpid%in%cs),pst[rownames(pst)%in%cs,]))
 addWorksheet(wb, "ModelSizeBayesFactors")
 writeDataTable(wb, "ModelSizeBayesFactors", as.data.frame(msbf))
-addWorksheet(wb, "Manhattan.plot")
-insertImage(wb, "Manhattan.plot", paste0(f, ".png"), width=18, height=12)
 addWorksheet(wb, "posterior.summary.table")
 writeDataTable(wb, "posterior.summary.table", cbind(ID=rownames(pst), as.data.frame(pst)))
+addWorksheet(wb, "Manhattan.plot")
+insertImage(wb, "Manhattan.plot", paste0(f, ".png"), width=18, height=12)
 saveWorkbook(wb, file=xlsx, overwrite=TRUE)
 
 # obsolete as it only deals with complete data
