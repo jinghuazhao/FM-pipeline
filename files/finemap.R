@@ -1,6 +1,6 @@
 # 13-1-2018 MRC-Epid JHZ
 
-options(digits=3, scipen=20, width=200)
+options(digits=3, scipen=20, width=500)
 
 f <- Sys.getenv("f")
 cat(f, "\n")
@@ -15,13 +15,11 @@ chk <- cbind(z[index, ], snp[1:length(index), c(3,4)], ld[index, index])
 chk
 
 ## Adapted from code by Ji Chen 
-## Find number of configs that account for 99% probability mass
-end <- which( cumsum( config$config_prob ) >= 0.99 )[ 1 ]
-head(config, end)
-
-## Get variants in 99% credible set
+## Find number of configs that account for 75% probability mass
+end <- which( cumsum( config$config_prob ) >= 0.75 )[ 1 ]
+## Get variants in the credible set
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
-
+head(config, end)
 index <- with(subset(snp, snp%in%credible_set&snp_prob>0), index)
 cs <- cbind(z[index, ], snp[index, c(3,4)])
 cs
