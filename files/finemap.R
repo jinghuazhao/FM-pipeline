@@ -13,7 +13,6 @@ subset(snp, snp_prob>0.01)
 subset(config,config_prob>0.01)
 chk <- cbind(z[index, ], snp[1:length(index), c(3,4)], ld[index, index])
 chk
-save(chk, file=paste0(f,".chk"))
 
 ## Adapted from code by Ji Chen 
 ## Find number of configs that account for 99% probability mass
@@ -35,7 +34,6 @@ addWorksheet(wb, paste0(f, ".snp"))
 writeDataTable(wb, paste0(f, ".snp"), snp)
 addWorksheet(wb, paste0(f, ".cfg"))
 writeDataTable(wb, paste0(f, ".cfg"), config)
-load(paste0(f, ".chk"))
 addWorksheet(wb, paste0(f, ".chk"))
 writeDataTable(wb, paste0(f, ".chk"), chk)
 addWorksheet(wb, paste0(f, ".cs"))
