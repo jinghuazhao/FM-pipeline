@@ -23,7 +23,7 @@ head(config, end)
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
 
 index <- with(subset(snp, snp%in%credible_set), index)
-cs <- cbind(z[index, ], snp[index, c(3,4)], ld[index, index])
+cs <- cbind(z[index, ], snp[index, c(3,4)])
 cs
 
 library(openxlsx)
