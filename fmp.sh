@@ -241,7 +241,7 @@ if [ $LocusZoom -eq 1 ]; then
        rm -f ld_cache.db; \
        locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date; \
        pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}'
-   R -q --no-save < $FM_location}/files/lz.R > lz.log
+   R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
 
 if [ $fgwas -eq 1 ]; then
