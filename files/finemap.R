@@ -28,7 +28,7 @@ cs <- cbind(z[index, ], snp[index, c(3,4)], ld[index, index])
 cs
 
 library(openxlsx)
-xlsx <- paste0("chr", f, "-", rsid, ".xlsx")
+xlsx <- paste0("chr", f, "-finemap", ".xlsx")
 unlink(xlsx, recursive = FALSE, force = TRUE)
 wb <- createWorkbook(xlsx)
 snp <- read.table(paste0("chr", f, ".snp"), as.is=TRUE, header=TRUE)
