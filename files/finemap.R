@@ -18,7 +18,7 @@ save(chk, file=paste0(f,".chk"))
 ## Adapted from code by Ji Chen 
 ## Find number of configs that account for 99% probability mass
 end <- which( cumsum( config$config_prob ) >= 0.99 )[ 1 ]
-head(configs, end)
+head(config, end)
 
 ## Get variants in 99% credible set
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
