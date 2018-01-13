@@ -27,7 +27,7 @@ cs <- cbind(z[index, ], snp[index, c(3,4)], ld[index, index])
 cs
 
 library(openxlsx)
-xlsx <- paste0(f, "-finemap", ".xlsx")
+xlsx <- paste0(f, ".xlsx")
 unlink(xlsx, recursive = FALSE, force = TRUE)
 wb <- createWorkbook(xlsx)
 addWorksheet(wb, paste0(f, ".snp"))
