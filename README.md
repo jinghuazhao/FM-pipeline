@@ -131,7 +131,7 @@ JAM      | .jam/.top | the posterior summary table and top models containing sel
 finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 
 It is helpful to examine directions of effects together with the correlation of them, e.g., for use with finemap, the code 
-[here](files/finemap-check.R) is now embedded in the pipeline as with [an example](files/finemap-gold.xlsx).
+[here](files/finemap-check.R) is now embedded in the pipeline.
 
 ## EXAMPLE
 
