@@ -3,10 +3,10 @@
 options(digits=3, scipen=20, width=200)
 
 library(openxlsx)
-bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
-xlsx <- paste0("lz.xlsx")
+xlsx <- "lz.xlsx"
 unlink(xlsx, recursive = FALSE, force = TRUE)
 wb <- createWorkbook(xlsx)
+bed <- read.table("st.bed", as.is=TRUE, header=TRUE)
 for(r in 1:nrow(bed))
 {
    rsid <- with(bed, rsid)[r]
