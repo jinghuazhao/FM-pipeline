@@ -15,11 +15,11 @@ chk <- cbind(z[id, ], with(subset(snp,index%in%id), c(snp_prob,snp_log10bf)), ld
 chk
 
 ## Code from Ji Chen for number of configs that account for 75% probability and variants in the credible set
-end <- which( cumsum( config$config_prob ) >= 0.75 )[ 1 ]
+end <- which( cumsum( config$config_prob ) >= 0.95 )[ 1 ]
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
 head(config, end)
 id <- with(subset(snp,snp%in%credible_set),index)
-cs <- cbind(z[index,],with(subset(snp, index%in%id),c(snp_prob,snp_log10bf))
+cs <- cbind(z[id,],with(subset(snp, index%in%id),cbind(snp_prob,snp_log10bf)))
 cs
 
 library(openxlsx)
