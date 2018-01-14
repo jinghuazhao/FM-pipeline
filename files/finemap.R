@@ -18,7 +18,7 @@ chk
 end <- which( cumsum( config$config_prob ) >= 0.75 )[ 1 ]
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
 head(config, end)
-id <- with(subset(snp,index%in%credible_set),index)
+id <- with(subset(snp,snp%in%credible_set),index)
 cs <- cbind(z[index,],with(subset(snp, index%in%id),c(snp_prob,snp_log10bf))
 cs
 
