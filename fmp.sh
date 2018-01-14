@@ -215,7 +215,7 @@ fi
 
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
-   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location -C' ' '
+   awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
@@ -223,7 +223,8 @@ if [ $JAM -eq 1 ]; then
        cat $f.snpid >> $f.prune.in
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
-       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p; \
+       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
+   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}p; \
        R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
    rm -f jam.top jam.txt
