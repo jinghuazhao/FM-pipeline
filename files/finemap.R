@@ -14,12 +14,12 @@ id <- with(subset(snp, snp_prob>0.01), index)
 chk <- cbind(z[id, ], with(subset(snp,index%in%id), c(snp_prob,snp_log10bf)), ld[id, id])
 chk
 
-## Code from Ji Chen for number of configs that account for 75% probability and variants in the credible set
-end <- which( cumsum( config$config_prob ) >= 0.95 )[ 1 ]
+## Code from Ji Chen for number of configs that account for % probability and variants in the credible set
+end <- which( cumsum( config$config_prob ) >= 0.75 )[ 1 ]
 credible_set <- unique( strsplit( paste( config$config[ seq( end ) ], collapse = ',' ), split = ',' )[[ 1 ]] )
 head(config, end)
-id <- with(subset(snp,snp%in%credible_set),index)
-cs <- cbind(z[id,],with(subset(snp, index%in%id),cbind(snp_prob,snp_log10bf)))
+snplist <- with(subset(snp,(snp%in%credible_set)&snp_prob>0),snp)
+cs <- cbind(subset(z,snp%in%snplist),with(subset(snp, snp%in%snplist),cbind(snp_prob,snp_log10bf)))
 cs
 
 library(openxlsx)
