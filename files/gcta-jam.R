@@ -38,7 +38,7 @@ if(file.exists("gcta-slct.csv"))
   gcta_m1 <- merge(m1[c("SNP","PostProb_model","PostProb","BF")],slct,by="SNP")
   gcta_cs <- merge(cs[c("snpid","PostProb","BF","Pos")],slct,by.x="snpid",by.y="SNP")
   ord <- with(gcta_cs,order(Chr,Pos))
-  xlsx <- "gcta-cs.xlsx"
+  xlsx <- "gcta-jam.xlsx"
   wb <- createWorkbook(xlsx)
   addWorksheet(wb, "gcta")
   writeDataTable(wb, "gcta", slct)
