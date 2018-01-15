@@ -1,4 +1,4 @@
-# 1-1-2018 MRC-Epid JHZ
+# 15-1-2018 MRC-Epid JHZ
 
 export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
@@ -10,6 +10,23 @@ touch merge-list
 for i in $(seq 22); do echo chr${i} >> merge-list; done
 /genetics/bin/plink-1.9 --merge-list merge-list --make-bed --out HRC
 
+stata <<END
+gzuse /gen_omics/data/EPIC-Norfolk/HRC/SNPinfo
+gen A1A2=cond(A1<A2,"_"+A1+"_"+A2,"_"+A2+"_"+A1)
+gen snpid=string(chr)+":"+string(pos,"%12.0f")+A1A2
+sort snpid
+forval CHR=1/22 {
+   forval PAR=1/30 {
+      local dir="/scratch/tempjhz22/LDcalc/HRC/chr`CHR'_`PAR'.snpid"
+      outsheet snpid using `dir' if chr==`CHR' & sub==`PAR', noname noquote replace
+   }
+}
+keep rsid snpid
+outsheet using SNPinfo.txt, noname noquote replace
+save SNPinfo, replace
+END
+
+echo "SNP A1 A2 freq b se p N" > gcta.dat
 sort -k9,9n -k10,10n repro.txt | awk '
 {
   a1=toupper($2)
@@ -21,9 +38,8 @@ sort -k9,9n -k10,10n repro.txt | awk '
   $1=snpid
   $2=a1
   $3=a2
-  if (NR==1) print "SNP A1 A2 freq b se p N"
   print $1,$2,$3,$4,$5,$6,$7,$8
-}' > gcta.dat
+}' | sort -k1,1 | join -12 -21 SNPinfo.txt - | awk '{$1="";print}' | awk '{print}' >> gcta.dat
 
 export GEN=/scratch/tempjhz22/LDcalc/HRC
 rm exclude.snps
