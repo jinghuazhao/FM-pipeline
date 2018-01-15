@@ -231,7 +231,11 @@ if [ $JAM -eq 1 ]; then
    touch jam.top jam.txt
    awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum' >> jam.top
    cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {} >> jam.txt;cat {}p.top {}p.jam >> jam.txt'
-   R -q --no-save < ${FM_location}/files/cs.R > cs.log
+   echo "Region Chr SNP rsid PostProb_model PostProb Median CrI_Lower CrI_Upper Median_Present CrI_Lower_Present CrI_Upper_Present BF" > jam.out
+   ls *sel | parallel -j1 -C' ' '
+       awk "NR>1{sub(/\p.sel/,\"\",FILENAME);split(\$2,a,\":\");\$1=FILENAME \" \" a[1];print}"' | \
+       sort -k1,1n >> jam.out
+   R -q --no-save < ${FM_location}/files/gcta-jam.R > gcta-jam.log
 fi
 
 if [ $LocusZoom -eq 1 ]; then
