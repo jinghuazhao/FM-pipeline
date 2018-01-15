@@ -1,4 +1,4 @@
-# 14-1-2018 MRC-Epid JHZ
+# 15-1-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -56,12 +56,10 @@ n.sel <- apply(tm[,1:n.snps],1,sum)
 sink(paste0(f,".sum"))
 cbind(n.sel,post.prob)
 sink()
-if(!identical(cs,character(0)))
-{
-  sink(paste0(f,".cs"))
-  cbind(subset(ssr,ssnpid%in%cs),subset(pst,rownames(pst)%in%cs))
-  sink()
-}
+sink(paste0(f,".cs"))
+cbind(subset(ssr,ssnpid%in%cs),subset(pst,rownames(pst)%in%cs))
+sink()
+if(identical(cs,character(0))) unlink(paste0(f,".cs"))
 tm1 <- tm[1,-n.col]
 selected <- names(tm1[tm1==1])
 if(n.sel[1]>0&n.sel[1]!=n.snps)
