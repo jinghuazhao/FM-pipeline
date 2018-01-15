@@ -1,5 +1,5 @@
 #!/bin/bash
-# 13-1-2018 MRC-Epid JHZ
+# 15-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -231,6 +231,7 @@ if [ $JAM -eq 1 ]; then
    touch jam.top jam.txt
    awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum' >> jam.top
    cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {} >> jam.txt;cat {}p.top {}p.jam >> jam.txt'
+   R -q --no-save < ${FM_location}/files/cs.R > cs.log
 fi
 
 if [ $LocusZoom -eq 1 ]; then
