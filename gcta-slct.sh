@@ -3,7 +3,7 @@
 
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$rt/HRC
-export idfile=$rt/id3.txt
+export idfile=$rt/id3.txt.gz
 export remove_sample=$rt/exclude.id
 export exclude_snp=$rt/exclude.snps
 export threads=10
