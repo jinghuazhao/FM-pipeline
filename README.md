@@ -136,7 +136,7 @@ It is helpful to examine directions of effects together with their correlation w
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
 
 As the pipeline works on regsions defined by lead SNPs, it is desirable to have a genomewide counterpart and currently this
-is possible with GCTA and we have a script call [gcta-slct.sh](gcta-slct.sh) which accepts a single sumstats file, and only
+is possible with GCTA and we have a script called [gcta-slct.sh](gcta-slct.sh) which accepts a single sumstats file, and only
 a minor change is required, namely,
 ```
 gcta-slct.sh <input>
