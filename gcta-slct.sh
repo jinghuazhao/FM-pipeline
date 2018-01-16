@@ -42,7 +42,7 @@ outsheet snpid if (MAC<3 | info<0.4) using exclude.snps, noname noquote replace
 keep snpid rsid RSnum
 order snpid rsid RSnum
 outsheet using /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt, delim(" ") noname noquote replace
-!gzip -f id3.txt
+!gzip -f /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt
 END
 export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
