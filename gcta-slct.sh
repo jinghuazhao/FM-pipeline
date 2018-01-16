@@ -8,6 +8,7 @@ export remove_sample=$rt/exclude.id
 export exclude_snp=$rt/exclude.snps
 export threads=10
 
+gunzip -c $idfile | sort -k1,1 > id3.txt
 echo "SNP A1 A2 freq b se p N" > $1.dat
 sort -k9,9n -k10,10n $1 | \
 awk '!(/SNP/&&/A1/&&/A2/&&/freq/&&/b/&&/se/&&/p/&&/N/){
@@ -21,7 +22,7 @@ awk '!(/SNP/&&/A1/&&/A2/&&/freq/&&/b/&&/se/&&/p/&&/N/){
   $2=a1
   $3=a2
   print $1,$2,$3,$4,$5,$6,$7,$8
-}' | sort -k1,1 | join -j1 $idfile - | awk '{$1=$3="";print}' | awk '{$1=$1};1' >> $1.dat
+}' | sort -k1,1 | join -j1 id3.txt - | awk '{$1=$3="";print}' | awk '{$1=$1};1' >> $1.dat
 
 export OPT1=""
 if [ -f $remove_sample ] && [ ! -z "$remove_sample" ]; then export OPT1="--remove $remove_sample"; fi
@@ -41,6 +42,7 @@ outsheet snpid if (MAC<3 | info<0.4) using exclude.snps, noname noquote replace
 keep snpid rsid RSnum
 order snpid rsid RSnum
 outsheet using /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt, delim(" ") noname noquote replace
+!gzip -f id3.txt
 END
 export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
