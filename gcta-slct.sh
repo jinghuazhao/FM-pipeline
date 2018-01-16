@@ -8,9 +8,9 @@ export exclude_sample=$rt/exclude.id
 export exclude_snp=$rt/exclude.snps
 export threads=10
 
-echo "SNP A1 A2 freq b se p N" > gcta.dat
-sort -k9,9n -k10,10n $1 | awk '
-{
+echo "SNP A1 A2 freq b se p N" > $1.dat
+sort -k9,9n -k10,10n $1 | \
+awk '!/SNP/' '{
   a1=toupper($2)
   a2=toupper($3)
   chr=$9
@@ -21,9 +21,7 @@ sort -k9,9n -k10,10n $1 | awk '
   $2=a1
   $3=a2
   print $1,$2,$3,$4,$5,$6,$7,$8
-}' | sort -k1,1 | join -13 -21 $idfile - | \
-awk '{$1=$2="";print}' | \
-awk '{$1=$1};1' >> $1.dat
+}' | sort -k1,1 | join -j1 $idfile - | awk '{$1=$2="";print}' | awk '{$1=$1};1' >> $1.dat
 
 export OPT1=""
 if [ -f $exclude_sample ] && [ ! -z "$exclude_sample" ]; then export OPT1="--remove $exclude_smaple"; fi
@@ -35,14 +33,13 @@ gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --thread-num $t
 setup() {
 stata <<END
 gzuse /gen_omics/data/EPIC-Norfolk/HRC/SNPinfo
-gen A1A2=cond(A1<A2,"_"+A1+"_"+A2,"_"+A2+"_"+A1)
-gen snpid=string(chr)+":"+string(pos,"%12.0f")+A1A2
+gen snpid=string(chr)+":"+string(pos,"%12.0f")+cond(A1<A2,"_"+A1+"_"+A2,"_"+A2+"_"+A1)
 sort snpid
 gen maf=cond(FreqA2<=0.5, FreqA2, 1-FreqA2)
 gen MAC=2*21044*maf
 outsheet snpid if (MAC<3 | info<0.4) using exclude.snps, noname noquote replace
-keep rsid RSnum snpid
-outsheet using id3.txt, delim(" ") noname noquote replace
+keep snpid rsid RSnum
+outsheet using /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt, delim(" ") noname noquote replace
 END
 export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
