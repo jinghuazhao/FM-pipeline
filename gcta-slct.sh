@@ -21,7 +21,7 @@ awk '!(/SNP/&&/A1/&&/A2/&&/freq/&&/b/&&/se/&&/p/&&/N/){
   $2=a1
   $3=a2
   print $1,$2,$3,$4,$5,$6,$7,$8
-}' | sort -k1,1 | join -j1 $idfile - | awk '{$1=$2="";print}' | awk '{$1=$1};1' >> $1.dat
+}' | sort -k1,1 | join -j1 $idfile - | awk '{$1=$3="";print}' | awk '{$1=$1};1' >> $1.dat
 
 export OPT1=""
 if [ -f $remove_sample ] && [ ! -z "$remove_sample" ]; then export OPT1="--remove $exclude_smaple"; fi
