@@ -115,7 +115,7 @@ Given these, one can do away with Stata and work on a text version for instance 
 contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA 
 conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
 and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
-quality. As it is very slow, we use .bgen instead see below the section on whole-genome conditional/joint analysis.
+quality. As it is very slow, we use .bgen instead see the section on WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS below.
 
 ## Outputs
 
@@ -133,7 +133,7 @@ finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations
 It is helpful to examine directions of effects together with their correlation which is now embedded as with finemap.
 
 
-## Whole-genome conditional/joint anlaysis
+## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
 
 As the pipeline works on regsions defined by lead SNPs, it is desirable to have a genomewide counterpart and currently this
 is possible with GCTA and we have a script call [gcta-slct.sh](gcta-slct.sh) which accepts a single sumstats file, and only
