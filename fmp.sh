@@ -1,5 +1,5 @@
 #!/bin/bash
-# 15-1-2018 MRC-Epid JHZ
+# 16-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -109,7 +109,8 @@ if [ $LD_MAGIC -eq 1 ]; then
     awk -f $FM_location/files/info.awk c=2 $GEN_location/$f.info > $GEN_location/$f.magic.info; \
     gzip -f $GEN_location/$f.magic.gen; \
     Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.05 0.4 $f.magic $threads'
+            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.05 0.4 $f.magic $threads; \
+    Rscript --vanilla $FM_location/files/lowtri2square.r'
 fi
 
 if [ $LD_PLINK -eq 1 ]; then
