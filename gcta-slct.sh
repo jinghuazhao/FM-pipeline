@@ -2,10 +2,10 @@
 # 16-1-2018 MRC-Epid JHZ
 
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
-export BINARY_PED=$rt/HRC
+export bfile=$rt/HRC
+export idfile=$rt/id3.txt
 export exclude_sample=$rt/exclude.id
 export exclude_snp=$rt/exclude.snps
-export ID3=$rt/id3.txt
 export threads=10
 
 echo "SNP A1 A2 freq b se p N" > gcta.dat
@@ -21,7 +21,7 @@ sort -k9,9n -k10,10n $1 | awk '
   $2=a1
   $3=a2
   print $1,$2,$3,$4,$5,$6,$7,$8
-}' | sort -k1,1 | join -13 -21 $ID3/id3.txt - | \
+}' | sort -k1,1 | join -13 -21 $idfile - | \
 awk '{$1=$2="";print}' | \
 awk '{$1=$1};1' >> $1.dat
 
@@ -30,7 +30,7 @@ if [ -f $exclude_sample ] && [ ! -z "$exclude_sample" ]; then export OPT1="--rem
 export OPT2=""
 if [ -f $exclude_snp ] && [ ! -z "$exclude_snp" ]; then export OPT2="--exclude $exclude_snp"; fi
 
-gcta64 --bfile $BINARY_PED $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --thread-num $threads --out $1
+gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --thread-num $threads --out $1
 
 setup() {
 stata <<END
