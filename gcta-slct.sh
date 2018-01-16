@@ -50,5 +50,3 @@ touch merge-list
 for i in $(seq 22); do echo chr${i} >> merge-list; done
 /genetics/bin/plink-1.9 --merge-list merge-list --make-bed --out HRC
 }
-
-
