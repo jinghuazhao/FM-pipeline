@@ -12,14 +12,11 @@ gen MAC=2*21044*maf
 outsheet snpid if (MAC<3 | info<0.4) using exclude.snps, noname noquote replace
 keep rsid RSnum snpid
 outsheet using SNPinfo.txt, delim(" ") noname noquote replace
-gzsave SNPinfo, replace
 END
-
 export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 cd /scratch/tempjhz22/LDcalc/HRC
-parallel --env GEN --env sample -C' ' 'sge "/genetics/bin/plink2 --bgen $GEN/chr{}.bgen --sample $sample --chr {} --make-bed --out chr{}"' ::: $(seq 22)
-
+seq 22 | parallel --env GEN --env sample -C' ' 'sge "/genetics/bin/plink2 --bgen $GEN/chr{}.bgen --sample $sample --chr {} --make-bed --out chr{}"'
 rm merge-list
 touch merge-list
 for i in $(seq 22); do echo chr${i} >> merge-list; done
@@ -27,7 +24,7 @@ for i in $(seq 22); do echo chr${i} >> merge-list; done
 }
 
 echo "SNP A1 A2 freq b se p N" > gcta.dat
-sort -k9,9n -k10,10n repro.txt | awk '
+sort -k9,9n -k10,10n $1 | awk '
 {
   a1=toupper($2)
   a2=toupper($3)
@@ -56,7 +53,6 @@ keep_note() {
   gcta64 --bfile $GEN/HRC --remove exclude.id --exclude exclude.snps --cojo-file gcta.dat --cojo-cond 97.snpid --thread-num 10 --out gcta
   export GEN=/scratch/tempjhz22/LDcalc/HRC
   gcta64 --bfile $GEN/HRC --remove exclude.id --exclude exclude.snps --cojo-file gcta.dat --cojo-top-SNPs 5 --thread-num 10 --out gcta.top
-
   export GENI=/gen_omics/data/EPIC-Norfolk/HRC
   export GENO=/scratch/tempjhz22/LDcalc/HRC
   export sample_file=$GENI/EPIC-Norfolk.sample
@@ -68,7 +64,6 @@ keep_note() {
     gzip -f > $GENO/\$f.gen.gz; \
     /genetics/bin/gtool -G --g $GENO/\$f.gen.gz --s ${sample_file} --ped $GENO/\$f.ped --map $GENO/\$f.map \
           --missing 0.05 --threshold 0.9 --log \$f.log --snp --alleles --chr {1}"' ::: $(seq 22) ::: $(seq 30)
-
   parallel -C' ' '
   sge "cd /scratch/tempjhz22/LDcalc/HRC;\
   zcat chr{}_1.ped.gz chr{}_2.ped.gz chr{}_3.ped.gz chr{}_4.ped.gz chr{}_5.ped.gz chr{}_6.ped.gz chr{}_7.ped.gz chr{}_8.ped.gz chr{}_9.ped.gz chr{}_10.ped.gz chr{}_11.ped.gz chr{}_12.ped.gz chr{}_13.ped.gz chr{}_14.ped.gz chr{}_15.ped.gz chr{}_16.ped.gz chr{}_17.ped.gz chr{}_18.ped.gz chr{}_19.ped.gz chr{}_20.ped.gz chr{}_21.ped.gz chr{}_22.ped.gz chr{}_23.ped.gz chr{}_24.ped.gz chr{}_25.ped.gz chr{}_26.ped.gz chr{}_27.ped.gz chr{}_28.ped.gz chr{}_29.ped.gz chr{}_30.ped.gz > HRC{}.ped;\
