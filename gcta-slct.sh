@@ -30,7 +30,7 @@ if [ -f $exclude_snp ] && [ ! -z "$exclude_snp" ]; then export OPT2="--exclude $
 
 gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --thread-num $threads --out $1
 
-setup() {
+how_to_setup() {
 stata <<END
 gzuse /gen_omics/data/EPIC-Norfolk/HRC/SNPinfo
 gen snpid=string(chr)+":"+string(pos,"%12.0f")+cond(A1<A2,"_"+A1+"_"+A2,"_"+A2+"_"+A1)
@@ -45,7 +45,7 @@ export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 cd /gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 seq 22 | parallel --env GEN --env sample -C' ' 'sge "/genetics/bin/plink2 --bgen $GEN/chr{}.bgen --sample $sample --chr {} --make-bed --out chr{}"'
-rm merge-list
+rm -f merge-list
 touch merge-list
 for i in $(seq 22); do echo chr${i} >> merge-list; done
 /genetics/bin/plink-1.9 --merge-list merge-list --make-bed --out HRC
