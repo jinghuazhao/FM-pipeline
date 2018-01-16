@@ -10,7 +10,7 @@ export threads=10
 
 echo "SNP A1 A2 freq b se p N" > $1.dat
 sort -k9,9n -k10,10n $1 | \
-awk '!/SNP/' '{
+awk '!/SNP/{
   a1=toupper($2)
   a2=toupper($3)
   chr=$9
