@@ -4,7 +4,7 @@
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$rt/HRC
 export idfile=$rt/id3.txt
-export exclude_sample=$rt/exclude.id
+export remove_sample=$rt/exclude.id
 export exclude_snp=$rt/exclude.snps
 export threads=10
 
@@ -24,7 +24,7 @@ awk '!(/SNP/&&/A1/&&/A2/&&/freq/&&/b/&&/se/&&/p/&&/N/){
 }' | sort -k1,1 | join -j1 $idfile - | awk '{$1=$2="";print}' | awk '{$1=$1};1' >> $1.dat
 
 export OPT1=""
-if [ -f $exclude_sample ] && [ ! -z "$exclude_sample" ]; then export OPT1="--remove $exclude_smaple"; fi
+if [ -f $remove_sample ] && [ ! -z "$remove_sample" ]; then export OPT1="--remove $exclude_smaple"; fi
 export OPT2=""
 if [ -f $exclude_snp ] && [ ! -z "$exclude_snp" ]; then export OPT2="--exclude $exclude_snp"; fi
 
