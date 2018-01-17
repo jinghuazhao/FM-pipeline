@@ -1,5 +1,5 @@
 #!/bin/bash
-# 16-1-2018 MRC-Epid JHZ
+# 17-1-2018 MRC-Epid JHZ
 
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$rt/HRC
@@ -8,6 +8,7 @@ export remove_sample=$rt/exclude.id
 export exclude_snp=$rt/exclude.snps
 export threads=10
 
+echo "1. Data preparation"
 gunzip -c $idfile | sort -k1,1 > id3.txt
 echo "SNP A1 A2 freq b se p N" > $1.dat
 sort -k9,9n -k10,10n $1 | \
@@ -24,12 +25,22 @@ awk '!(/SNP/&&/A1/&&/A2/&&/freq/&&/b/&&/se/&&/p/&&/N/){
   print $1,$2,$3,$4,$5,$6,$7,$8
 }' | sort -k1,1 | join -j1 id3.txt - | awk '{$1=$3="";print}' | awk '{$1=$1};1' >> $1.dat
 
+echo "2. GCTA --cojo analysis"
 export OPT1=""
 if [ -f $remove_sample ] && [ ! -z "$remove_sample" ]; then export OPT1="--remove $remove_sample"; fi
 export OPT2=""
 if [ -f $exclude_snp ] && [ ! -z "$exclude_snp" ]; then export OPT2="--exclude $exclude_snp"; fi
 
 gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --thread-num $threads --out $1
+
+echo "3. Adding SNPID and rsid"
+
+awk 'NR==1{print $0,"\tsnpid","\trsid"}' $1.jma.cojo > $1.jma.out
+sort -k2,2 id3.txt > id3.tmp
+awk 'NR>1{print $0, NR}' $1.jma.cojo | sort -k2,2 | \
+join -12 -22 - id3.tmp | sort -k15,15n | awk '{$15="";print}' | awk '{t=$1;$1=$2;$2=t;gsub(/ /,"\t",$0)};1' >> $1.jma.out
+
+rm id3.tmp id3.txt
 
 how_to_setup() {
 stata <<END
