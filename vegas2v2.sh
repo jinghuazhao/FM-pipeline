@@ -1,6 +1,6 @@
 # 17-1-2018 MRC-Epid JHZ
 
-export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
+export bfile=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
 export glist=/genetics/bin/glist-hg19
 export wd=$PWD
 
@@ -25,7 +25,7 @@ sed -i 's/ /\t/g' $1.jma.gene
 awk '$NF!="."{print $NF}' $1.jma.gene > $1.genelist
 awk -vFS="\t" -vOFS="\t" 'NR>1{print $2,$13}' $1.jma.out > $1.snpandp
 awk '{if($1=="X") $1=23;if($1=="Y") $1=24;if($1!="XY") print}' $glist > glist
-vegas2v2 -G -snpandp $1.snpandp -custom $HRC -glist glist -genelist $1.genelist -out $1
+vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -genelist $1.genelist -out $1
 
 #######################################################################################
 # Notes on setting up VEGAS2v2:
@@ -35,7 +35,7 @@ vegas2v2 -G -snpandp $1.snpandp -custom $HRC -glist glist -genelist $1.genelist 
 #    sed -i 's/plink2/plink-1.9/g' vegasv2
 # 2. We also reformat glist since VEGASv2 does not recognise X, Y, XY
 # 3. it is very computer-intensive with -glist, i.e., 
-#    vegas2v2 -G -snpandp $1.snpandp -custom $HRC -glist glist -out $1
+#    vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -out $1
 #    so we use -genelist which is perhaps more pertinent
 #    Gene-based analysis has -max=1E6 resampling by default
 #    Pathway-based analysis setup which also has -maxsample=1E6 resampling by default
