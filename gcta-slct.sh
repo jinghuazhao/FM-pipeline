@@ -38,7 +38,7 @@ echo "3. Adding SNPID and rsid"
 awk 'NR==1{print $0,"\tsnpid","\trsid"}' $1.jma.cojo > $1.jma.out
 sort -k2,2 id3.txt > id3.tmp
 awk 'NR>1{print $0, NR}' $1.jma.cojo | sort -k2,2 | \
-join -12 -22 - id3.tmp | sort -k15,15n | awk '{$15="";print}' | awk '{t=$1;$1=$2;$2=t;gsub(/ /,"\t",$0)};1' >> $1.jma.out
+join -j2 - id3.tmp | sort -k15,15n | awk '{$15="";print}' | awk '{t=$1;$1=$2;$2=t;gsub(/ /,"\t",$0)};1' >> $1.jma.out
 
 rm id3.tmp id3.txt
 
