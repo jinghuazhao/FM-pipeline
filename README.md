@@ -141,7 +141,8 @@ a minor change is required, namely,
 ```
 gcta-slct.sh <input>
 ```
-At the end of the script, it also shows how the relevant information was generated.
+At the end of the script, it also shows how the relevant information was generated. The use of gene list from the analysis
+can be fed into VEGASv2 as shown with [vegas2v2.sh](vegas2v2.sh) but more broadly software in PW-pipeline can be used.
 
 ## EXAMPLE
 
