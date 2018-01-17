@@ -1,5 +1,6 @@
 # 17-1-2018 MRC-Epid JHZ
 
+export PATH=$PATH:/genetics/data/software/bin
 export bfile=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
 export glist=/genetics/bin/glist-hg19
 export wd=$PWD
