@@ -148,12 +148,14 @@ qsub -S /bin/bash -V -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /gen
 ```
 so the job is sent to the clusters instead.
 
-The use of gene list from the analysis can be fed into VEGAS2v2 as shown with [vegas2v2.sh](vegas2v2.sh) and to facilitate
-this process we invoke interceptBed utility from the [bedtools](http://bedtools.readthedocs.io/en/latest/) package. Some
-changes are required for the command-line version described at the of the script. We don't have experiences with the web-based 
-interface from [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/). Nevertheless, as indicated
-in the original VEGAS paper (Liu et al. 2010), ``If a gene contains only one causal variant, then the inclusion of a large
-number of nonsignificant markers into the gene-based test will dilute this gene’s significance.``
+The use of gene list from the analysis can compared to feeding SNPs and their p values from a GWAS into VEGAS2v2 as illustrated
+with [vegas2v2.sh](vegas2v2.sh) where `interceptBed` utility from the [bedtools](http://bedtools.readthedocs.io/en/latest/) 
+package is used. Some changes are required for the command-line version of VEGAS2v2 and noted at the of the script. We don't have
+experiences with the pathway analysis option from command-line or [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/).
+Nevertheless, as indicated in the original VEGAS paper (Liu et al. 2010), 
+
+> If a gene contains only one causal variant, then the inclusion of a large number of nonsignificant markers into the gene-based 
+> test will dilute this gene’s significance.``
 
 However, more broadly software in PW-pipeline can be used and in terms of LD information PASCAL will be useful.
 
