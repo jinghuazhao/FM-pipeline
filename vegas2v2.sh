@@ -13,9 +13,9 @@ awk 'NR>1{
    print "chr" $1,$3-1,$3,$2,$15,$16
 }' FS="\t" OFS="\t" $1.jma.out > $1.jma.bed
 # Once uploaded https://usegalaxy.org, we can reformat data from "Operate on Genomic Intervals",
-# "Join the intervals of two datasets side-by-side"
+# "Join the intervals of two datasets side-by-side", "All records of first dataset (fill null with ".")"
 
-# As it is not automatic access, we use bedtools instead:
+# As it is interactive access, we use bedtools instead:
 intersectBed -a $1.jma.bed -b glist-hg19.bed -loj > $1.jma.bedtools
 echo chr pos oxfordid snpid rsid chrom start end gene > $1.jma.gene
 awk 'NR>1{
@@ -23,7 +23,7 @@ awk 'NR>1{
   $2=""
   print
 }' OFS="\t" $1.jma.bedtools | awk '{$1=$1};1' | sort -k1,1n -k2,2n >> $1.jma.gene
-sed -i 's/ /\t/g' $1.jma.gene
+sed -i 's/ /\t/g;s/-1/./g' $1.jma.gene
 
 awk '$NF!="."{print $NF}' $1.jma.gene > $1.genelist
 awk -vFS="\t" -vOFS="\t" 'NR>1{print $2,$13}' $1.jma.out > $1.snpandp
