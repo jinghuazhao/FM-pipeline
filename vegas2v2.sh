@@ -5,23 +5,25 @@ export bfile=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
 export glist=/genetics/bin/glist-hg19
 export wd=$PWD
 
-code_to_setup() {
-# isolate associate genes through galaxy
+# isolate associate genes through Galaxy
 sort -k1,1n -k2,2n glist-hg19 | \
 awk '{if(NR==1) print "#chrom","start","end","gene";print "chr" $1,$2,$3,$4}' OFS="\t" > glist-hg19.bed
 awk 'NR>1{
    if (NR==2) print "#chrom","Start","End","oxfordid","snpid","rsid"
    print "chr" $1,$3-1,$3,$2,$15,$16
 }' FS="\t" OFS="\t" $1.jma.out > $1.jma.bed
-# now we reformat galaxy data
+# Once uploaded https://usegalaxy.org, we can reformat data from "Operate on Genomic Intervals",
+# "Join the intervals of two datasets side-by-side"
+
+# As it is not automatic access, we use bedtools instead:
+intersectBed -a $1.jma.bed -b glist-hg19.bed -loj > $1.jma.bedtools
 echo chr pos oxfordid snpid rsid chrom start end gene > $1.jma.gene
 awk 'NR>1{
   gsub(/chr/,"",$1)
   $2=""
   print
-}' OFS="\t" $1.jma.galaxy | awk '{$1=$1};1' | sort -k1,1n -k2,2n >> $1.jma.gene
+}' OFS="\t" $1.jma.bedtools | awk '{$1=$1};1' | sort -k1,1n -k2,2n >> $1.jma.gene
 sed -i 's/ /\t/g' $1.jma.gene
-}
 
 awk '$NF!="."{print $NF}' $1.jma.gene > $1.genelist
 awk -vFS="\t" -vOFS="\t" 'NR>1{print $2,$13}' $1.jma.out > $1.snpandp
