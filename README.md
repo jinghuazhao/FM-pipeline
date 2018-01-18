@@ -148,7 +148,7 @@ qsub -S /bin/bash -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /geneti
 ```
 so the job is sent to the clusters instead.
 
-The use of gene list from the analysis can be fed into VEGASv2 as shown with [vegas2v2.sh](vegas2v2.sh) but some changes
+The use of gene list from the analysis can be fed into VEGAS2v2 as shown with [vegas2v2.sh](vegas2v2.sh) but some changes
 are required for the command-line version described at the of the script. We don't have experiences with the web-based 
 interface from [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/). Nevertheless, as indicated
 in the original VEGAS paper (Liu et al. 2010), ``If a gene contains only one causal variant, then the inclusion of a large
