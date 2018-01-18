@@ -1,5 +1,5 @@
 #!/bin/bash
-# 17-1-2018 MRC-Epid JHZ
+# 18-1-2018 MRC-Epid JHZ
 
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$rt/HRC
@@ -33,7 +33,7 @@ if [ -f $exclude_snp ] && [ ! -z "$exclude_snp" ]; then export OPT2="--exclude $
 
 gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --thread-num $threads --out $1
 
-echo "3. Adding SNPID and rsid"
+echo "3. Adding snpid and rsid"
 
 awk 'NR==1{print $0,"\tsnpid","\trsid"}' $1.jma.cojo > $1.jma.out
 sort -k2,2 id3.txt > id3.tmp
