@@ -155,9 +155,9 @@ experiences with the pathway analysis option from command-line or [https://vegas
 Nevertheless, as indicated in the original VEGAS paper (Liu et al. 2010), 
 > If a gene contains only one causal variant, then the inclusion of a large number of nonsignificant markers into the gene-based 
 > test will dilute this gene’s significance.``
-and we perhaps would see an analogy here.
 
-However, more broadly software in PW-pipeline can be used and in terms of LD information PASCAL will be useful.
+and we perhaps would see an analogy here. However, more broadly software in PW-pipeline can be used and in terms of LD information
+PASCAL will be useful.
 
 ## EXAMPLE
 
