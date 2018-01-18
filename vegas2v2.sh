@@ -12,7 +12,7 @@ awk 'NR>1{
    if (NR==2) print "#chrom","Start","End","oxfordid","snpid","rsid"
    print "chr" $1,$3-1,$3,$2,$15,$16
 }' FS="\t" OFS="\t" $1.jma.out > $1.jma.bed
-# Once uploaded https://usegalaxy.org, we can reformat data from "Operate on Genomic Intervals",
+# Once uploaded to https://usegalaxy.org, we can reformat data from "Operate on Genomic Intervals",
 # "Join the intervals of two datasets side-by-side", "All records of first dataset (fill null with ".")"
 
 # As it is interactive access, we use bedtools instead:
