@@ -153,9 +153,9 @@ with [vegas2v2.sh](vegas2v2.sh) where `interceptBed` utility from the [bedtools]
 package is used. Some changes are required for the command-line version of VEGAS2v2 and noted at the of the script. We don't have
 experiences with the pathway analysis option from command-line or [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/).
 Nevertheless, as indicated in the original VEGAS paper (Liu et al. 2010), 
-
 > If a gene contains only one causal variant, then the inclusion of a large number of nonsignificant markers into the gene-based 
 > test will dilute this gene’s significance.``
+and we perhaps would see an analogy here.
 
 However, more broadly software in PW-pipeline can be used and in terms of LD information PASCAL will be useful.
 
