@@ -234,7 +234,7 @@ Genet 101(4):539-551
 
 **VEGAS paper**
 
-Liu JZ, et al. (2010). A Versatile Gene-Based Test for Genome-wide Association Studies. Am J Hum Genet 87:139–145.
+Liu JZ, et al. (2010). A versatile gene-based test for genome-wide association studies. Am J Hum Genet 87:139–145.
 
 **GIANT paper**
 
