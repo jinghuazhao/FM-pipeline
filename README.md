@@ -144,7 +144,7 @@ gcta-slct.sh <input>
 At the end of the script, it also shows how the relevant information was generated. As it is very time-consuming for
 interactive use, on our system we resort to sge, e.g.,
 ```
-qsub -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh HRC
+qsub -S /bin/bash -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh HRC
 ```
 so the job is sent to the clusters instead.
 
