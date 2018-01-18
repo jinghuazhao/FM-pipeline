@@ -32,9 +32,9 @@ vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -genelist $1.genelis
 # Notes on setting up VEGAS2v2:
 #
 # 1. # PLINK2 alpha does not support --noweb and we switch to 1.9 beta instead
-#    sed -i 's/plink2/plink-1.9/g' vegasv2
+#    sed -i 's/plink2/plink-1.9/g' vegas2v2
 #    and mask the following statement: system("rm -R $time_stamp");
-# 2. We reformat glist-hg19 since VEGASv2 does not recognise X, Y, XY
+# 2. We reformat glist-hg19 since VEGAS2v2 does not recognise X, Y, XY
 # 3. it is very computer-intensive with -glist, i.e., 
 #    vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -out $1
 #    so we use -genelist which is perhaps more pertinent
