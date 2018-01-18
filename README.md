@@ -141,9 +141,19 @@ a minor change is required, namely,
 ```
 gcta-slct.sh <input>
 ```
-At the end of the script, it also shows how the relevant information was generated. The use of gene list from the analysis
-can be fed into VEGASv2 as shown with [vegas2v2.sh](vegas2v2.sh) but there are issues with the command-line version and one
-may have use the web-based interface from [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/).
+At the end of the script, it also shows how the relevant information was generated. As it is very time-consuming for
+interactive use, on our system we resort to sge, e.g.,
+```
+qsub -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh HRC
+```
+so the job is sent to the clusters instead.
+
+The use of gene list from the analysis can be fed into VEGASv2 as shown with [vegas2v2.sh](vegas2v2.sh) but some changes
+are required for the command-line version described at the of the script. We don't have experiences with the web-based 
+interface from [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/). Nevertheless, as indicated
+in the original VEGAS paper (Liu et al. 2010), ``If a gene contains only one causal variant, then the inclusion of a large
+number of nonsignificant markers into the gene-based test will dilute this gene’s significance.``
+
 However, more broadly software in PW-pipeline can be used and in terms of LD information PASCAL will be useful.
 
 ## EXAMPLE
@@ -221,6 +231,10 @@ Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data
 
 Benner C, et al. (2017) Prospects of Fine-Mapping Trait-Associated Genomic Regions by Using Summary Statistics from Genome-wide Association Studies. Am J Hum 
 Genet 101(4):539-551
+
+**VEGAS paper**
+
+Liu JZ, et al. (2010). A Versatile Gene-Based Test for Genome-wide Association Studies. Am J Hum Genet 87:139–145.
 
 **GIANT paper**
 
