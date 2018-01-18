@@ -1,4 +1,4 @@
-# 17-1-2018 MRC-Epid JHZ
+# 18-1-2018 MRC-Epid JHZ
 
 export PATH=$PATH:/genetics/data/software/bin
 export bfile=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
@@ -31,19 +31,23 @@ vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -genelist $1.genelis
 #######################################################################################
 # Notes on setting up VEGAS2v2:
 #
-# 0. assumming that $1.out is available from FM-pipeline
 # 1. # PLINK2 alpha does not support --noweb and we switch to 1.9 beta instead
 #    sed -i 's/plink2/plink-1.9/g' vegasv2
-#    We also mask the following statement: system("rm -R $time_stamp");
-# 2. We reformat glist since VEGASv2 does not recognise X, Y, XY
+#    and mask the following statement: system("rm -R $time_stamp");
+# 2. We reformat glist-hg19 since VEGASv2 does not recognise X, Y, XY
 # 3. it is very computer-intensive with -glist, i.e., 
 #    vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -out $1
 #    so we use -genelist which is perhaps more pertinent
 #    Gene-based analysis has -max=1E6 resampling by default
-#    Pathway-based analysis setup which also has -maxsample=1E6 resampling by default
-#    awk '{print $2,$8}' $1.out | grep -v Gene | sed 's/"//g' $1.geneandp
+#    Gene-specific p values can be obtained from -G option above as follows,
+
+awk '{print $2,$8}' $1.gene-basedoutput | grep -v Gene | sed 's/"//g' > $1.geneandp
+
+#    Onice pathway database is ready, the following command can be called:
+#
 #    vegas2v2 -P -geneandp $1.geneandp -geneandpath $1.vegas2pathSYM -glist glist
-#    The pathway definitions somehow require some work on other databases
+#
+#    Pathway-based analysis setup which also has -maxsample=1E6 resampling by default
 #######################################################################################
 
 rm glist
