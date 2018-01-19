@@ -1,6 +1,7 @@
 #!/bin/bash
-# 18-1-2018 MRC-Epid JHZ
+# 19-1-2018 MRC-Epid JHZ
 
+export PATH=/genetics/bin:/usr/local/bin:$PATH
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$rt/HRC
 export idfile=$rt/id3.txt.gz

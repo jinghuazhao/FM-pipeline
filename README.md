@@ -219,7 +219,7 @@ Chen W, et al. (2015) Fine Mapping Causal Variants with an Approximate Bayesian 
 
 Huang H, et al (2017) Fine-mapping inflammatory bowel disease loci to single-variant resolution. Nature 547, 173–178, doi:10.1038/nature22969
 
-**[GCTA](cnsgenomics.com/software/gcta/)**
+**[GCTA](http://cnsgenomics.com/software/gcta/)**
 
 Yang J, et al. (2012) Conditional and joint multiple-SNP analysis of GWAS summary statistics identifies additional variants influencing complex traits. Nat Genet 
 44:369-375
