@@ -141,6 +141,9 @@ a minor change is required, namely,
 ```
 gcta-slct.sh <input>
 ```
+The file id3.txt.gz contains SNP IDs, snpid, and rsid which correspond to SNP IDs in the reference, (ordered) snpid and
+reference sequence IDs. By doing so, we can deal with duplicate chromosomal positions commonly seen in reference data.
+
 At the end of the script, it also shows how the relevant information was generated. As it is very time-consuming for
 interactive use, on our system we resort to sge, e.g.,
 ```
