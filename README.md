@@ -146,11 +146,15 @@ interactive use, on our system we resort to sge, e.g.,
 ```
 qsub -S /bin/bash -V -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q gcta-slct.sh HRC
 ```
-so the job is sent to the clusters instead.
+so the job is sent to the clusters instead. In this case, we specifies the shell (-S) with environment variables (-V), error
+message file (-e), log file (-o), threads (-pe) and queue (-q) whereas the last item is argument to `gcta-slct.sh` itself. If you
+system supports for GNU parallel, the syntax is similar.
 
 The use of gene list from the analysis can compare to feeding SNPs and their p values from a GWAS into VEGAS2v2 as illustrated
 with [vegas2v2.sh](vegas2v2.sh) where `interceptBed` utility from the [bedtools](http://bedtools.readthedocs.io/en/latest/) 
-package is used. Some changes are required for the command-line version of VEGAS2v2 and noted at the of the script. We don't have
+package is used. Note that instead of the 1000Genomes reference provided, we use our own.
+
+Some changes are required for the command-line version of VEGAS2v2 and noted at the of the script. We don't have
 experiences with the pathway analysis option from command-line or [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/).
 Nevertheless, as indicated in the original VEGAS paper, Liu et al. (2010), 
 > If a gene contains only one causal variant, then the inclusion of a large number of nonsignificant markers into the gene-based 
