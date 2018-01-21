@@ -277,7 +277,7 @@ if [ $fgwas -eq 1 ]; then
    touch fgwas.tmp
    sort -k6,6n fgwas.snplist | \
    awk '{
-     cmd=sprintf("gunzip -c chr%d_%d_%d.fgwas.gz | awk \x27NR>1\x27 | awk \x27!/INDEL/\x27 >> fgwas.tmp",$2,$4,$5,$6)
+     cmd=sprintf("gunzip -c chr%d_%d_%d.fgwas.gz | awk \x27NR>1\x27 | awk \x27!/INDEL/\x27 >> fgwas.tmp\n",$2,$4,$5,$6)
      system(cmd)
    }'
    echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
