@@ -263,7 +263,7 @@ if [ $fgwas -eq 1 ]; then
    # specify regions
    # -/+ flanking position
    export flanking=250000
-   awk -vfl=${flanking} '{l=$2;u=$3;if(l<0) l=1;print $5,$1,$4,l,u,NR}' st.bed | \
+   awk -vfl=${flanking} '{l=$2;u=$3;print $5,$1,$4,l,u,NR}' st.bed | \
    sort -k1,1 > fgwas.snplist
    # the standard fgwas data
    awk 'NR>1' fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
