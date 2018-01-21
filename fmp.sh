@@ -281,7 +281,7 @@ if [ $fgwas -eq 1 ]; then
      system(cmd)
    }'
    echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
-   sort -k2,2 -k3,3n fgwas.tmp >> fgwas.fine
+   sort -k12,12n -k2,2 -k3,3n fgwas.tmp >> fgwas.fine
    gzip -f fgwas.fine
    # fgwas
    for an in ens_coding_exons ens_noncoding_exons tssdist syn nonsyn;
