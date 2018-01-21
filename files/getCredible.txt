@@ -1,11 +1,12 @@
+This code is adapted from https://github.com/hailianghuang/FM-summary.
 
-This method takes a list of SNPs in a locus known to be associated to a disease. It calculates the posterior probability for 
-each SNP (column probNorm), and whether the SNP is in 'credible set’ (column inCredible). The R2 is highly recommended for 
-controlling the secondary associations.
+The method takes a list of SNPs in a locus known to be associated to a disease. It calculates the posterior 
+probability for each SNP (column probNorm), and whether the SNP is in 'credible set’ (column inCredible). The R2 in 
+the original FM-summary is highly recommended for controlling the secondary associations.
 
 One needs to 
 
 1) apply this method to one locus at a time
-2) for each locus, you need to provide a full list of SNP (imputed)
+2) provide a full list of SNPs (imputed) for each locus
 
 See http://www.nature.com/nature/journal/v547/n7662/full/nature22969.html?foxtrotcallback=true
