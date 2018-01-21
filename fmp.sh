@@ -255,10 +255,10 @@ if [ $fgwas -eq 1 ]; then
    echo "--> fgwas"
    # obtain annotations
    seq 22 | parallel -j${threads} --env fgwas_location_1kg -C' ' '
-       if [ ! -f $fgwas_location_1kg/chr{}.gen ]; then
-       gunzip -c $fgwas_location_1kg/chr{}.annot.wdist.wcoding.gz | \
-       awk "(NR>1){print \$1,\$2,\$3,\$(NF-6),\$(NF-5),\$(NF-2),\$(NF-1),\$NF}" | \
-       sort -k2,2 > $fgwas_location_1kg/chr{}.gene \
+       if [ ! -f $fgwas_location_1kg/chr{}.gene ]; then
+          gunzip -c $fgwas_location_1kg/chr{}.annot.wdist.wcoding.gz | \
+          awk "(NR>1){print \$1,\$2,\$3,\$(NF-6),\$(NF-5),\$(NF-2),\$(NF-1),\$NF}" | \
+          sort -k2,2 > $fgwas_location_1kg/chr{}.gene \
        fi'
    # specify regions
    # -/+ flanking position
