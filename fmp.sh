@@ -263,11 +263,11 @@ if [ $fgwas -eq 1 ]; then
    # specify regions
    # -/+ flanking position
    export flanking=250000
-   awk -vfl=${flanking} '{l=$2;u=$3;print $5,$1,$4,l,u,NR}' st.bed | \
+   awk -vfl=${flanking} 'NR>1{l=$2;u=$3;print $5,$1,$4,l,u,NR}' st.bed | \
    sort -k1,1 > fgwas.snplist
    # the standard fgwas data
-   awk 'NR>1' fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
-   read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist); \
+   cat fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
+   read rsid chr pos start end sn <<<$(awk -vline={6} "NR==line" fgwas.snplist); \
         export f=chr{2}_{4}_{5}; \
         awk -vsn={6} -f $FM_location/files/fgwas.awk $f.r | \
         join -13 -22 - $fgwas_location_1kg/chr{2}.gene | \
