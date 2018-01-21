@@ -1,0 +1,24 @@
+From: Hailiang Huang [mailto:hailianghuang@gmail.com] 
+Sent: 05 August 2017 21:51
+To: Jing Hua Zhao
+Subject: Re: query over FM-summary
+
+Hi Jinghua,
+
+Thank you for your interests in my fine-mapping algorithm and code. 
+
+This method takes a list of SNPs in a locus known to be associated to a disease. It calculates the posterior probability for 
+each SNP (column probNorm), and whether the SNP is in 'credible set’ (column inCredible). The R2 is highly recommended for 
+controlling the secondary associations. I noticed that you applied the code to SNPs from multiple loci, which is not the 
+intended use for this approach. 
+
+I’ve attached a manuscript discussing this method and its application. In summary, you need to 
+1) apply this method to one locus at a time
+2) for each locus, you need to provide a full list of SNP (imputed)
+
+http://www.nature.com/nature/journal/v547/n7662/full/nature22969.html?foxtrotcallback=true
+
+Best wishes,
+
+Hailiang
+
