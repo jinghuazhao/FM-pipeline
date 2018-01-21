@@ -343,4 +343,4 @@ fi
 #   gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
 #         --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
 #   plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
-#   --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
+#         --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
