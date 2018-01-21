@@ -268,7 +268,7 @@ if [ $fgwas -eq 1 ]; then
    # the standard fgwas data
    awk 'NR>1' fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
    read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist); \
-        export f=chr{2}_{3}_{4}; \
+        export f=chr{2}_{4}_{5}; \
         awk -vsn={6} -f $FM_location/files/fgwas.awk $f.r | \
         join -13 -22 - $fgwas_location_1kg/chr{2}.gene | \
         awk -f $FM_location/files/gene.awk | \
