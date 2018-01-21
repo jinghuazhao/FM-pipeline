@@ -1,5 +1,5 @@
 #!/bin/bash
-# 19-1-2018 MRC-Epid JHZ
+# 21-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -155,8 +155,8 @@ if [ $FM_summary -eq 1 ]; then
    sed 's/ /\t/g' > FM-summary.txt
    awk 'NR>1' st.bed | parallel -j${threads} --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
-       $FM_location/files/getCredible.r {6}; \
-       awk "!/SNP/{print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
+       $FM_location/files/getCredible.r; \
+       awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
 fi
 
 if [ $GCTA -eq 1 ]; then
