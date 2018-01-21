@@ -264,9 +264,7 @@ if [ $fgwas -eq 1 ]; then
    # -/+ flanking position
    export flanking=250000
    awk -vfl=${flanking} 'NR>1{l=$2;u=$3;print $5,$1,$4,l,u,NR}' st.bed | \
-   sort -k1,1 > fgwas.snplist
-   # the standard fgwas data
-   cat fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
+   sort -k1,1 | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
        export f=chr{2}_{4}_{5}; \
        awk -vsn={6} -f $FM_location/files/fgwas.awk $f.r | \
        join -13 -22 - $fgwas_location_1kg/chr{2}.gene | \
