@@ -266,12 +266,12 @@ if [ $fgwas -eq 1 ]; then
    awk -vfl=${flanking} '{l=$2;u=$3;if(l<0) l=1;print $5,$1,$4,l,u,NR}' st.bed | \
    sort -k1,1 > fgwas.snplist
    # the standard fgwas data
-   awk 'NR>1' fgwas.snplist | parallel -j${threads} --env GEN_location --env fgwas_location_1kg -C' ' '
+   awk 'NR>1' fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
    read rsid chr pos start end sn <<<$(awk -vline={} "NR==line" fgwas.snplist); \
         export f=chr{2}_{3}_{4}; \
-        awk -vsn={6} -f $GEN_location/files/fgwas.awk $f.r | \
+        awk -vsn={6} -f $FM_location/files/fgwas.awk $f.r | \
         join -13 -22 - $fgwas_location_1kg/chr{1}.gene | \
-        awk -f $GEN_location/files/gene.awk | \
+        awk -f $FM_location/files/gene.awk | \
         gzip -fc > $f.fgwas.gz'
    # tally for -fine option
    echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
