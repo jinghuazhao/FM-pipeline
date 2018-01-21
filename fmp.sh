@@ -267,6 +267,7 @@ if [ $fgwas -eq 1 ]; then
    sort -k1,1 | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
        export f=chr{2}_{4}_{5}; \
        awk -vsn={6} -f $FM_location/files/fgwas.awk $f.r | \
+       sort -k3,3 | \
        join -13 -22 - $fgwas_location_1kg/chr{2}.gene | \
        awk -f $FM_location/files/gene.awk | \
        gzip -fc > $f.fgwas.gz'
