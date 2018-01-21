@@ -273,12 +273,15 @@ if [ $fgwas -eq 1 ]; then
        awk -f $FM_location/files/gene.awk | \
        gzip -fc > $f.fgwas.gz'
    # tally for -fine option
-   echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
+   rm -f fgwas.tmp
+   touch fgwas.tmp
    sort -k6,6n fgwas.snplist | \
    awk '{
-     cmd=sprintf("gunzip -c chr%d_%d_%d.fgwas.gz | awk \x27NR>1\x27 | awk \x27!/INDEL/\x27 >> fgwas.fine",$2,$4,$5,$6)
+     cmd=sprintf("gunzip -c chr%d_%d_%d.fgwas.gz | awk \x27NR>1\x27 | awk \x27!/INDEL/\x27 >> fgwas.tmp",$2,$4,$5,$6)
      system(cmd)
    }'
+   echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
+   sort -k2,2 -k3,3n fgwas.tmp >> fgwas.fine
    gzip -f fgwas.fine
    # fgwas
    for an in ens_coding_exons ens_noncoding_exons tssdist syn nonsyn;
