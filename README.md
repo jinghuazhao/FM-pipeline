@@ -148,7 +148,7 @@ information was generated in our analysis.
 
 As it is very time-consuming for interactive use, on our system we resort to sge, e.g.,
 ```
-qsub -S /bin/bash -V -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh HRC
+qsub -S /bin/bash -V -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh <input>
 ```
 so the job is sent to the clusters instead. In this case, we specifies the shell (-S) with environment variables (-V), error
 message file (-e), log file (-o), threads (-pe) and queue (-q) whereas the last item is argument to `gcta-slct.sh` itself. If you
