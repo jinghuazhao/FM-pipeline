@@ -32,12 +32,12 @@ forval k=1/22 {
    forval j=1/`nclus' {
       local lowr=start[`j']
       local uppr=end[`j']
-      local f="`k'_`lowr'_`uppr'"
+      local f="chr`k'_`lowr'_`uppr'"
       local qctool="/genetics/bin/qctool-1.4"
       local samples="/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample"
       local excl_samples="/genetics/data/gwas/1-11-17/exclude.dat"
-      outsheet rsid pos exp_freq_a1 info type RSnum if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`f'.txt, names noquote replace nolab delim(" ")
-      !echo -e "sge \"`qctool' -g `F'/chr`k'.gen.gz -og chr`f'.gen -s `samples' -excl-samples `excl_samples' -incl-range `lowr'-`uppr' -omit-chromosome -snp-missing-call-rate 0.100001 -snp-missing-rate 0.05 -maf 0.01 1 -info 0.4 1 -sort; cut -d' ' -f1 > `f'.snpid; grep -w -f `T'/`f'.snpid `T'/chr`f'.txt > `T'/chr`f'.info; gzip -w -f chr`f'.gen\"" >> `T'/Extract.sh
+      outsheet rsid pos exp_freq_a1 info type RSnum if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/`f'.txt, names noquote replace nolab delim(" ")
+      !echo -e "sge \"`qctool' -g `F'/chr`k'.gen.gz -og `f'.gen -s `samples' -excl-samples `excl_samples' -incl-range `lowr'-`uppr' -omit-chromosome -snp-missing-call-rate 0.100001 -snp-missing-rate 0.05 -maf 0.01 1 -info 0.4 1 -sort; cut -d' ' -f1 `f'.gen > `f'.snpid; grep -w -f `f'.snpid `f'.txt > `f'.info; gzip -f `f'.gen\"" >> `T'/Extract.sh
    }
    restore
 }
