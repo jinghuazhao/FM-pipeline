@@ -98,16 +98,15 @@ development will facilitate summary statistics from a variety of consortiua as w
 A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, a [utility program in 
 Stata](files/st.do) is written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
-chr |        snpid  |       rsid |    pos |    FreqA2 |    info  | type |  A1  | A2
+chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
  1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-Optionally, a file is specified which contains samples to be excluded from the reference panel; one leaves it 
-unspecified when not needed. In line with qctool -excl-samples option, it contains a list of individuals corresponding 
-to ID_2 of the [sample file](http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html) rather than ID_1 and 
-ID_2.
+Note that unlike fmp.sh, the utility program uses qctool-1.4 for its more comprehensive options. Optionally, a file is specified which contains samples to be
+excluded from the reference panel; one leaves it unspecified when not needed. In line with qctool -excl-samples option, it contains a list of individuals
+corresponding to ID_2 of the [sample file](http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html) rather than ID_1 and ID_2.
 
 ### --- The lead SNPs ---
 
