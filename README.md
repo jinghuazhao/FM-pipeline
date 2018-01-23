@@ -144,8 +144,8 @@ The syntax is as follows,
 ```
 gcta-slct.sh <input>
 ```
-The idfile contains SNP IDs, snpid, and rsid which correspond to (ordered) snpid, variant IDs in the reference, and reference
-sequence IDs, respectively. By doing so, we can deal with duplicate chromosomal positions commonly seen in reference data.
+Where the `idfile` contains SNP IDs, snpid, and rsid which correspond to (ordered) snpid, variant IDs in the reference, and
+reference sequence IDs, respectively. The design allows for duplicate chromosomal positions commonly seen in reference data.
 Optionally, exclusion lists for SNPs and samples can be incorporated. At the end of the script, it also shows how the relevant
 information was generated in our analysis.
 
