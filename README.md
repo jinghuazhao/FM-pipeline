@@ -137,7 +137,10 @@ It is helpful to examine directions of effects together with their correlation w
 
 As the pipeline works on regions defined by lead SNPs, it is desirable to have a genomewide counterpart and currently this
 is possible with GCTA and we have a script called [gcta-slct.sh](gcta-slct.sh) which accepts a single sumstats file, and only
-a minor change is required, namely,
+a minor change is required, e.g., `--cojo-wind` for different window size (default 10MB, smaller window leads to longer
+computing time) and `--thread-num` for number of threads (larger integer when available leads to shorter computing time).
+
+The syntax is as follows,
 ```
 gcta-slct.sh <input>
 ```
