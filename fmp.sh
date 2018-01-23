@@ -1,5 +1,5 @@
 #!/bin/bash
-# 21-1-2018 MRC-Epid JHZ
+# 23-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -109,7 +109,7 @@ if [ $LD_MAGIC -eq 1 ]; then
     awk -f $FM_location/files/info.awk c=2 $GEN_location/$f.info > $GEN_location/$f.magic.info; \
     gzip -f $GEN_location/$f.magic.gen; \
     Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.05 0.4 $f.magic $threads; \
+            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.01 0.4 $f.magic $threads; \
     Rscript --vanilla $FM_location/files/lowtri2square.r'
 fi
 
@@ -120,7 +120,7 @@ if [ $LD_PLINK -eq 1 ]; then
        awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
        cp $f.z $f.sav; \
      # grep -w -v -f $f.excl $f.sav > $f.z; \
-       plink-1.9 --bfile $f --maf 0.001 --r square --threads 3 --out $f; \
+       plink-1.9 --bfile $f --maf 0.01 --r square --threads 3 --out $f; \
        sed "s/\t/ /g" $f.ld > $f.plink'
      # grep -w -v -f $f.excl $f.r below
 fi
