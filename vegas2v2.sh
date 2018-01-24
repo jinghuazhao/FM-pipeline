@@ -25,7 +25,7 @@ awk '{
 }' OFS="\t" $1.jma.bedtools | awk '{$1=$1};1' | sort -k1,1n -k2,2n >> $1.jma.gene
 sed -i 's/ /\t/g;s/-1/./g' $1.jma.gene
 
-awk '$NF!="."{print $NF}' $1.jma.gene | sort -k1,1 | uniq > $1.genelist
+awk 'NR>1 && $NF!="."{print $NF}' $1.jma.gene | sort -k1,1 | uniq > $1.genelist
 awk -vFS="\t" -vOFS="\t" 'NR>1{print $2,$13}' $1.jma.out > $1.snpandp
 awk '{if($1=="X") $1=23;if($1=="Y") $1=24;if($1!="XY") print}' $glist > glist
 vegas2v2 -G -snpandp $1.snpandp -custom $bfile -glist glist -genelist $1.genelist -out $1
