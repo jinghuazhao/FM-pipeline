@@ -1,4 +1,4 @@
-# 18-1-2018 MRC-Epid JHZ
+# 24-1-2018 MRC-Epid JHZ
 
 export PATH=$PATH:/genetics/data/software/bin
 export bfile=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
@@ -18,7 +18,7 @@ awk 'NR>1{
 # As it is interactive access, we use bedtools instead:
 intersectBed -a $1.jma.bed -b glist-hg19.bed -loj > $1.jma.bedtools
 echo chr pos oxfordid snpid rsid chrom start end gene > $1.jma.gene
-awk 'NR>1{
+awk '{
   gsub(/chr/,"",$1)
   $2=""
   print
