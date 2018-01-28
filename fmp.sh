@@ -25,13 +25,11 @@ export finemap=1
 export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
 export FM_location=/genetics/bin/FM-pipeline
 
+export wd=$(pwd)
 # GEN files named chr{chr}_{start}_{end}.gen.gz
 export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 # sample file
-export sample_file=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
-# sample exclusion list
-export wd=$(pwd)
-export sample_to_exclude=$wd/exclude.dat
+export sample_file=$wd/HRC.sample
 # number of threads
 export threads=5
 export LD_MAGIC=0
@@ -57,16 +55,12 @@ awk '{
 ln -sf $wd/st.bed
 
 echo "--> binary_ped"
-export OPTs=""
-if [ -f $sample_to_exclude ] && [ ! -z "$sample_to_exclude" ]; then 
-   export OPTs="-excl-samples ${sample_to_exclude}"
-fi
 awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location --env OPTs -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
     qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
-          -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1} $OPTs'
+          -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1}'
 echo "region-specific data"
 awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
