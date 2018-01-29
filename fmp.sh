@@ -110,11 +110,11 @@ fi
 if [ $LD_PLINK -eq 1 ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
-       plink-1.9 --bfile $f --maf 0.001 --freq --threads 3 --out $f; \
+       plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
        awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
        cp $f.z $f.sav; \
      # grep -w -v -f $f.excl $f.sav > $f.z; \
-       plink-1.9 --bfile $f --maf 0.01 --r square --threads 3 --out $f; \
+       plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
        sed "s/\t/ /g" $f.ld > $f.plink'
      # grep -w -v -f $f.excl $f.r below
 fi
@@ -214,7 +214,7 @@ if [ $JAM -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
-       plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 5 0.80 --maf 0.05 --out $f; \
+       plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 5 0.80 --maf 0.0001 --out $f; \
        cat $f.snpid >> $f.prune.in
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
