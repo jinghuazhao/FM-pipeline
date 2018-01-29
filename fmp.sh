@@ -1,5 +1,5 @@
 #!/bin/bash
-# 28-1-2018 MRC-Epid JHZ
+# 29-1-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -55,7 +55,7 @@ awk '{
 ln -sf $wd/st.bed
 
 echo "--> binary_ped"
-awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location --env OPTs -C' ' '
+awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
@@ -94,12 +94,12 @@ awk 'NR>1' st.bed | parallel -j${threads} --env GEN_location -C' ' '
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 
 if [ $LD_MAGIC -eq 1 ]; then
-    awk 'NR>1' st.bed | parallel -j${threads} --env threads --env sample_file --env OPTs --env FM_location --env GEN_location -C' ' '
+    awk 'NR>1' st.bed | parallel -j${threads} --env threads --env sample_file --env FM_location --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
     qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f.magic.gen \
-          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome $OPTs;\
+          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome;\
     awk -f $FM_location/files/info.awk c=2 $GEN_location/$f.info > $GEN_location/$f.magic.info; \
     gzip -f $GEN_location/$f.magic.gen; \
     Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
@@ -336,5 +336,5 @@ fi
 # obsolete with gtool/plink-1.9 handling gen/ped
 #   gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
 #         --missing 0.05 --threshold 0.9 --log $f.log --snp --alleles --chr {1}'
-#   plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc ${OPTs} \
+#   plink-1.9 --file $GEN_location/$f --missing-genotype N --extract $f.inc \
 #         --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
