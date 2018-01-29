@@ -37,7 +37,7 @@ forval k=1/22 {
       local samples="/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample"
       local excl_samples="/genetics/data/gwas/1-11-17/exclude.dat"
       outsheet rsid pos exp_freq_a1 info type RSnum if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/`f'.txt, names noquote replace nolab delim(" ")
-      !echo -e "sge \"`qctool' -g `F'/chr`k'.gen.gz -og `f'.gen -s `samples' -excl-samples `excl_samples' -incl-range `lowr'-`uppr' -omit-chromosome -snp-missing-call-rate 0.100001 -snp-missing-rate 0.05 -maf 0.01 1 -info 0.4 1 -sort; cut -d' ' -f1 `f'.gen > `f'.snpid; grep -w -f `f'.snpid `f'.txt > `f'.info; gzip -f `f'.gen\"" >> `T'/Extract.sh
+      !echo -e "sge \"`qctool' -g `F'/chr`k'.gen.gz -og `f'.gen -s `samples' -excl-samples `excl_samples' -incl-range `lowr'-`uppr' -omit-chromosome -snp-missing-call-rate 0.100001 -snp-missing-rate 0.05 -maf 0.000072 1 -info 0.4 1 -sort; cut -d' ' -f1 `f'.gen > `f'.snpid; grep -w -f `f'.snpid `f'.txt > `f'.info; gzip -f `f'.gen\"" >> `T'/Extract.sh
    }
    restore
 }
@@ -47,6 +47,7 @@ cd `T'
 !./Extract.sh
 
 // origina scripts
+// order rsid pos exp_freq_a1 info type RSnum
 //    outsheet rsid if pos>=`lowr' & pos<=`uppr' & (MAC<3 | info<0.4) using `T'/exc`f'.txt, nonames noquote replace nolab
 //    outsheet rsid pos exp_freq_a1 info type RSnum if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`f'.info, names noquote replace nolab delim(" ")
 //    !echo -e "sge \"/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og chr`f'.gen -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`f'.txt -sort; gzip -f chr`f'.gen\"" >> `T'/Extract.sh
