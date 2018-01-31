@@ -1,4 +1,4 @@
-# 14-1-2018 MRC-Epid JHZ
+# 31-1-2018 MRC-Epid JHZ
 
 options(digits=3, scipen=20, width=500)
 
@@ -11,6 +11,7 @@ config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
 subset(snp, snp_prob>0.01)
 subset(config,config_prob>0.01)
 id <- with(subset(snp, snp_prob>0.01), index)
+ld[id,id][upper.tri(ld[id,id])] <- NA
 chk <- cbind(z[id, ], with(subset(snp,index%in%id), c(snp_prob,snp_log10bf)), ld[id, id])
 chk
 
