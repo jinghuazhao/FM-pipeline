@@ -1,5 +1,5 @@
 #!/bin/bash
-# 30-1-2018 MRC-Epid JHZ
+# 1-2-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -93,7 +93,7 @@ awk 'NR>1' st.bed | parallel -j${threads} --env GEN_location -C' ' '
     plink-1.9 --bfile $GEN_location/$f --extract $f.inc \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
 
-if [ $LD_MAGIC -eq 1 ]; then
+if [ $LD_MAGIC ]; then
     awk 'NR>1' st.bed | parallel -j${threads} --env threads --env sample_file --env FM_location --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
@@ -107,7 +107,7 @@ if [ $LD_MAGIC -eq 1 ]; then
     Rscript --vanilla $FM_location/files/lowtri2square.r'
 fi
 
-if [ $LD_PLINK -eq 1 ]; then
+if [ $LD_PLINK ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
        plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
@@ -119,7 +119,7 @@ if [ $LD_PLINK -eq 1 ]; then
      # grep -w -v -f $f.excl $f.r below
 fi
 
-if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
+if [ $CAVIAR ] || [ $CAVIARBF ] || [ $finemap ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
        ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
@@ -128,14 +128,14 @@ if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
        sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
 fi
 
-if [ $CAVIAR -eq 1 ]; then
+if [ $CAVIAR ]; then
    echo "--> CAVIAR"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        CAVIAR -z $f.z -l $f.ld -r 0.9 -o $f'
 fi
 
-if [ $CAVIARBF -eq 1 ]; then
+if [ $CAVIARBF ]; then
    echo "--> CAVIARBF"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -143,7 +143,7 @@ if [ $CAVIARBF -eq 1 ]; then
        tail -n1 | cut -d" " -f9) -t 0 -a 0.1 -c 3 --appr -o $f.caviarbf'
 fi
 
-if [ $FM_summary -eq 1 ]; then
+if [ $FM_summary ]; then
    echo "--> FM-summary"
    echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
    sed 's/ /\t/g' > FM-summary.txt
@@ -153,7 +153,7 @@ if [ $FM_summary -eq 1 ]; then
        awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
 fi
 
-if [ $GCTA -eq 1 ]; then
+if [ $GCTA ]; then
    echo "--> GCTA"
    awk 'NR>1' st.bed | parallel -j${threads} --env FM_location --env GEN_location -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -208,7 +208,7 @@ if [ $GCTA -eq 1 ]; then
    sed -i 's/ /,/g' gcta-top.csv
 fi
 
-if [ $JAM -eq 1 ]; then
+if [ $JAM ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -233,7 +233,7 @@ if [ $JAM -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/gcta-jam.R > gcta-jam.log
 fi
 
-if [ $LocusZoom -eq 1 ]; then
+if [ $LocusZoom ]; then
    echo "--> LocusZoom"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -245,7 +245,7 @@ if [ $LocusZoom -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
 
-if [ $fgwas -eq 1 ]; then
+if [ $fgwas ]; then
    echo "--> fgwas"
    # obtain annotations
    seq 22 | parallel -j${threads} --env fgwas_location_1kg -C' ' '
@@ -310,7 +310,7 @@ if [ $fgwas -eq 1 ]; then
    fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
 fi
 
-if [ $finemap -eq 1 ]; then
+if [ $finemap ]; then
    echo "--> finemap"
    echo "z;ld;snp;config;log;n-ind" > finemap.cfg
    awk 'NR>1' st.bed | parallel -j${threads} -C ' ' '
@@ -331,6 +331,10 @@ if [ $finemap -eq 1 ]; then
        sort -k5,5n | \
        awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp; \
        R -q --no-save < ${FM_location}/files/finemap.R > $f.out'
+fi
+
+if [ $gcta ] && [ $JAM ] && [ $finemap ]; then
+   R --q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
 fi
 
 # obsolete with gtool/plink-1.9 handling gen/ped
