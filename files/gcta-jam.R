@@ -1,4 +1,4 @@
-# 15-1-2018 MRC-Epid JHZ
+# 1-2-2018 MRC-Epid JHZ
 
 options(scipen=20, width=200)
 
@@ -7,8 +7,13 @@ cs <- data.frame()
 stbed <- read.table("st.bed",as.is=TRUE,header=TRUE)
 for(i in seq(nrow(stbed)))
 {
-  f <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3],"p.cs")
-  if(file.exists(f)) cs <- rbind(cs,read.table(f,as.is=TRUE,header=TRUE))
+  r <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3])
+  f <- paste0(r,"p.cs")
+  if(file.exists(f))
+  {
+    t <- read.table(f,as.is=TRUE,header=TRUE)
+    cs <- rbind(cs,data.frame(region=r,t))
+  }
 }
 
 # split snpid
