@@ -20,7 +20,7 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
   for(i in seq(nrow(stbed)))
   {
     r <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3])
-    cat(r,"\n")
+    cat(stbed[i,"r"],r,"\n")
     slct.r <- subset(slct,region==r)
     cs.r <- subset(cs,region==r)
     slct_cs.r <- qpcR:::cbind.na(slct.r[c("region","SNP","rsid","pJ")],cs.r[c("snpid","PostProb","BF")])
