@@ -1,7 +1,6 @@
 # 1-2-2018 MRC-Epid JHZ
 
-options(scipen=20, width=200)
-options(rgl.useNULL = TRUE)
+options(scipen=20, width=200, rgl.useNULL=TRUE)
 
 if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
 {
