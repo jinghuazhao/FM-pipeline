@@ -1,6 +1,7 @@
 # 1-2-2018 MRC-Epid JHZ
 
 options(scipen=20, width=200)
+options(rgl.useNULL = TRUE)
 
 if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
 {
@@ -19,6 +20,7 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
   for(i in seq(nrow(stbed)))
   {
     r <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3])
+    cat(r,"\n")
     slct.r <- subset(slct,region==r)
     cs.r <- subset(cs,region==r)
     slct_cs.r <- qpcR:::cbind.na(slct.r[c("region","SNP","rsid","pJ")],cs.r[c("snpid","PostProb","BF")])
@@ -35,7 +37,7 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
       index <- with(subset(snp,snp%in%snplist),index)
       sumstat <- subset(z,snp%in%snplist)
       ld[index,index][upper.tri(ld[index,index])] <- NA
-      info <- data.frame(index=rownames(ld[index,index]),sumstat,ld[index,index])
+      info <- data.frame(index=rownames(ld)[index],sumstat,ld[index,index])
       slct_cs_info <- paste0(r,".info")
       addWorksheet(wb, slct_cs_info)
       writeDataTable(wb, slct_cs_info, info)
