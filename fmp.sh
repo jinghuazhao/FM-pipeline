@@ -167,7 +167,7 @@ if [ $GCTA ]; then
        grep -f $f.inc | \
        awk -f $FM_location/files/ma.awk > $f.ma; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --cojo-collinear 0.9 --out $f; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --maf 0.00072 --out $f; \
+       gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --maf 0.000072 --out $f; \
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
        gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f; \
