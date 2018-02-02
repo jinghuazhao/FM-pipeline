@@ -21,7 +21,27 @@ awk -vfl=250000 '{
 
 grep -v -f exclude.dat /gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample > HRC.sample
 
-cd /scratch/tempjhz22/LDcalc/HRC
+export s=/gen_omics/data/EPIC-Norfolk/HRC
+export o=/scratch/tempjhz22/LDcalc/HRC
+export w=/genetics/data/gwas/1-11-17
+
+seq 22 | parallel -j1 --env s --env o --env w -C' ' '
+    sge "/genetics/bin/qctool_v2.0 -filetype bgen -g $s/chr{}.bgen -s $s/EPIC-Norfolk.sample -excl-samples $w/exclude.dat -snp-stats -osnp $o/chr{}.snpstats"'
+
+seq 22 | parallel -j5 --env o -C' ' 'awk "NR>12 && (\$14<0.000072||\$18<0.4||\$19>=0.05){print \$2}" $o/chr{}.snpstats > $o/chr{}.excl'
+seq 22 | parallel -j1 --env i --env b --env o -C' ' '
+    qctool_v2.0 -filetype bgen -g $s/chr{}.bgen -s $s/EPIC-Norfolk.sample \
+               -ofiletype binary_ped -og $o/chr{} -excl-samples exclude.dat \
+               -excl-rsids $o/chr{}.excl -threshhold 0.9 -threads 5'
+
+cd $o
+cd /gen_omics/data/EPIC-Norfolk/HRC/binary_ped
+ln -f $o/HRC.bed
+ln -f $o/HRC.bim
+ln -f $o/HRC.fam
+ln -f $o/HRC.nosex
 seq 22|awk -vp=chr '{print p $1}' > merge-list
 plink-1.9 --merge-list merge-list --maf 0.000072 --make-bed --out HRC
 cd -
+
+qsub -S /bin/bash -V -N HRC -cwd -e HRC3.err -o HRC3.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh HRC
