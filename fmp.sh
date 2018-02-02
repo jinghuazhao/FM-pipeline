@@ -34,7 +34,7 @@ export sample_file=$wd/HRC.sample
 export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
-export dry_run=yes
+export dry_run=
 
 export args=$1
 if [ $(dirname $args) == "." ]; then
