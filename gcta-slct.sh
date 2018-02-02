@@ -1,5 +1,5 @@
 #!/bin/bash
-# 30-1-2018 MRC-Epid JHZ
+# 2-2-2018 MRC-Epid JHZ
 
 export PATH=/genetics/bin:/usr/local/bin:$PATH
 export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
@@ -32,7 +32,7 @@ if [ -f $remove_sample ] && [ ! -z "$remove_sample" ]; then export OPT1="--remov
 export OPT2=""
 if [ -f $exclude_snp ] && [ ! -z "$exclude_snp" ]; then export OPT2="--exclude $exclude_snp"; fi
 
-gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --maf 0.00072 --thread-num $threads --out $1
+gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --maf 0.000072 --thread-num $threads --out $1
 
 echo "3. Adding snpid and rsid"
 
