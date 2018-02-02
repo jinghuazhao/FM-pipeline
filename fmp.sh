@@ -17,7 +17,7 @@ export dry_run=
 
 # software for analysis; set flags to 1 to enable
 
-export CAVIAR=0
+wexport CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
 export GCTA=0
@@ -339,7 +339,7 @@ if [ $finemap -eq 1 ]; then
        R -q --no-save < ${FM_location}/files/finemap.R > $f.out'
 fi
 
-if [ $gcta -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
+if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
    R --q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
 fi
 
