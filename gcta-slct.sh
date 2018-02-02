@@ -58,9 +58,9 @@ order snpid rsid RSnum
 outsheet using /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt, delim(" ") noname noquote replace
 !gzip -f /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt
 END
-export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 
 ## The following is now updated as in files/st.sh
+export GEN=/gen_omics/data/EPIC-Norfolk/HRC
 export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
 cd /gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 seq 22 | parallel --env GEN --env sample -C' ' 'sge "/genetics/bin/plink2 --bgen $GEN/chr{}.bgen --sample $sample --chr {} --make-bed --out chr{}"'
