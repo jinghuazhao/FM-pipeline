@@ -34,6 +34,7 @@ export sample_file=$wd/HRC.sample
 export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
+export DEBUG=yes
 
 export args=$1
 if [ $(dirname $args) == "." ]; then
@@ -54,41 +55,44 @@ awk '{
 };1' $args > $rt.input
 ln -sf $wd/st.bed
 
+export OPTs=""
+if [ ! -z "$DEBUG" ]; then OPTs="--dry-run"; fi
+
 echo "--> binary_ped"
-awk 'NR>1' st.bed | parallel -j${threads} --env sample_file --env FM_location --env GEN_location -C' ' '
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env sample_file --env FM_location --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
     qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
           -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1}'
 echo "region-specific data"
-awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
     awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
          \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
          sort -k11,11 > $f.txt'
 echo "--> GWAS auxiliary files"
-awk 'NR>1' st.bed | parallel -j${threads} --env GEN_location -C' ' '
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     sort -k2,2 $GEN_location/$f.bim | \
     join -111 -22 $f.txt - | \
     sort -k11,11 > $f.incl; \
     awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
     cut -d" " -f10,11 $f.r > $f.rsid'
-awk 'NR>1' st.bed | parallel -j${threads} --env wd -C' ' '
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env wd -C' ' '
     export f=chr{1}_{2}_{3}; \
     cut -d" " -f11,12 $f.r > $f.z; \
     awk "{print \$1}" $f.incl > $f.inc; \
     awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
     echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
     awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
-awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
          grep -f $f.inc $f.txt | \
          sort -k11,11 > $f.dat'
 
 echo "--> bfile"
-awk 'NR>1' st.bed | parallel -j${threads} --env GEN_location -C' ' '
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env GEN_location -C' ' '
     export f=chr{1}_{2}_{3}; \
     plink-1.9 --bfile $GEN_location/$f --extract $f.inc \
     --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
