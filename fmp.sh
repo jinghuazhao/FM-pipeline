@@ -12,6 +12,9 @@ export PATH=$PATH:/genetics/bin:/usr/local/bin:/genetics/data/software/bin
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
+# nonempty value to skip parallel sessions for data handling and go directly to analysis
+export dry_run=
+
 # software for analysis; set flags to 1 to enable
 
 export CAVIAR=0
@@ -34,7 +37,6 @@ export sample_file=$wd/HRC.sample
 export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
-export dry_run=
 
 export args=$1
 if [ $(dirname $args) == "." ]; then
