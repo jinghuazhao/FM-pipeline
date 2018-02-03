@@ -1,4 +1,4 @@
-# 2-2-2018 MRC-Epid JHZ
+# 3-2-2018 MRC-Epid JHZ
 
 # reformat summary statistics
 gunzip -c meta_meno1kg_101115_filt_rsid_flags_KR.txt.gz | \
@@ -20,6 +20,8 @@ awk -vfl=250000 '{
 }' $region > st.bed
 
 grep -v -f exclude.dat /gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample > HRC.sample
+
+# Those at end of gcta-slct.sh are actually fine so thes following section using qctool_v2.0 is unnecessary.
 
 export s=/gen_omics/data/EPIC-Norfolk/HRC
 export o=/scratch/tempjhz22/LDcalc/HRC
