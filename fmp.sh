@@ -1,5 +1,5 @@
 #!/bin/bash
-# 2-2-2018 MRC-Epid JHZ
+# 3-2-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -17,7 +17,7 @@ export dry_run=
 
 # software for analysis; set flags to 1 to enable
 
-wexport CAVIAR=0
+export CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
 export GCTA=0
