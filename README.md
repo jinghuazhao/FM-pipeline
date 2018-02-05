@@ -154,7 +154,7 @@ As it is very time-consuming for interactive use, on our system we resort to sge
 qsub -S /bin/bash -V -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh <input>
 ```
 so the job is sent to the clusters instead. In this case, we specifies the shell (**-S**) with environment variables (**-V**), error
-message file (**-e**), log file (**-o**), threads (**-pe**) and queue (**-q**) whereas the last item is argument to `gcta-slct.sh` itself. If you
+message file (**-e**), log file (**-o**), threads (**-pe**) and queue (**-q**) whereas the last item is argument to `gcta-slct.sh` itself. If your
 system supports for GNU parallel, the syntax is similar.
 
 The use of gene list from the analysis can compare to feeding SNPs and their p values from a GWAS into VEGAS2v2 as illustrated
