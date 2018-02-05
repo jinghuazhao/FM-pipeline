@@ -1,5 +1,5 @@
 #!/bin/bash
-# 3-2-2018 MRC-Epid JHZ
+# 5-2-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -189,7 +189,7 @@ if [ $GCTA -eq 1 ]; then
        join -j2 - {}.tmp >> {}.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print f, \$0}" f=$f $f.jma >> gcta-slct.csv'
+       if [ -f $f.jma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.jma >> gcta-slct.csv; fi'
    sed -i 's/ /,/g' gcta-slct.csv
 # --cojo-cond <==> given.cojo, cma.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
@@ -197,9 +197,9 @@ if [ $GCTA -eq 1 ]; then
        echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
        sort -k2,2 {}.cma.cojo | \
        join -j2 - {}.tmp >> {}.cma'
-   awk 'NR>1' st.bed | parallel -j1 -C' ' '
+       awk 'NR>1' st.bed | parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print f, \$0}" f=$f $f.cma >> gcta-cond.csv'
+       if [ -f $f.cma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.cma >> gcta-cond.csv; fi'
    sed -i 's/ /,/g' gcta-cond.csv
 # --cojo-top-SNPs <==> top.jma.cojo, top.ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
@@ -210,10 +210,11 @@ if [ $GCTA -eq 1 ]; then
        join -j2 - {}.tmp >> {}.top.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "!/SNP/{print f, \$0}" f=$f $f.top.jma >> gcta-top.csv'
+       if [ -f $f.top.jma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.top.jma >> gcta-top.csv; fi'
    sed -i 's/ /,/g' gcta-top.csv
 fi
 
+\\
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
