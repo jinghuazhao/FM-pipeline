@@ -4,7 +4,6 @@ options(scipen=20, width=200, rgl.useNULL=TRUE)
 
 if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
 {
-
   slct <- read.csv("gcta-slct.csv",as.is=TRUE)
   names(slct)[16] <- "rsid1"
   cs <- read.table("jam.cs",header=TRUE,as.is=TRUE)
