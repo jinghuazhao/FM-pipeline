@@ -26,7 +26,7 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
     slct_cs.r <- qpcR:::cbind.na(slct.r[c("region","SNP","rsid1","pJ")],cs.r[c("snpid","rsid2","PostProb","BF")])
     addWorksheet(wb, r)
     writeDataTable(wb, r, slct_cs.r)
-    snplist <- unique(sort(c(with(slct.r, SNP),with(cs.r, snpid))))
+    snplist <- data.frame(snp=unique(sort(c(with(slct.r, SNP),with(cs.r, snpid)))))
     fm <- paste0(r,c(".snp",".config",".ld",".z"))
     if(file.exists(fm[1])&file.exists(fm[2])&file.exists(fm[3])&file.exists(fm[4]))
     {
