@@ -34,6 +34,8 @@ export wd=$(pwd)
 export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 # sample file
 export sample_file=$wd/HRC.sample
+# wholegenome genotype file
+export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped/HRC
 # number of threads
 export threads=5
 export LD_MAGIC=0
@@ -142,7 +144,7 @@ if [ $clumping -eq 1 ]; then
       }   
       print snpid, $7
    }' OFS='\t' $rt.input > $rt.tab
-   plink-1.9 --bfile $f --clump $rt.tab \
+   plink-1.9 --bfile $HRC --clump $rt.tab \
              --clump-field P \
              --clump-kb 500 \
              --clump-p1 5e-08 \
@@ -375,6 +377,8 @@ if [ $finemap -eq 1 ]; then
        awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp; \
        R -q --no-save < ${FM_location}/files/finemap.R > $f.out'
 fi
+
+# we leave options to recalculate LD via PLINK here
 
 if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
