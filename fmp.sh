@@ -36,8 +36,9 @@ export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 export sample_file=$wd/HRC.sample
 # wholegenome genotype file
 export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
-export remove_sample=exclude.id
-export exclude_snp=exclude.snps
+export bfile=$HRC/HRC
+export remove_sample=$HRC/exclude.id
+export exclude_snp=$HRC/exclude.snps
 # number of threads
 export threads=5
 export LD_MAGIC=0
@@ -146,7 +147,7 @@ if [ $clumping -eq 1 ]; then
       }   
       print snpid, $7
    }' OFS='\t' $rt.input > $rt.tab
-   plink-1.9 --bfile $HRC/HRC --remove $HRC/$remove_sample --exclude $HRC/$exclude_snp --clump $rt.tab \
+   plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp --clump $rt.tab \
              --clump-field P \
              --clump-kb 500 \
              --clump-p1 5e-08 \
