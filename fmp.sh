@@ -17,6 +17,7 @@ export dry_run=
 
 # software for analysis; set flags to 1 to enable
 
+export clumping=0
 export CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
@@ -125,6 +126,41 @@ if [ $LD_PLINK -eq 1 ]; then
      # grep -w -v -f $f.excl $f.r below
 fi
 
+if [ $clumping -eq 1 ]; then
+   echo "--> clumping"
+   awk '
+   {
+      if (NR==1) print "snpid", "P"
+      chr=$9
+      pos=$10
+      a1=$2 
+      a2=$3
+      if (a1>a2) {
+         snpid=chr ":" pos "_" a2 "_" a1
+      } else {
+         snpid=chr ":" pos "_" a1 "_" a2
+      }   
+      print snpid, $7
+   }' OFS='\t' $rt.input > $rt.tab
+   plink-1.9 --bfile $f --clump $rt.tab \
+             --clump-field P \
+             --clump-kb 500 \
+             --clump-p1 5e-08 \
+             --clump-r2 0.1 \
+             --clump-snp-field snpid \
+             --out $rt.clump
+   awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
+       export f=chr{1}_{2}_{3}; \
+       awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab; \
+       plink-1.9 --bfile $f --clump $f.tab \
+            --clump-field P \
+            --clump-kb 500 \
+            --clump-p1 5e-08 \
+            --clump-r2 0.1 \
+            --clump-snp-field snpid \
+            --out $f.clump'
+fi
+
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
@@ -158,17 +194,6 @@ if [ $FM_summary -eq 1 ]; then
        $FM_location/files/getCredible.r; \
        awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
 fi
-
-awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab; \
-    plink-1.9 --bfile $f --clump $f.tab \
-         --clump-field P \
-         --clump-kb 500 \
-         --clump-p1 5e-08 \
-         --clump-r2 0.1 \
-         --clump-snp-field snpid \
-         --out $f.clump'
 
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
