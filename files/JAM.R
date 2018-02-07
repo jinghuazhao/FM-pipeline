@@ -1,4 +1,4 @@
-# 15-1-2018 MRC-Epid JHZ
+# 7-2-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -36,7 +36,7 @@ save(j,file=paste0(f,".j"))
 pst <- slot(j, "posterior.summary.table")
 tm <- TopModels(j)
 ssr <- data.frame(ssnpid=ssnpid, snpid=snpid, rsid=rsid)
-cs <- CredibleSet(j)
+cs <- CredibleSet(j, credible.percentile.threshold=0.75)
 msbf <- ModelSizeBayesFactors(j)[[1]]
 sink(paste0(f, ".jam"))
 pst
