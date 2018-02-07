@@ -159,6 +159,17 @@ if [ $FM_summary -eq 1 ]; then
        awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
 fi
 
+awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
+    export f=chr{1}_{2}_{3}; \
+    awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab; \
+    plink-1.9 --bfile $f --clump $f.tab \
+         --clump-field P \
+         --clump-kb 500 \
+         --clump-p1 5e-08 \
+         --clump-r2 0.1 \
+         --clump-snp-field snpid \
+         --out $f.clump'
+
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
    awk 'NR>1' st.bed | parallel -j${threads} --env FM_location --env GEN_location -C' ' '
