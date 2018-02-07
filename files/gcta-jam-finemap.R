@@ -35,7 +35,7 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
       ld <- read.table(fm[3])
       z <- read.table(fm[4],col.names=c("snp","z"))
       index <- with(merge(snp,snplist,by="snp"),index)
-      sumstat <- merget(z,snplist,by="snp")
+      sumstat <- merge(z,snplist,by="snp")
       ld[index,index][upper.tri(ld[index,index])] <- NA
       info <- data.frame(index=rownames(ld)[index],sumstat,ld[index,index])
       slct_cs_info <- paste0(r,".info")
