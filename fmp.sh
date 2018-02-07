@@ -1,5 +1,5 @@
 #!/bin/bash
-# 5-2-2018 MRC-Epid JHZ
+# 7-2-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -341,7 +341,7 @@ if [ $finemap -eq 1 ]; then
 fi
 
 if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
-   R --q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
+   R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
 fi
 
 # obsolete with gtool/plink-1.9 handling gen/ped
