@@ -127,10 +127,15 @@ Software | Output type | Description
 CAVIAR   | .set/.post | causal set and probabilities in the causal set/posterior probabilities
 CAVIARBF | .caviarbf | causal configurations and their BFs
 FM-summary | .txt | additional information to the GWAS summary statistics
+GCTA     | .jma.cojo | joint/conditional analysis results
 JAM      | .jam/.top | posterior summary table, top models containing selected SNPs and credible sets
 finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 
-It is helpful to examine directions of effects together with their correlation which is now embedded as with finemap.
+It is helpful to examine directions of effects together with their correlation which is now embedded when finemap 
+is also called.
+
+In addition, we have implemented clumping using PLINK with options comparable to those used in depict (e.g. 
+description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
@@ -167,8 +172,8 @@ Nevertheless, as indicated in the original VEGAS paper, Liu et al. (2010),
 > If a gene contains only one causal variant, then the inclusion of a large number of nonsignificant markers into the gene-based 
 > test will dilute this gene’s significance.``
 
-and we perhaps would see an analogy here. However, more broadly software in PW-pipeline can be used and in terms of LD information
-PASCAL will be useful.
+and we perhaps would see an analogy here. However, more broadly software in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline) can be used
+and in terms of LD information PASCAL will be useful.
 
 ## EXAMPLE
 
