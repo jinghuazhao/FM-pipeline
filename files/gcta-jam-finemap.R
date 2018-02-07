@@ -1,4 +1,4 @@
-# 6-2-2018 MRC-Epid JHZ
+# 7-2-2018 MRC-Epid JHZ
 
 options(scipen=20, width=200, rgl.useNULL=TRUE)
 
@@ -34,8 +34,8 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
       config <- read.table(fm[2],as.is=TRUE,header=TRUE)
       ld <- read.table(fm[3])
       z <- read.table(fm[4],col.names=c("snp","z"))
-      index <- with(subset(snp,snp%in%snplist),index)
-      sumstat <- subset(z,snp%in%snplist)
+      index <- with(merge(snp,snplist,by="snp"),index)
+      sumstat <- merget(z,snplist,by="snp")
       ld[index,index][upper.tri(ld[index,index])] <- NA
       info <- data.frame(index=rownames(ld)[index],sumstat,ld[index,index])
       slct_cs_info <- paste0(r,".info")
