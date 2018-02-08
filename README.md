@@ -162,6 +162,9 @@ so the job is sent to the clusters instead. In this case, we specifies the shell
 message file (**-e**), log file (**-o**), threads (**-pe**) and queue (**-q**) whereas the last item is argument to `gcta-slct.sh` itself. If your
 system supports for GNU parallel, the syntax is similar.
 
+Although the analysis involves particular region is equivalent to this genomewide setup but with focus on particular regions,
+there is also a section in the script for analysis with respect to a list of regions when setting region=1 and using `st.bed` as described above.
+
 The use of gene list from the analysis can compare to feeding SNPs and their p values from a GWAS into VEGAS2v2 as illustrated
 with [vegas2v2.sh](vegas2v2.sh) where `interceptBed` utility from the [bedtools](http://bedtools.readthedocs.io/en/latest/) 
 package is used. Note that instead of the 1000Genomes reference provided, we use our own.
