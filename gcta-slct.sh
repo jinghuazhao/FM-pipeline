@@ -37,7 +37,7 @@ gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --maf 0.000072 
 
 if [ $region -eq 1 ]; then
    export flanking=250
-   awk 'NR>1' st.bed | parallel -j${threads} --env flanking --env threads -C' ' '
+   awk 'NR>1' st.bed | parallel -j1 --env flanking --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
        gcta64 --bfile $bfile $OPT1 $OPT2 --cojo-file $1.dat --cojo-slct --maf 0.000072 --extract-region-bp {1} {4} $flanking --thread-num $threads --out $f'
 fi
