@@ -1,5 +1,5 @@
 #!/bin/bash
-# 7-2-2018 MRC-Epid JHZ
+# 8-2-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -381,11 +381,13 @@ if [ $finemap -eq 1 ]; then
        R -q --no-save < ${FM_location}/files/finemap.R > $f.out'
 fi
 
-# we leave options to recalculate LD via PLINK here
+# cherry-picking of information on z, ld, or possibly other things for signals with available data
 
 if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
 fi
+
+# However, we could opt to recalculate LD from the lists formed from GCTA and JAM results.
 
 # obsolete with gtool/plink-1.9 handling gen/ped
 #   gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
