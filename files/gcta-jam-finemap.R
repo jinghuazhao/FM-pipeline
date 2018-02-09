@@ -1,4 +1,4 @@
-# 7-2-2018 MRC-Epid JHZ
+# 9-2-2018 MRC-Epid JHZ
 
 options(scipen=20, width=200, rgl.useNULL=TRUE)
 
@@ -44,4 +44,23 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
     }
   }
   saveWorkbook(wb, file=xlsx, overwrite=TRUE)
+
+# get in data
+  require(dplyr)
+  slct <- rename(slct, snpid=SNP, Pos=bp)
+  p <- bind_rows(slct[c("region","Chr","Pos","snpid","pJ","rsid")],
+                 cs[c("region","Chr","Pos","snpid", "rsid", "PostProb", "BF")])
+  ord <- with(p,order(Chr,Pos))
+  slct_cs <- p[ord,]
+
+# overlaps, 
+  rs <- slct_cs %>% distinct(region, snpid,.keep_all=TRUE)
+  i <- intersect(with(slct,snpid),with(cs,snpid))
+  filter(rs,snpid%in%i)
+  filter(rs,!(snpid%in%i))
+  s <- slct_cs %>% distinct(snpid,.keep_all=TRUE)
+  u <- with(s,snpid)
+  with(s,setdiff(snpid,i))
+  write.table(s[c("region","Chr","Pos","PostProb","BF","pJ","snpid","rsid")],file="id",row.names=FALSE,quote=FALSE)
+  write.table(u,file="ld",col.names=FALSE,row.names=FALSE,quote=FALSE)
 }
