@@ -278,7 +278,7 @@ if [ $JAM -eq 1 ]; then
    ls *sel | parallel -j1 -C' ' '
        awk "NR>1{sub(/\p.sel/,\"\",FILENAME);split(\$2,a,\":\");\$1=FILENAME \" \" a[1];print}"' | \
        sort -k1,1n >> jam.out
-   R -q --no-save < ${FM_location}/files/gcta-jam.R > gcta-jam.log
+   R -q --no-save < ${FM_location}/files/JAM-cs.R > JAM-cs.log
 fi
 
 if [ $LocusZoom -eq 1 ]; then
