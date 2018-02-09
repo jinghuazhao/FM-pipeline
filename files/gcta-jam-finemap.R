@@ -4,10 +4,9 @@ options(scipen=20, width=200, rgl.useNULL=TRUE)
 
 if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
 {
-  slct <- read.csv("gcta-slct.csv",as.is=TRUE)
-  names(slct)[16] <- "rsid1"
-  cs <- read.table("jam.cs",header=TRUE,as.is=TRUE)
-  names(cs)[3] <- "rsid2"
+  require(dplyr)
+  slct <- rename(read.csv("gcta-slct.csv",as.is=TRUE), rsid1=rsid)
+  cs <- rename(read.table("jam.cs",header=TRUE,as.is=TRUE), rsid2=rsid)
   require(openxlsx)
   xlsx <- "gcta-jam-finemap.xlsx"
   wb <- createWorkbook(xlsx)
@@ -58,7 +57,6 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
   saveWorkbook(wb, file=xlsx, overwrite=TRUE)
 
 # get in data
-  require(dplyr)
   slct <- rename(slct, snpid=SNP, Pos=bp, rsid=rsid1)
   cs <- rename(cs, rsid=rsid2)
   p <- bind_rows(slct[c("region","Chr","Pos","snpid","pJ","rsid")],
