@@ -1,5 +1,5 @@
 #!/bin/bash
-# 8-2-2018 MRC-Epid JHZ
+# 9-2-2018 MRC-Epid JHZ
 
 if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
     echo "Usage: fmp.sh <input>"
@@ -385,6 +385,24 @@ fi
 
 if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
+   sort -k1,1 ld > ld.1
+   # As before the same setup for gcta-slct.sh is used here but may complain otherwise
+   gunzip -c /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt.gz | \
+   awk '{snpid=$2;gsub(/:|\_/," ",snpid);split(snpid,a);Chr=a[1];Pos=a[2];print $0,Chr,Pos}' | \
+   sort -k1,1 | \
+   join -j1 - ld.1 | \
+   sort -k4,4n -k5,5n | \
+   awk '{print $2}' > ld.dat
+   rm ld.1
+   plink-1.9 --bfile $bfile \
+             --remove $remove_sample \
+             --exclude $exclude_snp \
+             --extract ld.dat --r2 triangle spaces --out ld
+   awk 'NR>1{if(NR==2) printf $8;else printf " " $8}' id | \
+   awk '1' > ld.mat
+   sed -e 's/[[:space:]]*$//' ld.ld >> ld.mat
+   paste -d' ' id ld.mat > ld.txt
+   R -q --no-save < ${FM_location}/files/ld.R > ld.log
 fi
 
 # However, we could opt to recalculate LD from the lists formed from GCTA and JAM results.
