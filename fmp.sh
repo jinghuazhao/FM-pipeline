@@ -394,9 +394,7 @@ if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
    sort -k4,4n -k5,5n | \
    awk '{print $2}' > ld.dat
    rm ld.1
-   plink-1.9 --bfile $bfile \
-             --remove $remove_sample \
-             --exclude $exclude_snp \
+   plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp \
              --extract ld.dat --r2 triangle spaces --out ld
    awk 'NR>1{if(NR==2) printf $8;else printf " " $8}' id | \
    awk '1' > ld.mat
