@@ -59,7 +59,8 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
 
 # get in data
   require(dplyr)
-  slct <- rename(slct, snpid=SNP, Pos=bp)
+  slct <- rename(slct, snpid=SNP, Pos=bp, rsid=rsid1)
+  cs <- rename(cs, rsid=rsid2)
   p <- bind_rows(slct[c("region","Chr","Pos","snpid","pJ","rsid")],
                  cs[c("region","Chr","Pos","snpid", "rsid", "PostProb", "BF")])
   ord <- with(p,order(Chr,Pos))
