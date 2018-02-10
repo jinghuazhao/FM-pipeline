@@ -1,4 +1,4 @@
-# 7-2-2018 MRC-Epid JHZ
+# 9-2-2018 MRC-Epid JHZ
 
 require(plink2R)
 require(R2BGLiMS)
@@ -19,7 +19,7 @@ snpid <- with(sumstats, SNP_ID)
 
 # reference panel with mean substitution for (small) proportion of missing data
 p <- read_plink(f)
-R <- with(p, as.data.frame(bed))
+R <- with(p, as.data.frame(2-bed))
 R[] <- lapply(R, function(x) {
   x[is.na(x)] <- mean(x, na.rm = TRUE)
   x
