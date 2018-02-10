@@ -1,6 +1,7 @@
 # 9-2-2018 MRC-Epid JHZ
 
 require(plink2R)
+# require(snpStats)
 require(R2BGLiMS)
 require(methods)
 require(openxlsx)
@@ -9,6 +10,9 @@ options(scipen=20, width=2000)
 
 f <- Sys.getenv("f")
 cat(f,"\n")
+bed <- paste0(f,".bed")
+bim <- paste0(f,".bim")
+fam <- paste0(f,".fam")
 
 # summary statistics
 sumstats.name <- c("RS_ID","A1","A2","freqA1","b","se","P","N","chr","pos","SNP_ID")
@@ -20,6 +24,8 @@ snpid <- with(sumstats, SNP_ID)
 # reference panel with mean substitution for (small) proportion of missing data
 p <- read_plink(f)
 R <- with(p, as.data.frame(2-bed))
+# p <- read.plink(bed,bim,fam)
+# R <- as(with(p,genotypes),"numeric")
 R[] <- lapply(R, function(x) {
   x[is.na(x)] <- mean(x, na.rm = TRUE)
   x
