@@ -51,7 +51,7 @@ sort -k3,3 > snp150.txt
 ```
 Note that JAM requires Java 1.8 so call to Java -jar inside the function needs to 
 reflect this, not straightforward with `install_github()` from `devtools` but one needs to 
-clone the package, modify the R source code and then use
+clone the package, modify the R source code and then install,
 ```
 git clone https://github.com/pjnewcombe/R2BGLiMS
 ### change java to java-1.8 in R2BGLiMS/R/R2BGLiMS.R
@@ -128,7 +128,7 @@ CAVIAR   | .set/.post | causal set and probabilities in the causal set/posterior
 CAVIARBF | .caviarbf | causal configurations and their BFs
 FM-summary | .txt | additional information to the GWAS summary statistics
 GCTA     | .jma.cojo | joint/conditional analysis results
-JAM      | .jam/.top | posterior summary table, top models containing selected SNPs and credible sets
+JAM      | .jam/.top/.cs | posterior summary table, top models containing selected SNPs and credible sets
 finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 
 It is helpful to examine directions of effects together with their correlation which is now embedded when finemap 
