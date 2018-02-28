@@ -16,7 +16,7 @@ The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP
 Software included in this pipeline are listed in the table below.
 
 **Name** | **Function** | **Input** | **Output** | **Reference**
------|----------|-------|--------|----------
+---------|----------|--------------|--------------------|------------------------------------------------
 CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
 GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
@@ -74,7 +74,7 @@ bash fmp.sh <input>
 
 These include the following columns,
 
-Column | Name | Description
+**Column** | **Name** | **Description**
 -------|------|------------
 1 | SNP | RSid
 2 | A1 | Effect allele
@@ -122,8 +122,8 @@ quality. As it is very slow, we use .bgen instead see the section on WHOLE-GENOM
 The output will involve counterpart(s) from individual software, i.e., .set/post, 
 caviarbf, .snp/.config, .jam/.top
 
-Software | Output type | Description
----------|---------------------|------------
+**Software** | **Output type** | **Description**
+---------|---------------------|--------------------------------------------------------------
 CAVIAR   | .set/.post | causal set and probabilities in the causal set/posterior probabilities
 CAVIARBF | .caviarbf | causal configurations and their BFs
 FM-summary | .txt | additional information to the GWAS summary statistics
