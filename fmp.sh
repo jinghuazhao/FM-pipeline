@@ -1,18 +1,16 @@
 #!/bin/bash
-# 9-2-2018 MRC-Epid JHZ
+# 5-4-2018 MRC-Epid JHZ
 
-if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
-    echo "Usage: fmp.sh <input>"
-    echo "where <input> is in sumstats format:"
-    echo "SNP A1 A2 freqA1 beta se P N chr pos"
-    echo "where SNP is RSid, A1 is effect allele"
-    exit
-fi
+## SETTINGS
+
 export PATH=$PATH:/genetics/bin:/usr/local/bin:/genetics/data/software/bin
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
+## OPTIONS
+
 # nonempty value to skip parallel sessions for data handling and go directly to analysis
+
 export dry_run=
 
 # software for analysis; set flags to 1 to enable
@@ -43,6 +41,16 @@ export exclude_snp=$HRC/exclude.snps
 export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
+
+## ANALYSIS
+
+if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
+    echo "Usage: fmp.sh <input>"
+    echo "where <input> is in sumstats format:"
+    echo "SNP A1 A2 freqA1 beta se P N chr pos"
+    echo "where SNP is RSid, A1 is effect allele"
+    exit
+fi
 
 export args=$1
 if [ $(dirname $args) == "." ]; then
@@ -175,12 +183,16 @@ if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
        sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
 fi
 
+# CAusal Variants Identication in Associated Regions (CAVIAR)
+
 if [ $CAVIAR -eq 1 ]; then
    echo "--> CAVIAR"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
        CAVIAR -z $f.z -l $f.ld -r 0.9 -o $f'
 fi
+       
+# CAusal Variants Identication in Associated Regions BF (CAVIARBF)
 
 if [ $CAVIARBF -eq 1 ]; then
    echo "--> CAVIARBF"
@@ -189,6 +201,8 @@ if [ $CAVIARBF -eq 1 ]; then
        caviarbf -z $f.z -r $f.ld -n $(sort -k9,9g $f.r | \
        tail -n1 | cut -d" " -f9) -t 0 -a 0.1 -c 3 --appr -o $f.caviarbf'
 fi
+
+# Fine-mapping method only using summary statistics (FM-summary)
 
 if [ $FM_summary -eq 1 ]; then
    echo "--> FM-summary"
@@ -199,6 +213,8 @@ if [ $FM_summary -eq 1 ]; then
        $FM_location/files/getCredible.r; \
        awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
 fi
+
+# Genome-wide Complex Trait Analysis (GCTA)
 
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
@@ -255,7 +271,8 @@ if [ $GCTA -eq 1 ]; then
    sed -i 's/ /,/g' gcta-top.csv
 fi
 
-\\
+#  Joint Analysis of Marginal SNP Effects (JAM)
+
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
@@ -281,6 +298,8 @@ if [ $JAM -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/JAM-cs.R > JAM-cs.log
 fi
 
+# LocusZoom
+
 if [ $LocusZoom -eq 1 ]; then
    echo "--> LocusZoom"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
@@ -292,6 +311,8 @@ if [ $LocusZoom -eq 1 ]; then
        pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}'
    R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
+
+# functional genomic information with a genome-wide association study (fGWAS)
 
 if [ $fgwas -eq 1 ]; then
    echo "--> fgwas"
@@ -357,6 +378,8 @@ if [ $fgwas -eq 1 ]; then
    awk '{$12="";print}' fgwas.tmp|gzip -cf > fgwas.tmp.gz
    fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
 fi
+
+# finemap
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
