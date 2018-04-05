@@ -146,13 +146,13 @@ if [ $clumping -eq 1 ]; then
       if (NR==1) print "snpid", "P"
       chr=$9
       pos=$10
-      a1=$2 
+      a1=$2
       a2=$3
       if (a1>a2) {
          snpid=chr ":" pos "_" a2 "_" a1
       } else {
          snpid=chr ":" pos "_" a1 "_" a2
-      }   
+      }
       print snpid, $7
    }' OFS='\t' $rt.input > $rt.tab
    plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp --clump $rt.tab \
@@ -177,7 +177,7 @@ fi
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
        export f=chr{1}_{2}_{3}; \
-       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \  
+       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \
        ldstore --bcor $f.bcor --merge ${threads}; \
        ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
        sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
@@ -191,7 +191,7 @@ if [ $CAVIAR -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        CAVIAR -z $f.z -l $f.ld -r 0.9 -o $f'
 fi
-       
+
 # CAusal Variants Identication in Associated Regions BF (CAVIARBF)
 
 if [ $CAVIARBF -eq 1 ]; then
@@ -351,7 +351,7 @@ if [ $fgwas -eq 1 ]; then
        fgwas -i fgwas.fine.gz -fine -print -o fgwas-${an} -w ${an}
    done
    fgwas -i fgwas.fine.gz -fine -print -o fgwas -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn
-   gunzip -c fgwas.bfs.gz | 
+   gunzip -c fgwas.bfs.gz | \
    awk '(NR==1||$10>0.5)' > fgwas.PPA0.5
    # generate table for md document
    awk '(NR>1){print $1}' fgwas.PPA0.5 > fgwas.rsid
