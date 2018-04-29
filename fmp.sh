@@ -1,5 +1,5 @@
 #!/bin/bash
-# 5-4-2018 MRC-Epid JHZ
+# 29-4-2018 MRC-Epid JHZ
 
 ## SETTINGS
 
@@ -279,7 +279,7 @@ if [ $JAM -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
-       plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 5 0.80 --maf 0.0001 --out $f; \
+       plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 1 0.80 --maf 0.0001 --out $f; \
        cat $f.snpid >> $f.prune.in
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
