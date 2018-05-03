@@ -1,9 +1,9 @@
 #!/bin/bash
-# 29-4-2018 MRC-Epid JHZ
+# 3-5-2018 MRC-Epid JHZ
 
 ## SETTINGS
 
-export PATH=$PATH:/genetics/bin:/usr/local/bin:/genetics/data/software/bin
+export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
 export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
