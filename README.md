@@ -208,6 +208,10 @@ where we download the GWAS summary statistics adding SNP positions in build 37 r
 We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
 
+## Other approaches
+
+Credible sets are often described, see https://github.com/statgen/gwas-credible-sets
+
 ## ACKNOWLEDGEMENTS
 
 The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in the 
