@@ -222,7 +222,7 @@ credible set based on finemap configurations. Earlier version of the pipeline al
 
 ## SOFTWARE AND REFERENCES
 
-**[CAVIAR](https://github.com/fhormoz/caviar)**
+**[CAVIAR](https://github.com/fhormoz/caviar)** (Causal Variants Identification in Associated Regions)
 
 Hormozdiari F, et al. (2014) Identifying Causal Variants at Loci with Multiple Signals of Association. Genetics, 44, 725–731
 
@@ -239,7 +239,7 @@ Huang H, et al (2017) Fine-mapping inflammatory bowel disease loci to single-var
 Yang J, et al. (2012) Conditional and joint multiple-SNP analysis of GWAS summary statistics identifies additional variants influencing complex traits. Nat Genet 
 44:369-375
 
-**[JAM](https://github.com/pjnewcombe/R2BGLiMS)**
+**[JAM](https://github.com/pjnewcombe/R2BGLiMS)** (Joint Analysis of Marginal statistics)
 
 Newcombe PJ, et al. (2016) JAM: A Scalable Bayesian Framework for Joint Analysis of Marginal SNP Effects. Genet Epidemiol 40:188–201
 
@@ -247,7 +247,7 @@ Newcombe PJ, et al. (2016) JAM: A Scalable Bayesian Framework for Joint Analysis
 
 Pruim RJ, et al. (2010) LocusZoom: Regional visualization of genome-wide association scan results. Bioinformatics 2010 September 15; 26(18): 2336.2337
 
-**[fgwas](https://github.com/joepickrell/fgwas)**
+**[fgwas](https://github.com/joepickrell/fgwas)** (Functional genomics and genome-wide association studies)
 
 Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide association studies of 18 human traits. bioRxiv 10.1101/000752
 
@@ -258,10 +258,10 @@ Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data
 Benner C, et al. (2017) Prospects of Fine-Mapping Trait-Associated Genomic Regions by Using Summary Statistics from Genome-wide Association Studies. Am J Hum 
 Genet 101(4):539-551
 
-**VEGAS paper**
+**[VEGAS](https://vegas2.qimrberghofer.edu.au/)** (Versatile Gene-based Association Study)
 
 Liu JZ, et al. (2010). A versatile gene-based test for genome-wide association studies. Am J Hum Genet 87:139–145.
 
-**GIANT paper**
+**[GIANT](https://portals.broadinstitute.org/collaboration/giant/index.php/Main_Page)** (Genetic Investigation of ANthropometric Traits)
 
 Locke AE, et al. (2015) Genetic studies of body mass index yield new insights for obesity biology. Nature 518(7538):197-206. doi: 10.1038/nature14177
