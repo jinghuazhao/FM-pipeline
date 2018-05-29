@@ -226,7 +226,7 @@ credible set based on finemap configurations. Earlier version of the pipeline al
 
 Hormozdiari F, et al. (2014) Identifying Causal Variants at Loci with Multiple Signals of Association. Genetics, 44, 725–731
 
-**[CAVIARBF](https://bitbucket.org/Wenan/caviarbf)**
+**[CAVIARBF](https://bitbucket.org/Wenan/caviarbf)** (CAVIAR Bayes Factor)
 
 Chen W, et al. (2015) Fine Mapping Causal Variants with an Approximate Bayesian Method Using Marginal Test Statistics. Genetics 200:719-736.
 
