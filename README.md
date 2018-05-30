@@ -110,6 +110,29 @@ is also called.
 In addition, we have implemented clumping using PLINK with options comparable to those used in depict (e.g. 
 description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
+## EXAMPLE
+
+Again we use `bmi.txt` described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
+```
+# A list of 97 SNPs
+R --no-save <<END
+library(openxlsx)
+xlsx <- "https://www.nature.com/nature/journal/v518/n7538/extref/nature14177-s2.xlsx"
+snps <- read.xlsx(xlsx, sheet = 4, colNames=FALSE, skipEmptyRows = FALSE, cols = 1, rows = 5:101)
+snplist <- sort(as.vector(snps[,1]))
+write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
+END
+
+# st.bed
+grep -w -f 97.snps snp150.txt | \
+sort -k1,1n -k2,2n | \
+awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
+```
+where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
+
+We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
+[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
+
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
 
 As the pipeline works on regions defined by lead SNPs, it is desirable to have a genomewide counterpart and currently this
@@ -149,29 +172,6 @@ Nevertheless, as indicated in the original VEGAS paper, Liu et al. (2010),
 
 and we perhaps would see an analogy here. However, more broadly software in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline) can be used
 and in terms of LD information PASCAL will be useful.
-
-## EXAMPLE
-
-Again we use `bmi.txt` described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
-```
-# A list of 97 SNPs
-R --no-save <<END
-library(openxlsx)
-xlsx <- "https://www.nature.com/nature/journal/v518/n7538/extref/nature14177-s2.xlsx"
-snps <- read.xlsx(xlsx, sheet = 4, colNames=FALSE, skipEmptyRows = FALSE, cols = 1, rows = 5:101)
-snplist <- sort(as.vector(snps[,1]))
-write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
-END
-
-# st.bed
-grep -w -f 97.snps snp150.txt | \
-sort -k1,1n -k2,2n | \
-awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
-```
-where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
-
-We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
 
 ## OTHER APPROACHES
 
