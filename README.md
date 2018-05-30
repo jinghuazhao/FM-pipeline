@@ -42,13 +42,8 @@ The pipeline itself can be installed in the usual way,
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
 The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
-over different builds. To remedy this, we use information from UCSC, e.g.,
-```
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/snp150.txt.gz
-gunzip -c snp150.txt.gz | \
-awk '{split($2,a,"_");sub(/chr/,"",a[1]);print a[1],$4,$5}' | \
-sort -k3,3 > snp150.txt
-```
+over different builds.
+
 Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [xpdf](https://www.xpdfreader.com/) is used.
 
 We use [Stata](https://www.stata.com/) and Sun grid engine (sge) for some of the data preparation, which would become handy when available.
@@ -64,23 +59,9 @@ bash fmp.sh <input>
 
 ### --- GWAS summary statistics ---
 
-These include the following columns,
+The input will be GWAS summary statistics described at [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS)
 
-**Column** | **Name** | **Description**
--------|------|------------
-1 | SNP | RSid
-2 | A1 | Effect allele
-3 | A2 | Other allele
-4 | freqA1 | A1 frequency
-5 | beta | effect estimate
-6 | se | standard error of effect
-7 | P | P-value
-8 | N | sample size
-9*  | chr | chromosome
-10* | pos | position
-
-This format is in line with joint/conditional analysis by GCTA. Note the last two columns are not always available but can 
-be obtained from UCSC as above; see below for example use.
+This format is in line with joint/conditional analysis by GCTA.
 
 ### --- Reference panel ---
 
@@ -129,7 +110,6 @@ is also called.
 In addition, we have implemented clumping using PLINK with options comparable to those used in depict (e.g. 
 description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
-
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
 
 As the pipeline works on regions defined by lead SNPs, it is desirable to have a genomewide counterpart and currently this
@@ -172,15 +152,8 @@ and in terms of LD information PASCAL will be useful.
 
 ## EXAMPLE
 
-We show how to set up for BMI GWAS summary data as reported by the GIANT consortium, Locke, et al. (2015),
+Again we use `bmi.txt` described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
 ```
-# GWAS summary statistics
-wget http://portals.broadinstitute.org/collaboration/giant/images/1/15/SNP_gwas_mc_merge_nogc.tbl.uniq.gz
-gunzip -c SNP_gwas_mc_merge_nogc.tbl.uniq.gz |
-awk 'NR>1' | \
-join -11 -23 - snp150.txt | \
-awk '($9!="X" && $9!="Un")' > bmi.txt
-
 # A list of 97 SNPs
 R --no-save <<END
 library(openxlsx)
@@ -253,7 +226,3 @@ Genet 101(4):539-551
 **[VEGAS](https://vegas2.qimrberghofer.edu.au/)** (Versatile Gene-based Association Study)
 
 Liu JZ, et al. (2010). A versatile gene-based test for genome-wide association studies. Am J Hum Genet 87:139–145.
-
-**[GIANT](https://portals.broadinstitute.org/collaboration/giant/index.php/Main_Page)** (Genetic Investigation of ANthropometric Traits)
-
-Locke AE, et al. (2015) Genetic studies of body mass index yield new insights for obesity biology. Nature 518(7538):197-206. doi: 10.1038/nature14177
