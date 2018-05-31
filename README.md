@@ -120,6 +120,7 @@ awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 
 ### HRC panel
 
+This is what we implemented the pipeline for,
 ```bash
 cp bmi.txt HRC
 cp fmp.sh HRC.sh
