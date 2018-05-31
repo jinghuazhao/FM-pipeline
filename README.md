@@ -112,7 +112,7 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## EXAMPLE
 
-Again we use `bmi.txt` described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
+Again we use `bmi.txt` and `snp150.txt` from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
 ```
 # A list of 97 SNPs
 R --no-save <<END
