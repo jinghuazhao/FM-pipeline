@@ -177,7 +177,7 @@ Nevertheless, as indicated in the original VEGAS paper, Liu et al. (2010),
 and we perhaps would see an analogy here. However, more broadly software in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline) can be used
 and in terms of LD information PASCAL will be useful.
 
-## OTHER APPROACHES
+## RELATED LINK
 
 Credible sets are often described, see https://github.com/statgen/gwas-credible-sets
 
