@@ -68,7 +68,7 @@ This format is in line with joint/conditional analysis by GCTA.
 The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, a [st.do](files/st.do) is
+A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, [st.do](files/st.do) is
 written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
 chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
