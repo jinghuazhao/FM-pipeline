@@ -110,7 +110,7 @@ is also called.
 In addition, we have implemented clumping using PLINK with options comparable to those used in depict (e.g. 
 description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
-## EXAMPLE
+## EXAMPLES
 
 ### BMI data
 
