@@ -107,7 +107,7 @@ is also called.
 In addition, we have implemented clumping using PLINK with options comparable to those used in depict (e.g. 
 description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
-## EXAMPLES
+## EXAMPLE
 
 File `bmi.txt` and `97.snps` are described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS), from which
 we can build `st.bed`as follows,
