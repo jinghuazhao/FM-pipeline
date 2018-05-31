@@ -126,20 +126,24 @@ With `bmi.txt` being also ready from above,
 ```bash
 cp bmi.txt HRC
 cp fmp.sh HRC.sh
+# modify HRC.sh to use the HRC panel
 HRC.sh HRC
 ```
+and the results will be in `HRC.out`.
 
 ### 1000Genomes data
 
 This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
 
-We then modify `fmp.sh` pointing to this reference panel and then start.
+We then proceed with.
 ```bash
 cp bmi.txt 1KG
 cp fmp.sh 1KG.sh
+# modify 1KG.sh to use the 1KG panel
 1KG.sh 1KG
 ```
+and the results will be in `1KG.out`.
 
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
 
