@@ -68,8 +68,8 @@ This format is in line with joint/conditional analysis by GCTA.
 The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, a [utility program in 
-Stata](files/st.do) is written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
+A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, a [st.do](files/st.do) is
+written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
 chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
@@ -85,10 +85,7 @@ ID_1 and ID_2.
 ### --- The lead SNPs ---
 
 Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxiliary file called `st.bed` 
-contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. As GCTA 
-conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
-and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
-quality. As it is very slow, we use .bgen instead see the section on WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS below.
+contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. 
 
 ## Outputs
 
@@ -151,6 +148,10 @@ As the pipeline works on regions defined by lead SNPs, it is desirable to have a
 is possible with GCTA and we have a script called [gcta-slct.sh](gcta-slct.sh) which accepts a single sumstats file, and only
 a minor change is required, e.g., `--cojo-wind` for different window size (default 10MB, smaller window leads to longer
 computing time) and `--thread-num` for number of threads (larger integer when available leads to shorter computing time).
+
+As GCTA conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
+and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
+quality. As it is very slow, we use .bgen instead see the section on WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS below.
 
 The syntax is as follows,
 ```
