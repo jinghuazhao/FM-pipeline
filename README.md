@@ -112,20 +112,34 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## EXAMPLES
 
-### BMI data
-
-The `bmi.txt`, `97.snps` and `snp150.txt` are all from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS), and we now build `st.bed`.
-```
+First, we build `st.bed` from `97.snps` and `snp150.txt` from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
+```bash
 # st.bed
 grep -w -f 97.snps snp150.txt | \
 sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 ```
 
+### BMI data
+
+With `bmi.txt` being also ready from above,
+```bash
+cp bmi.txt HRC
+cp fmp.sh HRC.sh
+HRC.sh HRC
+```
+
 ### 1000Genomes data
 
 This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
+
+We then modify `fmp.sh` pointing to this reference panel and then start.
+```bash
+cp bmi.txt 1KG
+cp fmp.sh 1KG.sh
+1KG.sh 1KG
+```
 
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
 
