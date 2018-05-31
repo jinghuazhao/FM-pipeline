@@ -112,7 +112,9 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## EXAMPLE
 
-Again we use `bmi.txt` and `snp150.txt` from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
+### BMI data
+
+The `bmi.txt` and `snp150.txt` are from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
 ```
 # A list of 97 SNPs
 R --no-save <<END
@@ -130,7 +132,9 @@ awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 ```
 where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
 
-We illustrate use of 1000Genomes data, available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
+### 1000Genomes data
+
+This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
 
 ## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
