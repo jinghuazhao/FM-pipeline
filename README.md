@@ -114,23 +114,13 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ### BMI data
 
-The `bmi.txt` and `snp150.txt` are from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
+The `bmi.txt`, `97.snps` and `snp150.txt` are all from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS), and we now build `st.bed`.
 ```
-# A list of 97 SNPs
-R --no-save <<END
-library(openxlsx)
-xlsx <- "https://www.nature.com/nature/journal/v518/n7538/extref/nature14177-s2.xlsx"
-snps <- read.xlsx(xlsx, sheet = 4, colNames=FALSE, skipEmptyRows = FALSE, cols = 1, rows = 5:101)
-snplist <- sort(as.vector(snps[,1]))
-write.table(snplist, file="97.snps", row.names=FALSE, col.names=FALSE, quote=FALSE)
-END
-
 # st.bed
 grep -w -f 97.snps snp150.txt | \
 sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 ```
-where we download the GWAS summary statistics adding SNP positions in build 37 rather than 36. The list of SNPs can also be used to generate st.bed as above.
 
 ### 1000Genomes data
 
