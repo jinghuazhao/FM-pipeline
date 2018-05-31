@@ -109,7 +109,8 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## EXAMPLES
 
-First, we build `st.bed` from `97.snps` and `snp150.txt` from [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS),
+File `bmi.txt` and `97.snps` are described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS), from which
+we can build `st.bed`as follows,
 ```bash
 # st.bed
 grep -w -f 97.snps snp150.txt | \
@@ -117,9 +118,8 @@ sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 ```
 
-### BMI data
+### HRC panel
 
-With `bmi.txt` being also ready from above,
 ```bash
 cp bmi.txt HRC
 cp fmp.sh HRC.sh
@@ -128,7 +128,7 @@ HRC.sh HRC
 ```
 and the results will be in `HRC.out`.
 
-### 1000Genomes data
+### 1000Genomes panel
 
 This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the required data.
