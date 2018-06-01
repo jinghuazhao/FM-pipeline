@@ -120,7 +120,7 @@ awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 
 ### --- HRC panel ---
 
-The pipeline was originally implemented for this panel,
+This was the default,
 ```bash
 cp bmi.txt HRC
 cp fmp.sh HRC.sh
