@@ -30,6 +30,8 @@ so they range from regional association plots via LocusZoom, joint/conditional a
 CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap. One can optionally use a subset of these for a particular analysis by specifying relevant flags from the 
 pipeline's settings.
 
+Information on whole-genome analysis, which could be used to set up the regions, are described at the repository's [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki).
+
 ## INSTALLATION
 
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
@@ -142,50 +144,6 @@ cp fmp.sh 1KG.sh
 1KG.sh 1KG
 ```
 and the results will be in `1KG.out`.
-
-## WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS
-
-As the pipeline works on regions defined by lead SNPs, it is desirable to have a genomewide counterpart and currently this
-is possible with GCTA and we have a script called [gcta-slct.sh](gcta-slct.sh) which accepts a single sumstats file, and only
-a minor change is required, e.g., `--cojo-wind` for different window size (default 10MB, smaller window leads to longer
-computing time) and `--thread-num` for number of threads (larger integer when available leads to shorter computing time).
-
-As GCTA conditional/joint analysis requires whole chromosome reference the counterpart is [HRC.do](files/HRC.do). Note in this case the snpid 
-and rsid variables are called rsid and RSnum instead; both porgrams filter SNPs on minor allele count and measure of imputation 
-quality. As it is very slow, we use .bgen instead see the section on WHOLE-GENOME CONDITIONAL/JOINT ANALYSIS below.
-
-The syntax is as follows,
-```
-gcta-slct.sh <input>
-```
-Where the `idfile` contains SNP IDs, snpid, and rsid which correspond to (ordered) snpid, variant IDs in the reference, and
-reference sequence IDs, respectively. The design allows for duplicate chromosomal positions commonly seen in reference data.
-Optionally, exclusion lists for SNPs and samples can be incorporated. At the end of the script, it also shows how the relevant
-information was generated in our analysis.
-
-As it is very time-consuming for interactive use, on our system we resort to sge, e.g.,
-```
-qsub -S /bin/bash -V -N HRC -cwd -e HRC.err -o HRC.out -pe make 10 -q all.q /genetics/bin/gcta-slct.sh <input>
-```
-so the job is sent to the clusters instead. In this case, we specifies the shell (**-S**) with environment variables (**-V**), error
-message file (**-e**), log file (**-o**), threads (**-pe**) and queue (**-q**) whereas the last item is argument to `gcta-slct.sh` itself. If your
-system supports for GNU parallel, the syntax is similar.
-
-Although the analysis involves particular region is equivalent to this genomewide setup but with focus on particular regions,
-there is also a section in the script for analysis with respect to a list of regions when setting region=1 and using `st.bed` as described above.
-
-The use of gene list from the analysis can compare to feeding SNPs and their p values from a GWAS into VEGAS2v2 as illustrated
-with [vegas2v2.sh](vegas2v2.sh) where `interceptBed` utility from the [bedtools](http://bedtools.readthedocs.io/en/latest/) 
-package is used. Note that instead of the 1000Genomes reference provided, we use our own.
-
-Some changes are required for the command-line version of VEGAS2v2 and noted at the of the script. We don't have
-experiences with the pathway analysis option from command-line or [https://vegas2.qimrberghofer.edu.au/](https://vegas2.qimrberghofer.edu.au/).
-Nevertheless, as indicated in the original VEGAS paper, Liu et al. (2010), 
-> If a gene contains only one causal variant, then the inclusion of a large number of nonsignificant markers into the gene-based 
-> test will dilute this gene’s significance.``
-
-and we perhaps would see an analogy here. However, more broadly software in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline) can be used
-and in terms of LD information PASCAL will be useful.
 
 ## RELATED LINK
 
