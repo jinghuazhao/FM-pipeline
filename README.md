@@ -145,6 +145,12 @@ cp fmp.sh 1KG.sh
 ```
 and the results will be in `1KG.out`.
 
+## ADDITIONAL TOPICS
+
+The [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki) has additional information, e.g.,
+
+* [WHOLE GENOME CONDITIONAL JOINT ANALYSIS](https://github.com/jinghuazhao/FM-pipeline/wiki/WHOLE-GENOME-CONDITIONAL-JOINT-ANALYSIS)
+
 ## RELATED LINK
 
 Credible sets are often described, see https://github.com/statgen/gwas-credible-sets
