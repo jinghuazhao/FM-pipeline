@@ -46,7 +46,7 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
 over different builds.
 
-Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [xpdf](https://www.xpdfreader.com/) is used.
+Implementations have been done for the finemapping software along with LocusZoom and GCTA; support for fgwas is still alpha tested. To facilitate handling of grapahics, e.g., importing them into Excel, pdftopng from [XpdfReader](https://www.xpdfreader.com/) is used.
 
 We use [Stata](https://www.stata.com/) and Sun grid engine (sge) for some of the data preparation, which would become handy when available.
 
