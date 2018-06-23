@@ -61,7 +61,7 @@ bash fmp.sh <input>
 
 ### --- GWAS summary statistics ---
 
-The input will be GWAS summary statistics described at [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS)
+The input will be GWAS summary statistics described at https://github.com/jinghuazhao/SUMSTATS.
 
 This format is in line with joint/conditional analysis by GCTA.
 
@@ -111,7 +111,7 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## EXAMPLE
 
-File `bmi.txt` and `97.snps` are described in [SUMSTATS](https://github.com/jinghuazhao/SUMSTATS), from which
+File `bmi.txt` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS, from which
 we can build `st.bed`as follows,
 ```bash
 # st.bed
