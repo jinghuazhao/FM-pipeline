@@ -13,23 +13,6 @@ The process involves the following steps,
 
 The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
 
-Software included in this pipeline are listed in the table below.
-
-**Name** | **Function** | **Input** | **Output** | **Reference**
----------|----------|--------------|--------------------|------------------------------------------------
-CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
-CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
-GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
-FM-summary | finemapping | .sumstats | posterior probability & credible set | Huang, et al. (2017)
-JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
-LocusZoom | regional plot | .sumstats | .pdf/.png plots | Pruim, et al. (2010)
-fgwas | functional GWAS | .sumstats | functional significance | Pickrell (2014)
-finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
-
-so they range from regional association plots via LocusZoom, joint/conditional analysis via GCTA, functional annotation via fgwas to dedicated finemapping software including CAVIAR, 
-CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap. One can optionally use a subset of these for a particular analysis by specifying relevant flags from the 
-pipeline's settings.
-
 Information on whole-genome analysis, which could be used to set up the regions, are described at the repository's [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki).
 
 ## INSTALLATION
@@ -52,7 +35,53 @@ We use [Stata](https://www.stata.com/) and Sun grid engine (sge) for some of the
 
 ## USAGE
 
-Before start, settings at the beginning of the script need to be changed and only minor change is expected after this. The syntax of pipeline is then simply
+Before start, settings at the beginning of the script need to be changed and only minor change is expected after this. 
+```bash
+export clumping=0
+export CAVIAR=0
+export CAVIARBF=0
+export FM_summary=0
+export GCTA=0
+export JAM=1
+export LocusZoom=0
+export fgwas=0
+export finemap=1
+export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
+export FM_location=/genetics/bin/FM-pipeline
+
+export wd=$(pwd)
+# GEN files named chr{chr}_{start}_{end}.gen.gz
+export GEN_location=/scratch/tempjhz22/LDcalc/HRC
+# sample file
+export sample_file=$wd/HRC.sample
+# wholegenome genotype file
+export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
+export bfile=$HRC/HRC
+export remove_sample=$HRC/exclude.id
+export exclude_snp=$HRC/exclude.snps
+# number of threads
+export threads=5
+export LD_MAGIC=0
+export LD_PLINK=0
+```
+Software options included in this pipeline are listed in the table below.
+
+**Option** | **Name** | **Function** | **Input** | **Output** | **Reference**
+---------|----------|--------------|--------------------|------------------------------------------------
+CAVIAR | CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
+CAVIARBF | CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
+GCTA | GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
+FM_summary | FM-summary | finemapping | .sumstats | posterior probability & credible set | Huang, et al. (2017)
+JAM | JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
+LocusZoom | LocusZoom | regional plot | .sumstats | .pdf/.png plots | Pruim, et al. (2010)
+fgwas | fgwas | functional GWAS | .sumstats | functional significance | Pickrell (2014)
+finemap | finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
+
+so they range from regional association plots via LocusZoom, joint/conditional analysis via GCTA, functional annotation via fgwas to dedicated finemapping software including CAVIAR, 
+CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap. One can optionally use a subset of these for a particular analysis by specifying relevant flags from the 
+pipeline's settings.
+
+The syntax of pipeline is then simply
 ```
 bash fmp.sh <input>
 ```
