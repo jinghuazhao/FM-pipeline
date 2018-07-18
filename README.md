@@ -229,7 +229,3 @@ Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data
 
 Benner C, et al. (2017) Prospects of Fine-Mapping Trait-Associated Genomic Regions by Using Summary Statistics from Genome-wide Association Studies. Am J Hum 
 Genet 101(4):539-551
-
-**[VEGAS](https://vegas2.qimrberghofer.edu.au/)** (Versatile Gene-based Association Study)
-
-Liu JZ, et al. (2010). A versatile gene-based test for genome-wide association studies. Am J Hum Genet 87:139–145.
