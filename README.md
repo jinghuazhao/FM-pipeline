@@ -67,7 +67,7 @@ export LD_PLINK=0
 Software options included in this pipeline are listed in the table below.
 
 **Option** | **Name** | **Function** | **Input** | **Output** | **Reference**
----------|----------|--------------|--------------------|------------------------------------------------
+-----------|----------|--------------|-----------|------------|--------------------------------------------------------------
 CAVIAR | CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
 CAVIARBF | CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
 GCTA | GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
