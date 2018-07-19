@@ -1,5 +1,9 @@
 # FM-pipeline
 
+FineMapping analysis using GWAS summary statistics
+
+## INTRODUCTION
+
 This is a pipeline for finemapping using GWAS summary statistics, implemented in Bash as a series of steps to furnish an incremental analysis. As depicted in the diagram below 
 
 ![**LocusZoom plot showing Regional association for chr1:39114617-39614617**](files/fm.png)
