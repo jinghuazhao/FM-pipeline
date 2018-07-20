@@ -1,6 +1,7 @@
 # 20-7-2018 JHZ
 
 wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
+seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
 seq 22|awk -vp=1000G.EUR. '{print p $1}' > merge-list
 plink-1.9 --merge-list merge-list --make-bed --out EUR
 plink-1.9 --bfile EUR --freq --out EUR
@@ -25,4 +26,3 @@ stata <<END
   order snpid pos exp_freq_a1 info type
   gzsave SNPinfo, replace
 END
-seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
