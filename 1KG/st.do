@@ -6,6 +6,7 @@ local F /genetics/bin/FUSION/LDREF
 local T /scratch/tempjhz22/LDcalc/1KG
 
 gzuse `F'/SNPinfo.dta.gz, clear
+drop maf MAC exp_freq_a1
 gen maf=cond(FreqA2<=0.5, FreqA2, 1-FreqA2)
 sort chr pos snpid
 gen MAC=2*489*maf
