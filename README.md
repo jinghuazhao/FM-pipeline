@@ -161,13 +161,19 @@ cp fmp.sh 1KG.sh
 ```
 and the results will be in `1KG.out`.
 
-File `97.snps` is used to build `st.bed`as follows,
+### --- HRC panel ---
+
+File `97.snps` is used to build `st.bed` and the analysis proceed as follows,
 ```bash
 # st.bed
 grep -w -f 97.snps snp150.txt | \
 sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
+cp fmp.sh HRC.sh
+# modify HRC.sh to use the HRC panel
+HRC.sh HRC
 ```
+and the results will be in `HRC.out`.
 
 ## ADDITIONAL TOPICS
 
