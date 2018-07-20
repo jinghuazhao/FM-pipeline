@@ -144,39 +144,30 @@ description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## EXAMPLE
 
-File `bmi.txt` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS, from which
-we can build `st.bed`as follows,
-```bash
-# st.bed
-grep -w -f 97.snps snp150.txt | \
-sort -k1,1n -k2,2n | \
-awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
-```
+Files `bmi.txt` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS.
 
-### --- HRC panel ---
-
-This was the default,
-```bash
-cp bmi.txt HRC
-cp fmp.sh HRC.sh
-# modify HRC.sh to use the HRC panel
-HRC.sh HRC
-```
-and the results will be in `HRC.out`.
-
-### --- 1000Genomes panel ---
+### --- 1000Genomes panel using approximately indepdent LD blocks ---
 
 This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required data.
 
 We then proceed with.
 ```bash
+awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else print $1,$2,$3,$4}' 1KG/EUR.bed > st.bed
 cp bmi.txt 1KG
 cp fmp.sh 1KG.sh
 # modify 1KG.sh to use the 1KG panel
 1KG.sh 1KG
 ```
 and the results will be in `1KG.out`.
+
+File `97.snps` is used to build `st.bed`as follows,
+```bash
+# st.bed
+grep -w -f 97.snps snp150.txt | \
+sort -k1,1n -k2,2n | \
+awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
+```
 
 ## ADDITIONAL TOPICS
 
