@@ -3,7 +3,7 @@
 set more off
 
 local F /genetics/bin/FUSION/LDREF
-local T /scratch/tempjhz22/LDcalc/1KG
+local T /genetics/bin/FM-pipeline/1KG/LD-blocks
 
 gzuse `F'/SNPinfo.dta.gz, clear
 !rm -f `T'/Extract.sh
