@@ -21,6 +21,23 @@ Information on whole-genome analysis, which could be used to set up the regions,
 
 ## INSTALLATION
 
+Software options included in this pipeline are listed in the table below.
+
+**Option** | **Name** | **Function** | **Input** | **Output** | **Reference**
+-----------|----------|--------------|-----------|------------|--------------------------------------------------------------
+CAVIAR | CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
+CAVIARBF | CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
+GCTA | GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
+FM_summary | FM-summary | finemapping | .sumstats | posterior probability & credible set | Huang, et al. (2017)
+JAM | JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
+LocusZoom | LocusZoom | regional plot | .sumstats | .pdf/.png plots | Pruim, et al. (2010)
+fgwas | fgwas | functional GWAS | .sumstats | functional significance | Pickrell (2014)
+finemap | finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
+
+so they range from regional association plots via LocusZoom, joint/conditional analysis via GCTA, functional annotation via fgwas to dedicated finemapping software including CAVIAR, 
+CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap. One can optionally use a subset of these for a particular analysis by specifying relevant flags from the 
+pipeline's settings.
+
 On many occasions, the pipeline takes advantage of the [GNU parallel](http://www.gnu.org/software/parallel/).
 
 Besides (sub)set of software listed in the table above, the pipeline requires [qctool](http://www.well.ox.ac.uk/~gav/qctool/#overview) 2.0,
@@ -55,7 +72,7 @@ export FM_location=/genetics/bin/FM-pipeline
 
 export wd=$(pwd)
 # GEN files named chr{chr}_{start}_{end}.gen.gz
-export GEN_location=/scratch/tempjhz22/LDcalc/HRC
+export GEN_location=/genetics/bin/FM-pipeline/1KG/LD-blocks
 # sample file
 export sample_file=$wd/HRC.sample
 # wholegenome genotype file
@@ -68,23 +85,6 @@ export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
 ```
-Software options included in this pipeline are listed in the table below.
-
-**Option** | **Name** | **Function** | **Input** | **Output** | **Reference**
------------|----------|--------------|-----------|------------|--------------------------------------------------------------
-CAVIAR | CAVIAR | finemapping | z, correlation matrix | causal sets and probabilities | Hormozdiari, et al. (2014)
-CAVIARBF | CAVIARBF | finemapping | z, correlation matrix | BF and probabilities for all configurations | Chen, et al. (2015)
-GCTA | GCTA | joint/conditional analysis | .sumstats, reference data | association results | Yang, et al. (2012)
-FM_summary | FM-summary | finemapping | .sumstats | posterior probability & credible set | Huang, et al. (2017)
-JAM | JAM | finemapping | beta, individual reference data | Bayes Factor of being causal | Newcombe, et al. (2016)
-LocusZoom | LocusZoom | regional plot | .sumstats | .pdf/.png plots | Pruim, et al. (2010)
-fgwas | fgwas | functional GWAS | .sumstats | functional significance | Pickrell (2014)
-finemap | finemap | finemapping | z, correlation matrix | causal SNPs and configuration | Benner, et al. (2016)
-
-so they range from regional association plots via LocusZoom, joint/conditional analysis via GCTA, functional annotation via fgwas to dedicated finemapping software including CAVIAR, 
-CAVIARBF, an adapted version of FM-summary, R2BGLiMS/JAM and finemap. One can optionally use a subset of these for a particular analysis by specifying relevant flags from the 
-pipeline's settings.
-
 The syntax of pipeline is then simply
 ```
 bash fmp.sh <input>
@@ -171,6 +171,7 @@ sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
 cp fmp.sh HRC.sh
 # modify HRC.sh to use the HRC panel
+export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 HRC.sh HRC
 ```
 and the results will be in `HRC.out`.
