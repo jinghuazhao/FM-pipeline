@@ -25,9 +25,9 @@ forval k=1/22 {
    forval j=1/`nclus' {
       local lowr=start[`j']
       local uppr=end[`j']
-      outsheet snpid if pos>=`lowr' & pos<=`uppr' & (MAC<3 | info<0.4) using `T'/exc`k'_`lowr'_`uppr'.txt, nonames noquote replace nolab
-      outsheet snpid pos exp_freq_a1 info type rsid if pos>=`lowr' & pos<=`uppr' & MAC>=3 & info>=0.4 using `T'/chr`k'_`lowr'_`uppr'.info, names noquote replace nolab delim(" ")
-      !echo -e "/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og chr`k'_`lowr'_`uppr'.gen -incl-range `lowr'-`uppr' -omit-chromosome -excl-rsids exc`k'_`lowr'_`uppr'.txt -sort;gzip -f chr`k'_`lowr'_`uppr'.gen" >> `T'/Extract.sh
+      local f="chr`k'_`lowr'_`uppr'"
+      outsheet snpid pos exp_freq_a1 info type rsid if pos>=`lowr' & pos<=`uppr' using `T'/`f'.info, names noquote replace nolab delim(" ")
+      !echo -e "/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og `f'.gen -incl-range `lowr'-`uppr' -omit-chromosome -sort;gzip -f `f'.gen" >> `T'/Extract.sh
    }
    restore
 }
