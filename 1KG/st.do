@@ -1,4 +1,4 @@
-// extract GEN file for each LD region in EPIC-Omics HRC imputed data
+// extract GEN file for each LD region in 1000G data
 
 set more off
 
@@ -6,13 +6,6 @@ local F /genetics/bin/FUSION/LDREF
 local T /scratch/tempjhz22/LDcalc/1KG
 
 gzuse `F'/SNPinfo.dta.gz, clear
-drop maf MAC exp_freq_a1
-gen maf=cond(FreqA2<=0.5, FreqA2, 1-FreqA2)
-sort chr pos snpid
-gen MAC=2*489*maf
-rename FreqA2 exp_freq_a1
-order snpid pos exp_freq_a1 info type
-
 !rm -f `T'/Extract.sh
 tempfile f0
 forval k=1/22 {
@@ -38,7 +31,6 @@ forval k=1/22 {
    }
    restore
 }
-
 cd `T'
 !chmod u+x Extract.sh
 !./Extract.sh
