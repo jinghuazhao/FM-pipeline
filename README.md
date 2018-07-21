@@ -178,9 +178,10 @@ and the results will be in `HRC.out`.
 
 ## ADDITIONAL TOPICS
 
-The [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki) has additional information, e.g.,
+The [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki) has the following information,
 
-* [WHOLE GENOME CONDITIONAL JOINT ANALYSIS](https://github.com/jinghuazhao/FM-pipeline/wiki/WHOLE-GENOME-CONDITIONAL-JOINT-ANALYSIS)
+* [Whole-genome conditional/joint analysis](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-conditional-joint-analysis)
+* [Whole genome analysis using approxmiately independent LD blocks](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-analysis-using-approximate-LD-blocks).
 
 ## RELATED LINK
 
