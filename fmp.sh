@@ -1,5 +1,5 @@
 #!/bin/bash
-# 17-7-2018 MRC-Epid JHZ
+# 23-7-2018 MRC-Epid JHZ
 
 ## SETTINGS
 
@@ -29,7 +29,7 @@ export FM_location=/genetics/bin/FM-pipeline
 
 export wd=$(pwd)
 # GEN files named chr{chr}_{start}_{end}.gen.gz
-export GEN_location=/scratch/tempjhz22/LDcalc/HRC
+export GEN_location=/genetics/bin/FM-pipeline/1KG/LD-blocks
 # sample file
 export sample_file=$wd/HRC.sample
 # wholegenome genotype file
