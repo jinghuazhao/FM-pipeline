@@ -85,7 +85,7 @@ export threads=5
 export LD_MAGIC=0
 export LD_PLINK=0
 ```
-The syntax of pipeline is then simply
+The syntax of the pipeline is then simply
 ```
 bash fmp.sh <input>
 ```
