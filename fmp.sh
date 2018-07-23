@@ -31,7 +31,7 @@ export wd=$(pwd)
 # GEN files named chr{chr}_{start}_{end}.gen.gz
 export GEN_location=/genetics/bin/FM-pipeline/1KG/LD-blocks
 # sample file
-export sample_file=$wd/HRC.sample
+export sample_file=$wd/EUR.sample
 # wholegenome genotype file
 export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$HRC/HRC
