@@ -79,8 +79,8 @@ awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env sample_file --env FM_locat
     export f=chr{1}_{2}_{3}; \
     gunzip -c $GEN_location/$f.gen.gz | \
     awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
-    qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
-          -threads $threads -threshhold 0.9 -log $f.log -assume-chromosome {1}'
+    qctool -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
+          -threads $threads -threshold 0.9 -log $f.log -assume-chromosome {1}'
 echo "region-specific data"
 awk 'NR>1' st.bed | parallel $OPTs -j${threads} -C' ' '
     export f=chr{1}_{2}_{3}; \
