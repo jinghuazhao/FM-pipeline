@@ -1,5 +1,5 @@
 #!/bin/bash
-# 23-7-2018 MRC-Epid JHZ
+# 24-7-2018 MRC-Epid JHZ
 
 ## SETTINGS
 
@@ -280,7 +280,7 @@ if [ $JAM -eq 1 ]; then
        grep {5} $f.r | \
        cut -d" " -f11 > $f.snpid; \
        plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 1 0.80 --maf 0.0001 --out $f; \
-       cat $f.snpid >> $f.prune.in
+       cat $f.snpid >> $f.prune.in; \
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
