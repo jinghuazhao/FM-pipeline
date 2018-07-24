@@ -38,7 +38,7 @@ export bfile=$HRC/HRC
 export remove_sample=$HRC/exclude.id
 export exclude_snp=$HRC/exclude.snps
 # number of threads
-export threads=5
+export threads=1
 export LD_MAGIC=0
 export LD_PLINK=0
 
@@ -383,14 +383,14 @@ fi
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
-   echo "z;ld;snp;config;log;n-ind" > finemap.cfg
+   echo "z;ld;snp;config;log;n_samples" > finemap.cfg
    awk 'NR>1' st.bed | parallel -j${threads} -C ' ' '
        export f=chr{1}_{2}_{3}; \
        sort -k9,9g $f.r | \
        tail -n1 | \
        cut -d" " -f9 | \
        awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-   finemap --sss --in-files finemap.cfg --n-causal-max 5 --corr-config 0.9
+   finemap --sss --in-files finemap.cfg --n-causal-snps 5 --corr-config 0.9
    awk 'NR>1' st.bed | parallel -j1 --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
        awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
