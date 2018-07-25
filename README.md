@@ -81,7 +81,7 @@ export bfile=$HRC/HRC
 export remove_sample=$HRC/exclude.id
 export exclude_snp=$HRC/exclude.snps
 # number of threads
-export threads=5
+export threads=1
 export LD_MAGIC=0
 export LD_PLINK=0
 ```
