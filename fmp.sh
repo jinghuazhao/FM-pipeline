@@ -1,5 +1,5 @@
 #!/bin/bash
-# 24-7-2018 MRC-Epid JHZ
+# 25-7-2018 MRC-Epid JHZ
 
 ## SETTINGS
 
@@ -98,6 +98,8 @@ awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env GEN_location -C' ' '
 awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env wd -C' ' '
     export f=chr{1}_{2}_{3}; \
     cut -d" " -f11,12 $f.r > $f.z; \
+    awk "BEGIN{print \"rsid\",\"chromosome\",\"position\",\"allele1\",\"allele2\",\"maf\",\"beta\",\"se\"}" > $f.fm.z; \
+    awk "{if(\$5>0.5) \$5=1-\$5; print \$11,\$1,\$2,\$3,\$4,\$5,\$6,\$7}" $f.r >> $f.fm.z; \
     awk "{print \$1}" $f.incl > $f.inc; \
     awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
     echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
@@ -275,12 +277,17 @@ fi
 
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
+   export NF=$(awk 'NR==1{print NF}' st.bed)
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
-       grep {5} $f.r | \
-       cut -d" " -f11 > $f.snpid; \
-       plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 1 0.80 --maf 0.0001 --out $f; \
-       cat $f.snpid >> $f.prune.in; \
+       if [ $NF -eq 4 ]; then \
+          plink-1.9 --bfile $f --indep-pairwise 500kb 1 0.8 --maf 0.0001 --out $f; \
+       else \
+          grep {5} $f.r | \
+          cut -d" " -f11 > $f.snpid; \
+          plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 1 0.80 --maf 0.0001 --out $f; \
+          cat $f.snpid >> $f.prune.in \
+       fi \
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
@@ -389,7 +396,7 @@ if [ $finemap -eq 1 ]; then
        sort -k9,9g $f.r | \
        tail -n1 | \
        cut -d" " -f9 | \
-       awk -vf=$f "{print sprintf(\"%s.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
+       awk -vf=$f "{print sprintf(\"%s.fm.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
    finemap --sss --in-files finemap.cfg --n-causal-snps 5 --corr-config 0.9
    awk 'NR>1' st.bed | parallel -j1 --env FM_location -C' ' '
        export f=chr{1}_{2}_{3}; \
