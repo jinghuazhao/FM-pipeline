@@ -4,7 +4,7 @@
 ## SETTINGS
 
 export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
-export R_LIBS=/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
+export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
 ## OPTIONS
