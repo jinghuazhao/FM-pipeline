@@ -4,7 +4,7 @@ options(digits=3, scipen=20, width=500)
 
 f <- Sys.getenv("f")
 cat(f, "\n")
-z <- read.table(paste0(f, ".z"), as.is=TRUE, header=TRUE)
+z <- read.table(paste0(f, ".fm.z"), as.is=TRUE, header=TRUE)
 ld <- read.table(paste0(f, ".ld"))
 snp <- read.table(paste0(f, ".snp"), as.is=TRUE, header=TRUE)
 config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
