@@ -1,4 +1,4 @@
-# 18-7-2018 MRC-Epid JHZ
+# 25-7-2018 MRC-Epid JHZ
 
 git add .gitignore
 git commit -m "Don't process these"
@@ -12,6 +12,8 @@ git add 1KG
 git commit -m "1000 Genomes reference panel"
 git add README.*
 git commit -m "README"
+git add NEWS.md
+git commit -m "NEWS"
 git add st.sh
 git commit -m "st.sh"
 git push
