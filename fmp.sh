@@ -278,7 +278,7 @@ fi
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    export NF=$(awk 'NR==1{print NF}' st.bed)
-   awk 'NR>1' st.bed | parallel -j${threads} --env NF -C' ' '
+   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location --env NF -C' ' '
        export f=chr{1}_{2}_{3}; \
        if [ $NF -eq 4 ]; then
           plink-1.9 --bfile $f --indep-pairwise 500kb 1 0.8 --maf 0.0001 --out $f
@@ -290,8 +290,7 @@ if [ $JAM -eq 1 ]; then
        fi; \
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
-       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p'
-   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location -C' ' '
+       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p; \
        export f=chr{1}_{2}_{3}p; \
        R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
    rm -f jam.top jam.txt
