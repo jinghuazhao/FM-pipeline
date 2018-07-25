@@ -24,7 +24,7 @@ export JAM=1
 export LocusZoom=0
 export fgwas=0
 export finemap=1
-export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
+export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes-genetic-maps
 export FM_location=/genetics/bin/FM-pipeline
 
 export wd=$(pwd)
