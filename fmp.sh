@@ -291,7 +291,7 @@ if [ $JAM -eq 1 ]; then
        grep -w -f $f.prune.in $f.a > $f.p; \
        grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
        plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p; \
-       export f=${f}p; \
+       export f=chr{1}_{2}_{3}p; \
        R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
    rm -f jam.top jam.txt
    touch jam.top jam.txt
