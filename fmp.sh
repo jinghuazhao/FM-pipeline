@@ -1,5 +1,5 @@
 #!/bin/bash
-# 26-7-2018 MRC-Epid JHZ
+# 26-7-2018 JHZ
 
 ## SETTINGS
 
