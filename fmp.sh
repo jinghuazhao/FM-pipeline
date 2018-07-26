@@ -18,7 +18,7 @@ export GEN_location=$FM_location/1KG/LD-blocks
 # sample file
 export sample_file=$FM_location/1KG/EUR.sample
 # Complementary files for fgwas
-export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes-genetic-maps
+export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes
 
 ## OTHER SETTINGS
 
