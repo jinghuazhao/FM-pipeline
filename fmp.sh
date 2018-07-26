@@ -29,14 +29,15 @@ export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
 export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
-# Other possibilities to calculate LD
-export LD_MAGIC=0
-export LD_PLINK=0
-# wholegenome genotype file
+# Clumping wholegenome genotype file
+export clumping=0
 export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$HRC/HRC
 export remove_sample=$HRC/exclude.id
 export exclude_snp=$HRC/exclude.snps
+# Altrenative LD calculations
+export LD_MAGIC=0
+export LD_PLINK=0
 # nonempty value to skip parallel sessions for data handling and go directly to analysis
 export dry_run=
 export OPTs=""
@@ -420,8 +421,6 @@ if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
    paste -d' ' id ld.mat > ld.txt
    R -q --no-save < ${FM_location}/files/ld.R > ld.log
 fi
-
-# However, we could opt to recalculate LD from the lists formed from GCTA and JAM results.
 
 # obsolete with gtool/plink-1.9 handling gen/ped
 #   gtool -G --g $GEN_location/$f.ord --s ${sample_file} --ped $GEN_location/$f.ped --map $GEN_location/$f.map \
