@@ -139,7 +139,7 @@ Files `bmi.txt` and `97.snps` are described in https://github.com/jinghuazhao/SU
 This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
 [1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required data.
 
-We then proceed with.
+We then proceed with
 ```bash
 awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else print $1,$2,$3,$4}' 1KG/EUR.bed > st.bed
 cp bmi.txt BMI_1KG
@@ -151,7 +151,7 @@ and the results will be in `BMI_1KG.out`.
 
 ### --- HRC panel ---
 
-File `97.snps` is used to build `st.bed` and the analysis proceed as follows,
+Assuming a HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
 ```bash
 # st.bed
 grep -w -f 97.snps snp150.txt | \
