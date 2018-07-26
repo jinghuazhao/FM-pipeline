@@ -155,12 +155,12 @@ This is available as [FUSION LD reference panel](https://data.broadinstitute.org
 We then proceed with.
 ```bash
 awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else print $1,$2,$3,$4}' 1KG/EUR.bed > st.bed
-cp bmi.txt 1KG
-cp fmp.sh 1KG.sh
-# modify 1KG.sh to use the 1KG panel
-1KG.sh 1KG
+cp bmi.txt BMI_1KG
+cp fmp.sh BMI_1KG.sh
+# modify BMI_1KG.sh to use the 1KG panel
+1KG.sh BMI_1KG
 ```
-and the results will be in `1KG.out`.
+and the results will be in `BMI_1KG.out`.
 
 ### --- HRC panel ---
 
@@ -170,12 +170,12 @@ File `97.snps` is used to build `st.bed` and the analysis proceed as follows,
 grep -w -f 97.snps snp150.txt | \
 sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
-cp fmp.sh HRC.sh
-# modify HRC.sh to use the HRC panel
+cp fmp.sh BMI_HRC.sh
+# modify BMI_HRC.sh to use the HRC panel
 export GEN_location=/scratch/tempjhz22/LDcalc/HRC
-HRC.sh HRC
+BMI_HRC.sh BMI_HRC
 ```
-and the results will be in `HRC.out`.
+and the results will be in `BMI_HRC.out`.
 
 ## ADDITIONAL TOPICS
 
