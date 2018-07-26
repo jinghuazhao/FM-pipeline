@@ -69,21 +69,18 @@ export JAM=1
 export LocusZoom=0
 export fgwas=0
 export finemap=1
-export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes-genetic-maps
+# parallel processes when available
+export threads=1
+# Default location and reference data
 export FM_location=/genetics/bin/FM-pipeline
-
-export wd=$(pwd)
 # GEN files named chr{chr}_{start}_{end}.gen.gz
 export GEN_location=$FM_location/1KG/LD-blocks
 # sample file
 export sample_file=$FM_location/1KG/EUR.sample
-# wholegenome genotype file
-export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
-export bfile=$HRC/HRC
-export remove_sample=$HRC/exclude.id
-export exclude_snp=$HRC/exclude.snps
+# Complementary files for fgwas
+export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes-genetic-maps
 
-## OTHER OPTIONS
+## OTHER SETTINGS
 
 export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
 export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
