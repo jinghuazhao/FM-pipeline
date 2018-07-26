@@ -151,7 +151,7 @@ and the results will be in `BMI_1KG.out`.
 
 ### --- HRC panel ---
 
-Assuming a HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
+Assuming an HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
 ```bash
 # st.bed
 grep -w -f 97.snps snp150.txt | \
