@@ -1,4 +1,4 @@
-# 26-7-2018 MRC-Epid JHZ
+# 26-7-2018 JHZ
 
 options(digits=3, scipen=20, width=500)
 
