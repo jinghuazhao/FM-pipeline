@@ -158,7 +158,7 @@ awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else prin
 cp bmi.txt BMI_1KG
 cp fmp.sh BMI_1KG.sh
 # modify BMI_1KG.sh to use the 1KG panel
-1KG.sh BMI_1KG
+BMI_1KG.sh BMI_1KG
 ```
 and the results will be in `BMI_1KG.out`.
 
