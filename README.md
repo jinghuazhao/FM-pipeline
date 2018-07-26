@@ -17,7 +17,8 @@ The process involves the following steps,
 
 The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
 
-Information on whole-genome analysis, which could be used to set up the regions, are described at the repository's [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki).
+Information on whole-genome analysis, which could be used to set up the regions, are described at the [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki).
+Clumping using PLINK is also included analogous to those used in depict (e.g. description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
 ## INSTALLATION
 
@@ -48,12 +49,10 @@ The pipeline itself can be installed in the usual way,
 ```
 git clone https://github.com/jinghuazhao/FM-pipeline
 ```
-The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
-over different builds.
 
 ## USAGE
 
-Before start, settings at the beginning of the script need to be changed and only minor change is expected after this. 
+Settings at the beginning of the script are expected to change along with minor ones afterwards.
 ```bash
 # software flags: 1=enable
 
@@ -92,16 +91,14 @@ bash fmp.sh <input>
 
 ### --- GWAS summary statistics ---
 
-The input will be GWAS summary statistics described at https://github.com/jinghuazhao/SUMSTATS.
-
-This format is in line with joint/conditional analysis by GCTA.
+The input will be GWAS summary statistics described at https://github.com/jinghuazhao/SUMSTATS, in line with joint/conditional analysis by GCTA involving chromosomal positions.
 
 ### --- Reference panel ---
 
-The pipeline uses a reference panel in a .GEN format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
+The pipeline uses a reference panel in a .gen.gz format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-A .GEN file is required for each region, named such that chr{chr}\_{start}\_{end}.gen, together with a sample file. For our own data, [st.do](files/st.do) is
+A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with a sample file. For our own data, [st.do](files/st.do) is
 written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
 
 chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
@@ -110,20 +107,17 @@ chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | 
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-Note that unlike fmp.sh, the utility program uses qctool-1.4 for its more comprehensive 
-options. In line with qctool -excl-samples option, it contains a list of individuals 
-corresponding to ID_2 of the [sample file](http://www.stats.ox.ac.uk/~marchini/software/gwas/file_format.html) rather than 
-ID_1 and ID_2.
+We may also work on a text version for instance SNPinfo.txt.
 
 ### --- The lead SNPs ---
 
-Given these, one can do away with Stata and work on a text version for instance SNPinfo.txt. An auxiliary file called `st.bed` 
-contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is a sequence number of region. 
+The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
+over different builds. An auxiliary file called `st.bed` contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is
+a sequence number of region. 
 
 ## Outputs
 
-The output will involve counterpart(s) from individual software, i.e., .set/post, 
-caviarbf, .snp/.config, .jam/.top
+The output will involve counterpart(s) from individual software, i.e., .set/post, caviarbf, .snp/.config, .jam/.top
 
 **Software** | **Output type** | **Description**
 ---------|---------------------|--------------------------------------------------------------
@@ -134,11 +128,7 @@ GCTA     | .jma.cojo | joint/conditional analysis results
 JAM      | .jam/.top/.cs | posterior summary table, top models containing selected SNPs and credible sets
 finemap  | .snp/.config | top SNPs with largest log10(BF) and top configurations as with their log10(BF)
 
-It is helpful to examine directions of effects together with their correlation which is now embedded when finemap 
-is also called.
-
-In addition, we have implemented clumping using PLINK with options comparable to those used in depict (e.g. 
-description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
+It is helpful to examine directions of effects together with their correlation which is now embedded when finemap is involved.
 
 ## EXAMPLE
 
