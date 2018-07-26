@@ -60,7 +60,6 @@ Before start, settings at the beginning of the script need to be changed and onl
 ```bash
 # software flags: 1=enable
 
-export clumping=0
 export CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
@@ -69,8 +68,6 @@ export JAM=1
 export LocusZoom=0
 export fgwas=0
 export finemap=1
-# parallel processes when available
-export threads=1
 # Default location and reference data
 export FM_location=/genetics/bin/FM-pipeline
 # GEN files named chr{chr}_{start}_{end}.gen.gz
@@ -82,6 +79,9 @@ export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes-genetic-maps
 
 ## OTHER SETTINGS
 
+# parallel processes when available
+export threads=1
+# environmental variables
 export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
 export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
