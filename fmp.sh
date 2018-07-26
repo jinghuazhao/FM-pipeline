@@ -1,5 +1,5 @@
 #!/bin/bash
-# 25-7-2018 MRC-Epid JHZ
+# 26-7-2018 MRC-Epid JHZ
 
 ## SETTINGS
 
@@ -53,14 +53,8 @@ if [ $# -lt 1 ] || [ "$args" == "-h" ]; then
 fi
 
 export args=$1
-if [ $(dirname $args) == "." ]; then
-   dir=$(pwd)/$(basename $args).out
-else
-   dir=$args.out
-fi
-if [ ! -d $dir ]; then
-   mkdir -p $dir
-fi
+if [ $(dirname $args) == "." ]; then dir=$(pwd)/$(basename $args).out; else dir=$args.out; fi
+if [ ! -d $dir ]; then mkdir -p $dir; fi
 cd $dir
 ln -sf $wd/$args
 export rt=$dir/$(basename $args)
