@@ -1,12 +1,6 @@
 #!/bin/bash
 # 26-7-2018 JHZ
 
-## SETTINGS
-
-export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
-export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
-
 # software flags: 1=enable
 
 export clumping=0
@@ -34,14 +28,17 @@ export exclude_snp=$HRC/exclude.snps
 
 ## OTHER OPTIONS
 
-# nonempty value to skip parallel sessions for data handling and go directly to analysis
+export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
+export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
+export threads=1
+export LD_MAGIC=0
+export LD_PLINK=0
+# nonempty value to skip parallel sessions for data handling and go directly to analysis
 export dry_run=
 export OPTs=""
 if [ ! -z "$dry_run" ]; then OPTs="--dry-run"; fi
-export LD_MAGIC=0
-export LD_PLINK=0
-export threads=1
 
 ## ANALYSIS
 
