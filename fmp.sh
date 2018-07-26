@@ -59,10 +59,7 @@ cd $dir
 ln -sf $wd/$args
 export rt=$dir/$(basename $args)
 echo "--> $rt.input, st.bed"
-awk '{
-  $2=toupper($2)
-  $3=toupper($3)
-};1' $args > $rt.input
+awk '{$2=toupper($2);$3=toupper($3)};1' $args > $rt.input
 ln -sf $wd/st.bed
 
 export OPTs=""
