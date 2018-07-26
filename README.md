@@ -58,6 +58,14 @@ We use [Stata](https://www.stata.com/) and Sun grid engine (sge) for some of the
 
 Before start, settings at the beginning of the script need to be changed and only minor change is expected after this. 
 ```bash
+## SETTINGS
+
+export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
+export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
+
+# software flags: 1=enable
+
 export clumping=0
 export CAVIAR=0
 export CAVIARBF=0
@@ -67,23 +75,21 @@ export JAM=1
 export LocusZoom=0
 export fgwas=0
 export finemap=1
-export fgwas_location_1kg=/genetics/data/software/fgwas/1000-genomes
+export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes-genetic-maps
 export FM_location=/genetics/bin/FM-pipeline
 
 export wd=$(pwd)
 # GEN files named chr{chr}_{start}_{end}.gen.gz
 export GEN_location=$FM_location/1KG/LD-blocks
 # sample file
-export sample_file=$FM_location/1KD/EUR.sample
+export sample_file=$FM_location/1KG/EUR.sample
 # wholegenome genotype file
 export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$HRC/HRC
 export remove_sample=$HRC/exclude.id
 export exclude_snp=$HRC/exclude.snps
-# number of threads
-export threads=1
-export LD_MAGIC=0
-export LD_PLINK=0
+
+## OTHER OPTIONS
 ```
 The syntax of the pipeline is then simply
 ```
