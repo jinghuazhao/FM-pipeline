@@ -7,13 +7,7 @@ export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
 export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
 
-## OPTIONS
-
-# nonempty value to skip parallel sessions for data handling and go directly to analysis
-
-export dry_run=
-
-# software for analysis; set flags to 1 to enable
+# software flags: 1=enable
 
 export clumping=0
 export CAVIAR=0
@@ -37,10 +31,17 @@ export HRC=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
 export bfile=$HRC/HRC
 export remove_sample=$HRC/exclude.id
 export exclude_snp=$HRC/exclude.snps
-# number of threads
-export threads=1
+
+## OTHER OPTIONS
+
+# nonempty value to skip parallel sessions for data handling and go directly to analysis
+
+export dry_run=
+export OPTs=""
+if [ ! -z "$dry_run" ]; then OPTs="--dry-run"; fi
 export LD_MAGIC=0
 export LD_PLINK=0
+export threads=1
 
 ## ANALYSIS
 
@@ -61,9 +62,6 @@ export rt=$dir/$(basename $args)
 echo "--> $rt.input, st.bed"
 awk '{$2=toupper($2);$3=toupper($3)};1' $args > $rt.input
 ln -sf $wd/st.bed
-
-export OPTs=""
-if [ ! -z "$dry_run" ]; then OPTs="--dry-run"; fi
 
 echo "--> binary_ped"
 awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env sample_file --env FM_location --env GEN_location -C' ' '
