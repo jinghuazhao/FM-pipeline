@@ -402,7 +402,7 @@ fi
 
 # cherry-picking of information on z, ld, or possibly other things for signals with available data
 
-if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ]; then
+if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ] && [ $clumping -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
    sort -k1,1 ld > ld.1
    # As before the same setup for gcta-slct.sh is used here but may complain otherwise
