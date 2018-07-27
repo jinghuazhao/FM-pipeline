@@ -1,5 +1,5 @@
 #!/bin/bash
-# 26-7-2018 JHZ
+# 27-7-2018 JHZ
 
 # software flags: 1=enable
 
