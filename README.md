@@ -154,9 +154,10 @@ and the results will be in `BMI_1KG.out`.
 Assuming an HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
 ```bash
 # st.bed
+echo "chr start end rsid pos r" > st.bed
 grep -w -f 97.snps snp150.txt | \
 sort -k1,1n -k2,2n | \
-awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' > st.bed
+awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' >> st.bed
 cp fmp.sh BMI_HRC.sh
 # modify BMI_HRC.sh to use the HRC panel
 export GEN_location=/scratch/tempjhz22/LDcalc/HRC
