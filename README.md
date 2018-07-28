@@ -54,8 +54,7 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 
 Settings at the beginning of the script are expected to change along with minor ones afterwards.
 ```bash
-# software flags: 1=enable
-
+## software flags: 1=enable
 export CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
@@ -73,8 +72,7 @@ export sample_file=$FM_location/1KG/EUR.sample
 # Complementary files for fgwas
 export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes
 
-## OTHER SETTINGS
-
+## Environmental variables
 # parallel processes when available
 export threads=1
 # environmental variables
