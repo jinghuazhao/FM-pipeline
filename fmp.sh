@@ -1,8 +1,7 @@
 #!/bin/bash
-# 27-7-2018 JHZ
+# 28-7-2018 JHZ
 
-# software flags: 1=enable
-
+## software flags: 1=enable
 export CAVIAR=0
 export CAVIARBF=0
 export FM_summary=0
@@ -20,8 +19,7 @@ export sample_file=$FM_location/1KG/EUR.sample
 # Complementary files for fgwas
 export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes
 
-## OTHER SETTINGS
-
+## Environmental variables
 # parallel processes when available
 export threads=1
 # environmental variables
