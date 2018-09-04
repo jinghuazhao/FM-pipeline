@@ -1,5 +1,5 @@
 #!/bin/bash
-# 3-9-2018 JHZ
+# 4-9-2018 JHZ
 
 ## software flags: 1=enable
 export CAVIAR=0
@@ -146,7 +146,6 @@ if [ $clumping -eq 1 ]; then
       print snpid, $7
    }' OFS='\t' $rt.input > $rt.tab
    plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp --clump $rt.tab \
-             --clump-snp-field snpid \
              --clump-field P \
              --clump-kb 500 \
              --clump-p1 5e-08 \
@@ -157,7 +156,6 @@ if [ $clumping -eq 1 ]; then
        export f=chr{1}_{2}_{3}; \
        awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab; \
        plink-1.9 --bfile $f --clump $f.tab \
-            --clump-snp-field snpid \
             --clump-field P \
             --clump-kb 500 \
             --clump-p1 5e-08 \
