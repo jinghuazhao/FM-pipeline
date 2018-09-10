@@ -1,9 +1,11 @@
-# 25-7-2018 MRC-Epid JHZ
+# 10-9-2018 MRC-Epid JHZ
 
 git add .gitignore
 git commit -m "Don't process these"
 git add files
 git commit -m "auxiliary files"
+git add FMP.ini
+git commit -m "settings"
 git add fmp.sh
 git commit -m "main program"
 git add gcta-slct.sh
