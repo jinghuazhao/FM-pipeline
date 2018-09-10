@@ -52,35 +52,9 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 
 ## USAGE
 
-Settings at the beginning of the script are expected to change along with minor ones afterwards.
-```bash
-## software flags: 1=enable
-export CAVIAR=0
-export CAVIARBF=0
-export FM_summary=0
-export GCTA=0
-export JAM=1
-export LocusZoom=0
-export fgwas=0
-export finemap=1
-# Default location and reference data
-export FM_location=/genetics/bin/FM-pipeline
-# GEN files named chr{chr}_{start}_{end}.gen.gz
-export GEN_location=$FM_location/1KG/LD-blocks
-# sample file
-export sample_file=$FM_location/1KG/EUR.sample
-# Complementary files for fgwas
-export fgwas_location_1kg=/genetics/data/fgwas/1000-genomes
+A [FMP.ini](FMP.ini) needs to be present at the working directory,
 
-## Environmental variables
-# parallel processes when available
-export threads=1
-# environmental variables
-export PATH=/genetics/bin:/usr/local/bin:$PATH:/genetics/data/software/bin
-export R_LIBS=/usr/local/lib/R/site-library/:/genetics/bin/R:/usr/local/lib64/R/library:/genetics/data/software/R
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/R/lib:/genetics/data/software/lib
-```
-The syntax of the pipeline is then simply
+The pipeline is then called with
 ```
 bash fmp.sh <input>
 ```
