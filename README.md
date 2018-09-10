@@ -52,7 +52,7 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 
 ## USAGE
 
-A [FMP.ini](FMP.ini) needs to be present at the working directory,
+An [FMP.ini](FMP.ini) needs to be present at the working directory,
 
 The pipeline is then called with
 ```
