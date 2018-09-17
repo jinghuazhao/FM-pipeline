@@ -1,5 +1,5 @@
 #!/bin/bash
-# 10-9-2018 JHZ
+# 17-9-2018 JHZ
 
 ## SETTINGS
 
