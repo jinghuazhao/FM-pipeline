@@ -52,7 +52,7 @@ git clone https://github.com/jinghuazhao/FM-pipeline
 
 ## USAGE
 
-An [FMP.ini](FMP.ini) needs to be present at the working directory,
+An [fmp.ini](fmp.ini) needs to be present at the working directory,
 
 The pipeline is then called with
 ```
@@ -115,7 +115,7 @@ We then proceed with
 ```bash
 awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else print $1,$2,$3,$4}' 1KG/EUR.bed > st.bed
 ln -s bmi.txt BMI_1KG
-# modify FMP.ini to use the 1KG panel
+# modify fmp.ini to use the 1KG panel
 fmp.sh BMI_1KG
 ```
 and the results will be in `BMI_1KG.out`.
@@ -130,7 +130,7 @@ grep -w -f 97.snps snp150.txt | \
 sort -k1,1n -k2,2n | \
 awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' >> st.bed
 ln -s bmi.txt BMI_HRC
-# modify FMP.ini to use the HRC panel
+# modify fmp.ini to use the HRC panel
 # export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 fmp.sh BMI_HRC
 ```
