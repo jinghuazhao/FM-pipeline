@@ -3,7 +3,7 @@
 
 ## SETTINGS
 
-source FMP.ini
+source fmp.ini
 
 ## ANALYSIS
 
