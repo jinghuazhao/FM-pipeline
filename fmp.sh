@@ -1,9 +1,9 @@
 #!/bin/bash
-# 10-9-2018 JHZ
+# 26-9-2018 JHZ
 
 ## SETTINGS
 
-source FMP.ini
+source fmp.ini
 
 ## ANALYSIS
 
@@ -262,10 +262,10 @@ if [ $LocusZoom -eq 1 ]; then
    echo "--> LocusZoom"
    awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
        export f=chr{1}_{2}_{3}; \
-       awk "{OFS=\"\\t\";if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz'
+       awk -v OFS="\t" "{if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
        rm -f ld_cache.db; \
-       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date; \
+       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date --rundir .; \
        pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}'
    R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
