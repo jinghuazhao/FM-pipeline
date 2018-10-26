@@ -159,11 +159,11 @@ credible set based on finemap configurations. Earlier version of the pipeline al
 
 **[CAVIAR](https://github.com/fhormoz/caviar)** (Causal Variants Identification in Associated Regions)
 
-Hormozdiari F, et al. (2014) Identifying Causal Variants at Loci with Multiple Signals of Association. *Genetics* 44:725–731
+Hormozdiari F, et al. (2014) Identifying causal variants at loci with multiple signals of association. *Genetics* 44:725–731
 
 **[CAVIARBF](https://bitbucket.org/Wenan/caviarbf)** (CAVIAR Bayes Factor)
 
-Chen W, et al. (2015) Fine Mapping Causal Variants with an Approximate Bayesian Method Using Marginal Test Statistics. *Genetics* 200:719-736.
+Chen W, et al. (2015) Fine mapping causal variants with an approximate Bayesian method using marginal test statistics. *Genetics* 200:719-736.
 
 **[FM-summary](https://github.com/hailianghuang/FM-summary)**
 
@@ -176,7 +176,7 @@ Yang J, et al. (2012) Conditional and joint multiple-SNP analysis of GWAS summar
 
 **[JAM](https://github.com/pjnewcombe/R2BGLiMS)** (Joint Analysis of Marginal statistics)
 
-Newcombe PJ, et al. (2016) JAM: A Scalable Bayesian Framework for Joint Analysis of Marginal SNP Effects. *Genet Epidemiol* 40:188–201
+Newcombe PJ, et al. (2016) JAM: A scalable Bayesian framework for joint analysis of marginal SNP effects. *Genet Epidemiol* 40:188–201
 
 **[LocusZoom](http://locuszoom.sph.umich.edu/)**
 
@@ -190,5 +190,5 @@ Pickrell JK (2014) Joint analysis of functional genomic data and genome-wide ass
 
 Benner C, et al. (2016) FINEMAP: Efficient variable selection using summary data from genome-wide association studies. *Bioinformatics* 32, 1493-1501.
 
-Benner C, et al. (2017) Prospects of Fine-Mapping Trait-Associated Genomic Regions by Using Summary Statistics from Genome-wide Association Studies. *Am J Hum 
+Benner C, et al. (2017) Prospects of fine-mapping trait-associated genomic regions by using summary statistics from genome-wide association studies. *Am J Hum 
 Genet* 101(4):539-551
