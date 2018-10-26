@@ -28,41 +28,7 @@ ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
 export NF=$(awk 'NR==1{print NF}' st.bed)
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env sample_file --env FM_location --env GEN_location --env NF -C' ' '$FM_location/fmp.subs';
-if [ $clumping -eq 1 ]; then
-   echo "--> clumping"
-   awk '
-   {
-      if (NR==1) print "snpid", "P"
-      chr=$9
-      pos=$10
-      a1=$2
-      a2=$3
-      if (a1>a2) {
-         snpid=chr ":" pos "_" a2 "_" a1
-      } else {
-         snpid=chr ":" pos "_" a1 "_" a2
-      }
-      print snpid, $7
-   }' OFS='\t' $rt.input > $rt.tab
-   plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp --clump $rt.tab \
-             --clump-field P \
-             --clump-kb 500 \
-             --clump-p1 5e-08 \
-             --clump-r2 0.1 \
-             --clump-snp-field snpid \
-             --out $rt.clump
-   awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab; \
-       plink-1.9 --bfile $f --clump $f.tab \
-            --clump-field P \
-            --clump-kb 500 \
-            --clump-p1 5e-08 \
-            --clump-r2 0.1 \
-            --clump-snp-field snpid \
-            --out $f.clump'
-fi
+awk 'NR>1' st.bed | env_parallel $OPTs -j${threads} -C' ' '$FM_location/fmp.subs';
 
 # Genome-wide Complex Trait Analysis (GCTA)
 
