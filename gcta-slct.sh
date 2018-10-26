@@ -1,14 +1,7 @@
 #!/bin/bash
-# 8-2-2018 MRC-Epid JHZ
+# 26-10-2018 MRC-Epid JHZ
 
-export PATH=/genetics/bin:/usr/local/bin:$PATH
-export rt=/gen_omics/data/EPIC-Norfolk/HRC/binary_ped
-export bfile=$rt/HRC
-export idfile=$rt/id3.txt.gz
-export remove_sample=$rt/exclude.id
-export exclude_snp=$rt/exclude.snps
-export threads=10
-export region=0
+source gcta-slct.ini
 
 echo "1. Data preparation"
 gunzip -c $idfile | sort -k1,1 > id3.txt
@@ -52,44 +45,3 @@ join -j2 - id3.tmp | sort -k15,15n | awk '{$15="";print}' | awk '{t=$1;$1=$2;$2=
 rm id3.tmp id3.txt
 
 echo "Done!"
-
-how_to_setup() {
-stata <<END
-gzuse /gen_omics/data/EPIC-Norfolk/HRC/SNPinfo
-gen snpid=string(chr)+":"+string(pos,"%12.0f")+cond(A1<A2,"_"+A1+"_"+A2,"_"+A2+"_"+A1)
-sort snpid
-gen maf=cond(FreqA2<=0.5, FreqA2, 1-FreqA2)
-gen MAC=2*21044*maf
-outsheet snpid if (MAC<3 | info<0.4) using exclude.snps, noname noquote replace
-keep snpid rsid RSnum
-order snpid rsid RSnum
-outsheet using /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt, delim(" ") noname noquote replace
-!gzip -f /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt
-END
-export GEN=/gen_omics/data/EPIC-Norfolk/HRC
-export sample=/gen_omics/data/EPIC-Norfolk/HRC/EPIC-Norfolk.sample
-cd /gen_omics/data/EPIC-Norfolk/HRC/binary_ped
-seq 22 | parallel --env GEN --env sample -C' ' 'sge "/genetics/bin/plink2 --bgen $GEN/chr{}.bgen --sample $sample --chr {} --make-bed --out chr{}"'
-rm -f merge-list
-touch merge-list
-for i in $(seq 22); do echo chr${i} >> merge-list; done
-/genetics/bin/plink-1.9 --merge-list merge-list --make-bed --out HRC
-}
-
-# Additional notes on regional GCTA analysis (Courtesy of Prof Jian Yang on 9 January 2018)
-
-## http://cnsgenomics.com/software/gcta/#Datamanagement
-
-## --extract-snp rs123678
-## Specify a SNP to be included in the analysis.
-## --exclude-snp rs123678
-## Specify a single SNP to be excluded from the analysis.
-## --extract-region-snp rs123678 1000
-## Extract a region centred around a specified SNP, e.g. +-1000Kb region centred around rs123678.
-## --exclude-region-snp rs123678 1000
-## Exclude a region centred around a specified SNP, e.g. +-1000Kb region centred around rs123678.
-## --extract-region-bp 1 120000 1000
-## Extract a region centred around a specified bp, e.g. +-1000Kb region centred around 120,000bp of chr 1.
-## --exclude-region-bp 1 120000 1000
-## Exclude a region centred around a specified bp, e.g. +-1000Kb region centred around 120,000bp of chr 1. 
-## This option is particularly useful for a analysis excluding the MHC region.
