@@ -137,7 +137,7 @@ if [ $LocusZoom -eq 1 ]; then \
    echo "--> LocusZoom"; \
    awk -v OFS="\t" "{if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz; \
    rm -f ld_cache.db; \
-   locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal $f.lz --plotonly --chr {1} --start {2} --end {3} --no-date --rundir .; \
+   locuszoom-1.4 --source 1000G_Nov2014 --build hg19 --pop EUR --metal $f.lz --plotonly --chr {1} --start {2} --end {3} --no-date --rundir .; \
    pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}; \
    R -q --no-save < ${FM_location}/files/lz.R > lz.log; \
 fi; \
