@@ -93,5 +93,3 @@ for i in $(seq 22); do echo chr${i} >> merge-list; done
 ## --exclude-region-bp 1 120000 1000
 ## Exclude a region centred around a specified bp, e.g. +-1000Kb region centred around 120,000bp of chr 1. 
 ## This option is particularly useful for a analysis excluding the MHC region.
-
-
