@@ -78,7 +78,7 @@ if [ $clumping -eq 1 ]; then \
          snpid=chr ":" pos "_" a1 "_" a2; \
       } \
       print snpid, $7; \
-   }' OFS='\t' $rt.input > $rt.tab
+   }' OFS='\t' $rt.input > $rt.tab; \
    awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab; \
    plink-1.9 --bfile $f --clump $f.tab \
              --clump-field P \
