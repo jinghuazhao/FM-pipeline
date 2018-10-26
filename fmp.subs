@@ -86,7 +86,7 @@ if [ $clumping -eq 1 ]; then \
              --clump-p1 5e-08 \
              --clump-r2 0.1 \
              --clump-snp-field snpid \
-             --out $f.clump; \
+             --out $f; \
 fi; \
 if [ $FM_summary -eq 1 ]; then \
    echo "--> FM-summary"; \
