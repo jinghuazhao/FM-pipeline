@@ -1,5 +1,5 @@
 #!/bin/bash
-# 26-9-2018 JHZ
+# 26-10-2018 JHZ
 
 ## SETTINGS
 
@@ -26,73 +26,9 @@ echo "--> $rt.input, st.bed"
 awk '{$2=toupper($2);$3=toupper($3)};1' $args > $rt.input
 ln -sf $wd/st.bed
 
-echo "--> binary_ped"
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env sample_file --env FM_location --env GEN_location -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    gunzip -c $GEN_location/$f.gen.gz | \
-    awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
-    qctool -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
-          -threads $threads -threshold 0.9 -log $f.log -assume-chromosome {1}'
-echo "region-specific data"
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-         \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
-         sort -k11,11 > $f.txt'
-echo "--> GWAS auxiliary files"
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env GEN_location -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    sort -k2,2 $GEN_location/$f.bim | \
-    join -111 -22 $f.txt - | \
-    sort -k11,11 > $f.incl; \
-    awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r; \
-    cut -d" " -f10,11 $f.r > $f.rsid'
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env wd -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    cut -d" " -f11,12 $f.r > $f.z; \
-    awk "BEGIN{print \"rsid\",\"chromosome\",\"position\",\"allele1\",\"allele2\",\"maf\",\"beta\",\"se\"}" > $f.fm.z; \
-    awk "{if(\$5>0.5) \$5=1-\$5; print \$11,\$1,\$2,\$3,\$4,\$5,\$6,\$7}" $f.r >> $f.fm.z; \
-    awk "{print \$1}" $f.incl > $f.inc; \
-    awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a; \
-    echo "RSID position chromosome A_allele B_allele" > $f.incl_variants; \
-    awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants'
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} -C' ' '
-    export f=chr{1}_{2}_{3}; \
-         grep -f $f.inc $f.txt | \
-         sort -k11,11 > $f.dat'
-
-echo "--> bfile"
-awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env GEN_location -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    plink-1.9 --bfile $GEN_location/$f --extract $f.inc \
-    --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f'
-
-if [ $LD_MAGIC -eq 1 ]; then
-    awk 'NR>1' st.bed | parallel -j${threads} --env threads --env sample_file --env FM_location --env GEN_location -C' ' '
-    export f=chr{1}_{2}_{3}; \
-    gunzip -c $GEN_location/$f.gen.gz | \
-    awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord;\
-    qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f.magic.gen \
-          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome;\
-    awk -f $FM_location/files/info.awk c=2 $GEN_location/$f.info > $GEN_location/$f.magic.info; \
-    gzip -f $GEN_location/$f.magic.gen; \
-    Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.01 0.4 $f.magic $threads; \
-    Rscript --vanilla $FM_location/files/lowtri2square.r'
-fi
-
-if [ $LD_PLINK -eq 1 ]; then
-   awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f; \
-       awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl; \
-       cp $f.z $f.sav; \
-     # grep -w -v -f $f.excl $f.sav > $f.z; \
-       plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f; \
-       sed "s/\t/ /g" $f.ld > $f.plink'
-     # grep -w -v -f $f.excl $f.r below
-fi
-
+echo "--> region-specific finemapping"
+export NF=$(awk 'NR==1{print NF}' st.bed)
+awk 'NR>1' st.bed | parallel $OPTs -j${threads} --env sample_file --env FM_location --env GEN_location --env NF -C' ' '$FM_location/fmp.subs';
 if [ $clumping -eq 1 ]; then
    echo "--> clumping"
    awk '
@@ -128,70 +64,10 @@ if [ $clumping -eq 1 ]; then
             --out $f.clump'
 fi
 
-if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
-   awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}; \
-       ldstore --bcor $f.bcor --merge ${threads}; \
-       ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants; \
-       sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld'
-fi
-
-# CAusal Variants Identication in Associated Regions (CAVIAR)
-
-if [ $CAVIAR -eq 1 ]; then
-   echo "--> CAVIAR"
-   awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       CAVIAR -z $f.z -l $f.ld -r 0.9 -o $f'
-fi
-
-# CAusal Variants Identication in Associated Regions BF (CAVIARBF)
-
-if [ $CAVIARBF -eq 1 ]; then
-   echo "--> CAVIARBF"
-   awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       caviarbf -z $f.z -r $f.ld -n $(sort -k9,9g $f.r | \
-       tail -n1 | cut -d" " -f9) -t 0 -a 0.1 -c 3 --appr -o $f.caviarbf'
-fi
-
-# Fine-mapping method only using summary statistics (FM-summary)
-
-if [ $FM_summary -eq 1 ]; then
-   echo "--> FM-summary"
-   echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
-   sed 's/ /\t/g' > FM-summary.txt
-   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       $FM_location/files/getCredible.r; \
-       awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt'
-fi
-
 # Genome-wide Complex Trait Analysis (GCTA)
 
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
-   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location --env GEN_location -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk -f $FM_location/files/info.awk c=1 chr={1} $GEN_location/$f.info | \
-       sort -k2,2 > $f.tmp; \
-       sort -k2,2 $GEN_location/$f.bim | \
-       join -j2 $f.tmp - | \
-       awk -vOFS="\t" "{print \$7,\$6,0,\$2,\$10,\$11,\$9}" > ${f}_map; \
-       sort -k4,4 ${f}_map | \
-       join -111 -24 $f.r - | \
-       grep -f $f.inc | \
-       awk -f $FM_location/files/ma.awk > $f.ma; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --cojo-collinear 0.9 --out $f; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --maf 0.000072 --out $f; \
-       grep {5} $f.r | \
-       cut -d" " -f11 > $f.snpid; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f; \
-       gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 1 --out $f.top; \
-       cut -d" " -f10,11 $f.r | \
-       sort -k2,2 | \
-       sed "s/ /\t/g">$f.tmp'
 # --cojo-slct <==> jma.cojo, ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | parallel -j1 -C' ' '
@@ -228,23 +104,6 @@ fi
 #  Joint Analysis of Marginal SNP Effects (JAM)
 
 if [ $JAM -eq 1 ]; then
-   echo "--> JAM"
-   export NF=$(awk 'NR==1{print NF}' st.bed)
-   awk 'NR>1' st.bed | parallel -j${threads} --env FM_location --env NF -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       if [ $NF -eq 4 ]; then
-          plink-1.9 --bfile $f --indep-pairwise 500kb 1 0.8 --maf 0.0001 --out $f
-       else
-          grep {5} $f.r | \
-          cut -d" " -f11 > $f.snpid; \
-          plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 1 0.80 --maf 0.0001 --out $f; \
-          cat $f.snpid >> $f.prune.in
-       fi; \
-       grep -w -f $f.prune.in $f.a > $f.p; \
-       grep -w -f $f.prune.in $f.dat > ${f}p.dat; \
-       plink-1.9 --bfile $f --extract $f.prune.in --keep-allele-order --a2-allele $f.p 3 1 --make-bed --out ${f}p; \
-       export f=chr{1}_{2}_{3}p; \
-       R -q --no-save < ${FM_location}/files/JAM.R > $f.log'
    rm -f jam.top jam.txt
    touch jam.top jam.txt
    awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum' >> jam.top
@@ -254,20 +113,6 @@ if [ $JAM -eq 1 ]; then
        awk "NR>1{sub(/\p.sel/,\"\",FILENAME);split(\$2,a,\":\");\$1=FILENAME \" \" a[1];print}"' | \
        sort -k1,1n >> jam.out
    R -q --no-save < ${FM_location}/files/JAM-cs.R > JAM-cs.log
-fi
-
-# LocusZoom
-
-if [ $LocusZoom -eq 1 ]; then
-   echo "--> LocusZoom"
-   awk 'NR>1' st.bed | parallel -j${threads} -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk -v OFS="\t" "{if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz'
-   awk 'NR>1' st.bed | parallel -j1 -C' ' '
-       rm -f ld_cache.db; \
-       locuszoom-1.4 --source 1000G_March2012 --build hg19 --pop EUR --metal chr{1}_{2}_{3}.lz --plotonly --chr {1} --start {2} --end {3} --no-date --rundir .; \
-       pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}'
-   R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
 
 # functional genomic information with a genome-wide association study (fGWAS)
@@ -335,53 +180,6 @@ if [ $fgwas -eq 1 ]; then
    sort -k12,12n -k3,3 >> fgwas.tmp
    awk '{$12="";print}' fgwas.tmp|gzip -cf > fgwas.tmp.gz
    fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
-fi
-
-# finemap
-
-if [ $finemap -eq 1 ]; then
-   echo "--> finemap"
-   echo "z;ld;snp;config;log;n_samples" > finemap.cfg
-   awk 'NR>1' st.bed | parallel -j${threads} -C ' ' '
-       export f=chr{1}_{2}_{3}; \
-       sort -k9,9g $f.r | \
-       tail -n1 | \
-       cut -d" " -f9 | \
-       awk -vf=$f "{print sprintf(\"%s.fm.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg'
-   finemap --sss --in-files finemap.cfg --n-causal-snps 5 --corr-config 0.9
-   awk 'NR>1' st.bed | parallel -j1 --env FM_location -C' ' '
-       export f=chr{1}_{2}_{3}; \
-       awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav; \
-       awk "NR==1" $f.sav | \
-       awk "{print \$0 \" rsid\"}" > $f.snp; \
-       awk "(NR>1)" $f.sav | \
-       sort -k2,2 | \
-       join -j2 - $f.rsid | \
-       sort -k5,5n | \
-       awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp; \
-       R -q --no-save < ${FM_location}/files/finemap.R > $f.out'
-fi
-
-# cherry-picking of information on z, ld, or possibly other things for signals with available data
-
-if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ] && [ $clumping -eq 1 ]; then
-   R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
-   sort -k1,1 ld > ld.1
-   # As before the same setup for gcta-slct.sh is used here but may complain otherwise
-   gunzip -c /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt.gz | \
-   awk '{snpid=$2;gsub(/:|\_/," ",snpid);split(snpid,a);Chr=a[1];Pos=a[2];print $0,Chr,Pos}' | \
-   sort -k1,1 | \
-   join -j1 - ld.1 | \
-   sort -k4,4n -k5,5n | \
-   awk '{print $2}' > ld.dat
-   rm ld.1
-   plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp \
-             --extract ld.dat --r2 triangle spaces --out ld
-   awk 'NR>1{if(NR==2) printf $8;else printf " " $8}' id | \
-   awk '1' > ld.mat
-   sed -e 's/[[:space:]]*$//' ld.ld >> ld.mat
-   paste -d' ' id ld.mat > ld.txt
-   R -q --no-save < ${FM_location}/files/ld.R > ld.log
 fi
 
 # obsolete with gtool/plink-1.9 handling gen/ped
