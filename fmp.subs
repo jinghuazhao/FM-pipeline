@@ -21,12 +21,16 @@ sort -k11,11 > $f.incl
 awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r
 cut -d" " -f10,11 $f.r > $f.rsid
 cut -d" " -f11,12 $f.r > $f.z
-awk "BEGIN{print \"rsid\",\"chromosome\",\"position\",\"allele1\",\"allele2\",\"maf\",\"beta\",\"se\"}" > $f.fm.z
-awk "{if(\$5>0.5) \$5=1-\$5; print \$11,\$1,\$2,\$3,\$4,\$5,\$6,\$7}" $f.r >> $f.fm.z
+(
+  awk "BEGIN{print \"rsid\",\"chromosome\",\"position\",\"allele1\",\"allele2\",\"maf\",\"beta\",\"se\"}"
+  awk "{if(\$5>0.5) \$5=1-\$5; print \$11,\$1,\$2,\$3,\$4,\$5,\$6,\$7}" $f.r
+) > $f.fm.z
 awk "{print \$1}" $f.incl > $f.inc
 awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a
-echo "RSID position chromosome A_allele B_allele" > $f.incl_variants
-awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl >> $f.incl_variants
+(
+  echo "RSID position chromosome A_allele B_allele"
+  awk "{print \$1,\$11,\$10,\$4,\$3}" $f.incl
+) > $f.incl_variants
 grep -f $f.inc $f.txt | \
 sort -k11,11 > $f.dat
 
@@ -94,10 +98,12 @@ if [ $clumping -eq 1 ]; then
 fi
 if [ $FM_summary -eq 1 ]; then
    echo "--> FM-summary"
-   echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
-   sed 's/ /\t/g' > FM-summary.txt
-   $FM_location/files/getCredible.r
-   awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre >> FM-summary.txt
+   (
+     echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
+     sed 's/ /\t/g'
+     $FM_location/files/getCredible.r
+     awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre
+   ) > FM-summary.txt
 fi
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
@@ -147,19 +153,23 @@ if [ $LocusZoom -eq 1 ]; then
 fi
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
-   echo "z;ld;snp;config;log;n_samples" > finemap.cfg
-   sort -k9,9g $f.r | \
-   tail -n1 | \
-   cut -d" " -f9 | \
-   awk -vf=$f "{print sprintf(\"%s.fm.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}" >> finemap.cfg
+   (
+     echo "z;ld;snp;config;log;n_samples"
+     sort -k9,9g $f.r | \
+     tail -n1 | \
+     cut -d" " -f9 | \
+     awk -vf=$f "{print sprintf(\"%s.fm.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}"
+   ) > finemap.cfg
    finemap --sss --in-files finemap.cfg --n-causal-snps 5 --corr-config 0.9
    awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav
-   awk "NR==1" $f.sav | \
-   awk "{print \$0 \" rsid\"}" > $f.snp
-   awk "(NR>1)" $f.sav | \
-   sort -k2,2 | \
-   join -j2 - $f.rsid | \
-   sort -k5,5n | \
-   awk "{t=\$1;\$1=\$2;\$2=t};1" >> $f.snp
+   (
+     awk "NR==1" $f.sav | \
+     awk "{print \$0 \" rsid\"}"
+     awk "(NR>1)" $f.sav | \
+     sort -k2,2 | \
+     join -j2 - $f.rsid | \
+     sort -k5,5n | \
+     awk "{t=\$1;\$1=\$2;\$2=t};1"
+   ) > $f.snp
    R -q --no-save < ${FM_location}/files/finemap.R > $f.out
 fi

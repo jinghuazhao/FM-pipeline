@@ -37,9 +37,11 @@ if [ $GCTA -eq 1 ]; then
 # --cojo-slct <==> jma.cojo, ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | parallel -j1 -C' ' '
-       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma
-       sort -k2,2 {}.jma.cojo | \
-       join -j2 - {}.tmp >> {}.jma'
+       (
+         echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid"
+         sort -k2,2 {}.jma.cojo | \
+         join -j2 - {}.tmp
+       ) > {}.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
        if [ -f $f.jma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.jma >> gcta-slct.csv; fi'
@@ -47,9 +49,11 @@ if [ $GCTA -eq 1 ]; then
 # --cojo-cond <==> given.cojo, cma.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > gcta-cond.csv
    ls *cma.cojo|sed 's/\.cma\.cojo//g' | parallel -j1 -C' ' '
-       echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid" > {}.cma; \
-       sort -k2,2 {}.cma.cojo | \
-       join -j2 - {}.tmp >> {}.cma'
+       (
+         echo "SNP Chr bp refA freq b se p n freq_geno bC bC_se pC rsid"
+         sort -k2,2 {}.cma.cojo | \
+         join -j2 - {}.tmp
+       ) > {}.cma'
        awk 'NR>1' st.bed | parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
        if [ -f $f.cma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.cma >> gcta-cond.csv; fi'
@@ -58,9 +62,11 @@ if [ $GCTA -eq 1 ]; then
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-top.csv
    ls *top.jma.cojo | \
    sed 's/\.top\.jma\.cojo//g' | parallel -j1 -C' ' '
-       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.top.jma; \
-       sort -k2,2 {}.top.jma.cojo | \
-       join -j2 - {}.tmp >> {}.top.jma'
+       (
+         echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid"
+         sort -k2,2 {}.top.jma.cojo | \
+         join -j2 - {}.tmp
+       ) > {}.top.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
        export f=chr{1}_{2}_{3}; \
        if [ -f $f.top.jma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.top.jma >> gcta-top.csv; fi'
@@ -70,14 +76,18 @@ fi
 #  Joint Analysis of Marginal SNP Effects (JAM)
 
 if [ $JAM -eq 1 ]; then
-   rm -f jam.top jam.txt
-   touch jam.top jam.txt
-   awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum' >> jam.top
-   cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {} >> jam.txt;cat {}p.top {}p.jam >> jam.txt'
-   echo "Region Chr SNP rsid PostProb_model PostProb Median CrI_Lower CrI_Upper Median_Present CrI_Lower_Present CrI_Upper_Present BF" > jam.out
-   ls *sel | parallel -j1 -C' ' '
-       awk "NR>1{sub(/\p.sel/,\"\",FILENAME);split(\$2,a,\":\");\$1=FILENAME \" \" a[1];print}"' | \
-       sort -k1,1n >> jam.out
+   (
+     awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum'
+   ) > jam.top
+   (
+     cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {};cat {}p.top {}p.jam'
+   ) > jam.txt
+   (
+     echo "Region Chr SNP rsid PostProb_model PostProb Median CrI_Lower CrI_Upper Median_Present CrI_Lower_Present CrI_Upper_Present BF"
+     ls *sel | parallel -j1 -C' ' '
+         awk "NR>1{sub(/\p.sel/,\"\",FILENAME);split(\$2,a,\":\");\$1=FILENAME \" \" a[1];print}"' | \
+         sort -k1,1n
+   ) > jam.out
    R -q --no-save < ${FM_location}/files/JAM-cs.R > JAM-cs.log
 fi
 
@@ -92,10 +102,12 @@ if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ] && [ $clumping -eq 1 
    awk '{print $2}' > ld.dat; \
    rm ld.1 ; \
    plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp \
-             --extract ld.dat --r2 triangle spaces --out ld; \
-   awk 'NR>1{if(NR==2) printf $8;else printf " " $8}' id | \
-   awk '1' > ld.mat; \
-   sed -e 's/[[:space:]]*$//' ld.ld >> ld.mat; \
+             --extract ld.dat --r2 triangle spaces --out ld
+   (
+     awk 'NR>1{if(NR==2) printf $8;else printf " " $8}' id | \
+     awk '1'
+     sed -e 's/[[:space:]]*$//' ld.ld
+   ) > ld.mat
    paste -d' ' id ld.mat > ld.txt; \
    R -q --no-save < ${FM_location}/files/ld.R > ld.log; \
 fi;
@@ -124,14 +136,17 @@ if [ $fgwas -eq 1 ]; then
        awk -f $FM_location/files/gene.awk | \
        gzip -fc > $f.fgwas.gz'
    # tally for -fine option
-   rm -f fgwas.tmp
-   touch fgwas.tmp
-   sort -k6,6n fgwas.snplist | parallel -j1 -C' ' '
+   (
+   sort -k6,6n fgwas.snplist | \
+     parallel -j1 -C' ' '
      gunzip -c chr{2}_{4}_{5}.fgwas.gz | \
-     awk "(NR>1 && !/INDEL/)" >> fgwas.tmp
+     awk "(NR>1 && !/INDEL/)"
    '
-   echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER" > fgwas.fine
-   sort -k12,12n -k2,2 -k3,3n fgwas.tmp >> fgwas.fine
+   ) > fgwas.tmp
+   (
+     echo "SNPID CHR POS Z F N ens_coding_exons ens_noncoding_exons tssdist syn nonsyn SEGNUMBER"
+     sort -k12,12n -k2,2 -k3,3n fgwas.tmp
+   ) > fgwas.fine
    gzip -f fgwas.fine
    # fgwas
    for an in ens_coding_exons ens_noncoding_exons tssdist syn nonsyn;
@@ -146,23 +161,29 @@ if [ $fgwas -eq 1 ]; then
    grep -f fgwas.rsid st.bed | \
    awk '{print $5, "*"}' | \
    sort -k1,1 > fgwas.tmp
-   head -1 fgwas.PPA0.5 | \
-   awk '{gsub(/ /,",",$0);$0=$0 "," "index"};1' > fgwas.csv
-   awk 'NR>1' fgwas.PPA0.5 | \
-   sort -k1,1 | \
-   join -a1 - fgwas.tmp | \
-   sed 's/chr//g' | \
-   sort -k2,2n -k3,3n | \
-   sed 's/ /,/g' >> fgwas.csv
+   (
+     head -1 fgwas.PPA0.5 | \
+     awk '{gsub(/ /,",",$0);$0=$0 "," "index"};1'
+     awk 'NR>1' fgwas.PPA0.5 | \
+     sort -k1,1 | \
+     join -a1 - fgwas.tmp | \
+     sed 's/chr//g' | \
+     sort -k2,2n -k3,3n | \
+     sed 's/ /,/g'
+   ) > fgwas.csv
    # manipulations to trick conditional analysis
    cut -d' ' -f1 fgwas.snplist > fgwas.tmp
-   zgrep -f fgwas.tmp -v fgwas.fine.gz | \
-   awk '{if(NR==1){print $0,"hit"}else{print $0,0}}' > fgwas.cond
-   zgrep -f fgwas.tmp fgwas.fine.gz | \
-   awk '{print $0,1}' >> fgwas.cond
-   head -1 fgwas.cond > fgwas.tmp
-   awk 'NR>1' fgwas.cond | \
-   sort -k12,12n -k3,3 >> fgwas.tmp
+   (
+     zgrep -f fgwas.tmp -v fgwas.fine.gz | \
+     awk '{if(NR==1){print $0,"hit"}else{print $0,0}}'
+     zgrep -f fgwas.tmp fgwas.fine.gz | \
+     awk '{print $0,1}'
+   ) > fgwas.cond
+   (
+     head -1 fgwas.cond
+     awk 'NR>1' fgwas.cond | \
+     sort -k12,12n -k3,3
+   ) > fgwas.tmp
    awk '{$12="";print}' fgwas.tmp|gzip -cf > fgwas.tmp.gz
    fgwas -i fgwas.tmp.gz -k 500 -print -o fgwas.cond -w ens_coding_exons+ens_noncoding_exons+syn+nonsyn -cond hit
 fi
