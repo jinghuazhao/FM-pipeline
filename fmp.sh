@@ -1,5 +1,5 @@
 #!/bin/bash
-# 26-10-2018 JHZ
+# 2-1-2019 JHZ
 
 ## SETTINGS
 
@@ -37,7 +37,7 @@ if [ $GCTA -eq 1 ]; then
 # --cojo-slct <==> jma.cojo, ldr.cojo
    echo "region SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > gcta-slct.csv
    ls *.jma.cojo|sed 's/\.jma\.cojo//g' | parallel -j1 -C' ' '
-       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma; \
+       echo "SNP Chr bp refA freq b se p n freq_geno bJ bJ_se pJ LD_r rsid" > {}.jma
        sort -k2,2 {}.jma.cojo | \
        join -j2 - {}.tmp >> {}.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
