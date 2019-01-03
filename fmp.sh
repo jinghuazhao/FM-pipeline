@@ -1,5 +1,5 @@
 #!/bin/bash
-# 2-1-2019 JHZ
+# 3-1-2019 JHZ
 
 ## SETTINGS
 
@@ -28,7 +28,7 @@ ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
 export NF=$(awk 'NR==1{print NF}' st.bed)
-awk 'NR>1' st.bed | env_parallel $OPTs -j${threads} -C' ' '$FM_location/fmp.subs';
+awk 'NR>1' st.bed | env_parallel $OPTs -j${threads} -C' ' '$FM_location/fmp.subs'
 
 # Genome-wide Complex Trait Analysis (GCTA)
 
@@ -43,7 +43,7 @@ if [ $GCTA -eq 1 ]; then
          join -j2 - {}.tmp
        ) > {}.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
-       export f=chr{1}_{2}_{3}; \
+       export f=chr{1}_{2}_{3}
        if [ -f $f.jma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.jma >> gcta-slct.csv; fi'
    sed -i 's/ /,/g' gcta-slct.csv
 # --cojo-cond <==> given.cojo, cma.cojo
@@ -55,7 +55,7 @@ if [ $GCTA -eq 1 ]; then
          join -j2 - {}.tmp
        ) > {}.cma'
        awk 'NR>1' st.bed | parallel -j1 -C' ' '
-       export f=chr{1}_{2}_{3}; \
+       export f=chr{1}_{2}_{3}
        if [ -f $f.cma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.cma >> gcta-cond.csv; fi'
    sed -i 's/ /,/g' gcta-cond.csv
 # --cojo-top-SNPs <==> top.jma.cojo, top.ldr.cojo
@@ -68,7 +68,7 @@ if [ $GCTA -eq 1 ]; then
          join -j2 - {}.tmp
        ) > {}.top.jma'
    awk 'NR>1' st.bed | parallel -j1 -C' ' '
-       export f=chr{1}_{2}_{3}; \
+       export f=chr{1}_{2}_{3}
        if [ -f $f.top.jma ]; then awk "!/SNP/{print f, \$0}" f=$f $f.top.jma >> gcta-top.csv; fi'
    sed -i 's/ /,/g' gcta-top.csv
 fi
@@ -91,16 +91,16 @@ if [ $JAM -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/JAM-cs.R > JAM-cs.log
 fi
 
-if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ] && [ $clumping -eq 1 ]; then \
-   R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log; \
-   sort -k1,1 ld > ld.1; \
+if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ] && [ $clumping -eq 1 ]; then
+   R -q --no-save < ${FM_location}/files/gcta-jam-finemap.R > gcta-jam-finemap.log
+   sort -k1,1 ld > ld.1
    gunzip -c /gen_omics/data/EPIC-Norfolk/HRC/binary_ped/id3.txt.gz | \
    awk '{snpid=$2;gsub(/:|\_/," ",snpid);split(snpid,a);Chr=a[1];Pos=a[2];print $0,Chr,Pos}' | \
    sort -k1,1 | \
    join -j1 - ld.1 | \
    sort -k4,4n -k5,5n | \
-   awk '{print $2}' > ld.dat; \
-   rm ld.1 ; \
+   awk '{print $2}' > ld.dat
+   rm ld.1
    plink-1.9 --bfile $bfile --remove $remove_sample --exclude $exclude_snp \
              --extract ld.dat --r2 triangle spaces --out ld
    (
@@ -108,9 +108,9 @@ if [ $GCTA -eq 1 ] && [ $JAM -eq 1 ] && [ $finemap -eq 1 ] && [ $clumping -eq 1 
      awk '1'
      sed -e 's/[[:space:]]*$//' ld.ld
    ) > ld.mat
-   paste -d' ' id ld.mat > ld.txt; \
-   R -q --no-save < ${FM_location}/files/ld.R > ld.log; \
-fi;
+   paste -d' ' id ld.mat > ld.txt
+   R -q --no-save < ${FM_location}/files/ld.R > ld.log
+fi
 
 # functional genomic information with a genome-wide association study (fGWAS)
 
@@ -129,7 +129,7 @@ if [ $fgwas -eq 1 ]; then
    awk -vfl=${flanking} 'NR>1{l=$2;u=$3;print $5,$1,$4,l,u,NR}' st.bed | \
    sort -k1,1 > fgwas.snplist
    cat fgwas.snplist | parallel -j${threads} --env FM_location --env fgwas_location_1kg -C' ' '
-       export f=chr{2}_{4}_{5}; \
+       export f=chr{2}_{4}_{5}
        awk -vsn={6} -f $FM_location/files/fgwas.awk $f.r | \
        sort -k3,3 | \
        join -13 -22 - $fgwas_location_1kg/chr{2}.gene | \
