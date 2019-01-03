@@ -1,5 +1,5 @@
 #!/bin/bash
-# 2-1-2019 JHZ
+# 3-1-2019 JHZ
 
 export f=chr{1}_{2}_{3}
 
@@ -9,7 +9,7 @@ awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord
 qctool -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
        -threads $threads -threshold 0.9 -log $f.log -assume-chromosome {1}
 
-echo "region-specific data"
+echo "--> region-specific data"
 awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
      \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
 sort -k11,11 > $f.txt
@@ -37,6 +37,7 @@ sort -k11,11 > $f.dat
 echo "--> bfile"
 plink-1.9 --bfile $GEN_location/$f --extract $f.inc \
           --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f
+
 if [ $LD_MAGIC -eq 1 ]; then
    gunzip -c $GEN_location/$f.gen.gz | \
    awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord
@@ -48,6 +49,7 @@ if [ $LD_MAGIC -eq 1 ]; then
             $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.01 0.4 $f.magic $threads
    Rscript --vanilla $FM_location/files/lowtri2square.r
 fi
+
 if [ $LD_PLINK -eq 1 ]; then
    awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
        plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f
@@ -55,36 +57,40 @@ if [ $LD_PLINK -eq 1 ]; then
        cp $f.z $f.sav
        plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f
        sed "s/\t/ /g" $f.ld > $f.plink
-fi; \
+fi
+
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
    ldstore --bcor $f.bcor --bplink $f --n-threads ${threads}
    ldstore --bcor $f.bcor --merge ${threads}
    ldstore --bcor $f.bcor --matrix $f.ld --incl_variants $f.incl_variants
    sed -i -e "s/  */ /g; s/^ *//; /^$/d" $f.ld
 fi
+
 if [ $CAVIAR -eq 1 ]; then
    echo "--> CAVIAR"
    CAVIAR -z $f.z -l $f.ld -r 0.9 -o $f
 fi
+
 if [ $CAVIARBF -eq 1 ]; then
    echo "--> CAVIARBF"
    caviarbf -z $f.z -r $f.ld -n $(sort -k9,9g $f.r | \
    tail -n1 | cut -d" " -f9) -t 0 -a 0.1 -c 3 --appr -o $f.caviarbf
-fi; \
+fi
+
 if [ $clumping -eq 1 ]; then
    echo "--> clumping"
    awk '
    { \
-      if (NR==1) print "snpid", "P"; \
-      chr=$9; \
-      pos=$10; \
-      a1=$2; \
-      a2=$3; \
-      if (a1>a2) {; \
-         snpid=chr ":" pos "_" a2 "_" a1; \
-      } else { \
-         snpid=chr ":" pos "_" a1 "_" a2; \
-      } \
+      if (NR==1) print "snpid", "P"
+      chr=$9;
+      pos=$10;
+      a1=$2;
+      a2=$3;
+      if (a1>a2) {
+         snpid=chr ":" pos "_" a2 "_" a1;
+      } else {
+         snpid=chr ":" pos "_" a1 "_" a2;
+      }
       print snpid, $7
    }' OFS='\t' $rt.input > $rt.tab
    awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab
@@ -96,6 +102,7 @@ if [ $clumping -eq 1 ]; then
              --clump-snp-field snpid \
              --out $f
 fi
+
 if [ $FM_summary -eq 1 ]; then
    echo "--> FM-summary"
    (
@@ -105,6 +112,7 @@ if [ $FM_summary -eq 1 ]; then
      awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre
    ) > FM-summary.txt
 fi
+
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
    awk -f $FM_location/files/info.awk c=1 chr={1} $GEN_location/$f.info | \
@@ -126,6 +134,7 @@ if [ $GCTA -eq 1 ]; then
    sort -k2,2 | \
    sed "s/ /\t/g">$f.tmp
 fi
+
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
    export NF=$(awk 'NR==1{print NF}' st.bed)
@@ -143,6 +152,7 @@ if [ $JAM -eq 1 ]; then
    R -q --no-save < ${FM_location}/files/JAM.R > $f.log
    R -q --no-save < ${FM_location}/files/JAM-cs.R > JAM-cs.log
 fi
+
 if [ $LocusZoom -eq 1 ]; then
    echo "--> LocusZoom"
    awk -v OFS="\t" "{if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz
@@ -151,6 +161,7 @@ if [ $LocusZoom -eq 1 ]; then
    pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}
    R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
+
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
    (
