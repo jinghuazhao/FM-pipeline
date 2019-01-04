@@ -1,7 +1,7 @@
 #!/bin/bash
 # 4-1-2019 JHZ
 
-export f=chr{1}_{2}_{3}
+export f=chr${1}_${2}_${3}
 
 echo "--> binary_ped"
 if [ ! -d work ]; then mkdir work; fi

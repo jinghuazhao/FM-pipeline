@@ -28,7 +28,21 @@ ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
 export NF=$(awk 'NR==1{print NF}' st.bed)
-awk 'NR>1' st.bed | env_parallel $OPTs -j${threads} -C' ' '$FM_location/fmp.subs'
+awk 'NR>1' st.bed | \
+parallel --env $OPTs \
+         --env FM_location \
+         --env GEN_location 
+         --env LD_MAGIC \
+         --env LD_PLINK \
+         --env CAVIAR \
+         --env CAVIARBF \
+         --env FM_summary \
+         --env GCTA \
+         --env finemap \
+         --env JAM \
+         --env LocusZoom \
+         --env fgwas \
+          -j${threads} -C' ' '$FM_location/fmp.subs {1} {2} {3}'
 
 # Genome-wide Complex Trait Analysis (GCTA)
 
