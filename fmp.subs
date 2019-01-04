@@ -6,13 +6,13 @@ export f=chr${1}_${2}_${3}
 echo "--> binary_ped"
 if [ ! -d work ]; then mkdir work; fi
 gunzip -c $GEN_location/$f.gen.gz | \
-awk -f $FM_location/files/order.awk chr={1} > work/$f.ord
+awk -f $FM_location/files/order.awk chr=${1} > work/$f.ord
 qctool -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype binary_ped -og work/$f \
-       -threads $threads -threshold 0.9 -log $f.log -assume-chromosome {1}
+       -threads $threads -threshold 0.9 -log $f.log -assume-chromosome ${1}
 
 echo "--> region-specific data"
 awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
-     \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr={1} l={2} u={3} $rt.input | \
+     \$0=\$0 \" \" \$9 \":\" \$10 \"_\" a1 \"_\" a2;print}" chr=${1} l=${2} u=${3} $rt.input | \
 sort -k11,11 > $f.txt
 
 echo "--> GWAS auxiliary files"
@@ -41,23 +41,22 @@ plink-1.9 --bfile work/$f --extract $f.inc \
 
 if [ $LD_MAGIC -eq 1 ]; then
    gunzip -c work/$f.gen.gz | \
-   awk -f $FM_location/files/order.awk chr={1} > work/$f.ord
+   awk -f $FM_location/files/order.awk chr=${1} > work/$f.ord
    qctool_v2.0 -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype gen -og work/$f.magic.gen \
                -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome
    awk -f $FM_location/files/info.awk c=2 work/$f.info > work/$f.magic.info
    gzip -f work/$f.magic.gen
    Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-            work/$f.magic.info work/$f.magic.gen.gz {1} {2} {3} 0.01 0.4 $f.magic $threads
+            work/$f.magic.info work/$f.magic.gen.gz ${1} ${2} ${3} 0.01 0.4 $f.magic $threads
    Rscript --vanilla $FM_location/files/lowtri2square.r
 fi
 
 if [ $LD_PLINK -eq 1 ]; then
-   awk 'NR>1' st.bed | parallel -j${threads} --env threads -C' ' '
-       plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f
-       awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl
-       cp $f.z $f.sav
-       plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f
-       sed "s/\t/ /g" $f.ld > $f.plink
+   plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f
+   awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl
+   cp $f.z $f.sav
+   plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f
+   sed "s/\t/ /g" $f.ld > $f.plink
 fi
 
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
@@ -80,20 +79,20 @@ fi
 
 if [ $clumping -eq 1 ]; then
    echo "--> clumping"
-   awk '
-   { \
+   awk "
+   {
       if (NR==1) print "snpid", "P"
       chr=$9;
       pos=$10;
       a1=$2;
       a2=$3;
       if (a1>a2) {
-         snpid=chr ":" pos "_" a2 "_" a1;
+         snpid=chr \":\" pos \"_\" a2 \"_\" a1;
       } else {
-         snpid=chr ":" pos "_" a1 "_" a2;
+         snpid=chr \":\" pos \"_\" a1 \"_\" a2;
       }
       print snpid, $7
-   }' OFS='\t' $rt.input > $rt.tab
+   }" OFS="\t" $rt.input > $rt.tab
    awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab
    plink-1.9 --bfile $f --clump $f.tab \
              --clump-field P \
@@ -108,7 +107,7 @@ if [ $FM_summary -eq 1 ]; then
    echo "--> FM-summary"
    (
      echo "region chr pos A B Freq1 Effect StdErr P N SNP inCredible probNorm cumSum" | \
-     sed 's/ /\t/g'
+     sed "s/ /\t/g"
      $FM_location/files/getCredible.r
      awk "!(/SNP/&&/inCredible/){print f, \$0}" OFS="\t" f=$f $f.cre
    ) > FM-summary.txt
@@ -116,7 +115,7 @@ fi
 
 if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
-   awk -f $FM_location/files/info.awk c=1 chr={1} $GEN_location/$f.info | \
+   awk -f $FM_location/files/info.awk c=1 chr=${1} $GEN_location/$f.info | \
    sort -k2,2 > $f.tmp
    sort -k2,2 $GEN_location/$f.bim | \
    join -j2 $f.tmp - | \
@@ -138,7 +137,7 @@ fi
 
 if [ $JAM -eq 1 ]; then
    echo "--> JAM"
-   export NF=$(awk 'NR==1{print NF}' st.bed)
+   export NF=$(awk "NR==1{print NF}" st.bed)
    if [ $NF -eq 4 ]; then
        plink-1.9 --bfile $f --indep-pairwise 500kb 1 0.8 --maf 0.0001 --out $f
    else
@@ -158,19 +157,19 @@ if [ $LocusZoom -eq 1 ]; then
    echo "--> LocusZoom"
    awk -v OFS="\t" "{if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz
    rm -f ld_cache.db
-   locuszoom-1.4 --source 1000G_Nov2014 --build hg19 --pop EUR --metal $f.lz --plotonly --chr {1} --start {2} --end {3} --no-date --rundir .
-   pdftopng chr{1}_{2}-{3}.pdf -r 300 {5}
+   locuszoom-1.4 --source 1000G_Nov2014 --build hg19 --pop EUR --metal $f.lz --plotonly --chr ${1} --start ${2} --end ${3} --no-date --rundir .
+   pdftopng chr${1}_${2}-${3}.pdf -r 300 ${5}
    R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
 
 if [ $finemap -eq 1 ]; then
    echo "--> finemap"
    (
-     echo "z;ld;snp;config;log;n_samples"
+     echo "z;ld;snp;config;log;n_samples;cred"
      sort -k9,9g $f.r | \
      tail -n1 | \
      cut -d" " -f9 | \
-     awk -vf=$f "{print sprintf(\"%s.fm.z;%s.ld;%s.snp;%s.config;%s.log;%d\",f,f,f,f,f,int(\$1))}"
+     awk -vf=$f "{print sprintf(\"%s.fm.z;%s.ld;%s.snp;%s.config;%s.log;%d;%s.cred\",f,f,f,f,f,int(\$1),f)}"
    ) > finemap.cfg
    finemap --sss --in-files finemap.cfg --n-causal-snps 5 --corr-config 0.9
    awk "{if(NR==1) \$0=\$0 \" order\"; else \$0=\$0 \" \" NR-1;print}" $f.snp > $f.sav

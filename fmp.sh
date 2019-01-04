@@ -1,5 +1,5 @@
 #!/bin/bash
-# 3-1-2019 JHZ
+# 4-1-2019 JHZ
 
 ## SETTINGS
 
@@ -27,22 +27,23 @@ awk '{$2=toupper($2);$3=toupper($3)};1' $args > $rt.input
 ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
-export NF=$(awk 'NR==1{print NF}' st.bed)
-awk 'NR>1' st.bed | \
-parallel --env $OPTs \
+awk 'NR==2' st.bed | \
+parallel -j${threads} -C' ' \
          --env FM_location \
-         --env GEN_location 
-         --env LD_MAGIC \
-         --env LD_PLINK \
+         --env GEN_location  \
          --env CAVIAR \
          --env CAVIARBF \
          --env FM_summary \
-         --env GCTA \
-         --env finemap \
-         --env JAM \
-         --env LocusZoom \
          --env fgwas \
-          -j${threads} -C' ' '$FM_location/fmp.subs {1} {2} {3}'
+         --env finemap \
+         --env GCTA \
+         --env JAM \
+         --env LD_MAGIC \
+         --env LD_PLINK \
+         --env LocusZoom \
+          '$FM_location/fmp.subs {1} {2} {3}'
+
+exit
 
 # Genome-wide Complex Trait Analysis (GCTA)
 
@@ -91,7 +92,7 @@ fi
 
 if [ $JAM -eq 1 ]; then
    (
-     awk 'NR>1' st.bed | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum'
+     ls *p.sum | sed 's/\p.\sum//g' | parallel -j1 -C' ' 'export f=chr{1}_{2}_{3};awk "NR==2&&\$2>0 {print f}" f=$f ${f}p.sum'
    ) > jam.top
    (
      cat jam.top | parallel -j1 -C' ' 'echo -e "\n" {};cat {}p.top {}p.jam'
