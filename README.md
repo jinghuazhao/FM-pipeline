@@ -115,6 +115,8 @@ Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao
   awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
 ) > st.bed
 ```
+Note the change in rsid from build 36 to build 37.
+
 We can also use approximately indepdent LD blocks
 ```bash
 # dummy rsid and pos in this case
@@ -146,7 +148,7 @@ gunzip -c bmi.tsv.gz > BMI_HRC
 # export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 fmp.sh BMI_HRC
 ```
-and the results will be in `BMI_HRC.out`. Note the change in rsid from build 36 to build 37.
+and the results will be in `BMI_HRC.out`.
 
 ## ADDITIONAL TOPICS
 
