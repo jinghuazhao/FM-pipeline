@@ -1,12 +1,13 @@
 #!/bin/bash
-# 3-1-2019 JHZ
+# 4-1-2019 JHZ
 
 export f=chr{1}_{2}_{3}
 
 echo "--> binary_ped"
+if [ ! -d work ]; then mkdir work; fi
 gunzip -c $GEN_location/$f.gen.gz | \
-awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord
-qctool -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype binary_ped -og $GEN_location/$f \
+awk -f $FM_location/files/order.awk chr={1} > work/$f.ord
+qctool -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype binary_ped -og work/$f \
        -threads $threads -threshold 0.9 -log $f.log -assume-chromosome {1}
 
 echo "--> region-specific data"
@@ -15,7 +16,7 @@ awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1
 sort -k11,11 > $f.txt
 
 echo "--> GWAS auxiliary files"
-sort -k2,2 $GEN_location/$f.bim | \
+sort -k2,2 work/$f.bim | \
 join -111 -22 $f.txt - | \
 sort -k11,11 > $f.incl
 awk "{print \$10,\$11,\$3,\$4,\$5,\$6,\$7,\$8,\$9,\$2,\$1,\$6/\$7}" $f.incl > $f.r
@@ -35,18 +36,18 @@ grep -f $f.inc $f.txt | \
 sort -k11,11 > $f.dat
 
 echo "--> bfile"
-plink-1.9 --bfile $GEN_location/$f --extract $f.inc \
+plink-1.9 --bfile work/$f --extract $f.inc \
           --make-bed --keep-allele-order --a2-allele $f.a 3 1 --out $f
 
 if [ $LD_MAGIC -eq 1 ]; then
-   gunzip -c $GEN_location/$f.gen.gz | \
-   awk -f $FM_location/files/order.awk chr={1} > $GEN_location/$f.ord
-   qctool_v2.0 -filetype gen -g $GEN_location/$f.ord -s ${sample_file} -ofiletype gen -og $GEN_location/$f.magic.gen \
+   gunzip -c work/$f.gen.gz | \
+   awk -f $FM_location/files/order.awk chr={1} > work/$f.ord
+   qctool_v2.0 -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype gen -og work/$f.magic.gen \
                -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome
-   awk -f $FM_location/files/info.awk c=2 $GEN_location/$f.info > $GEN_location/$f.magic.info
-   gzip -f $GEN_location/$f.magic.gen
+   awk -f $FM_location/files/info.awk c=2 work/$f.info > work/$f.magic.info
+   gzip -f work/$f.magic.gen
    Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
-            $GEN_location/$f.magic.info $GEN_location/$f.magic.gen.gz {1} {2} {3} 0.01 0.4 $f.magic $threads
+            work/$f.magic.info work/$f.magic.gen.gz {1} {2} {3} 0.01 0.4 $f.magic $threads
    Rscript --vanilla $FM_location/files/lowtri2square.r
 fi
 
