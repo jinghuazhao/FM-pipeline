@@ -113,7 +113,8 @@ This is available as [FUSION LD reference panel](https://data.broadinstitute.org
 
 We then proceed with
 ```bash
-awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else print $1,$2,$3,$4}' 1KG/EUR.bed > st.bed
+# dummy rsid and pos in this case
+awk '{gsub(/chr|region/,"",$0);if(NR==1) {print "chr","start","end","rsid","pos","region"} else print $1,$2,$3,"top","pos",$4}' 1KG/EUR.bed > st.bed
 gunzip bmi.tsv.gz > BMI_1KG
 # modify fmp.ini to use the 1KG panel
 fmp.sh BMI_1KG
