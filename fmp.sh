@@ -41,7 +41,7 @@ parallel -j${threads} -C' ' \
          --env LD_MAGIC \
          --env LD_PLINK \
          --env LocusZoom \
-          '$FM_location/fmp.subs {1} {2} {3}'
+          '$FM_location/fmp.subs {1} {2} {3} {4} {5}'
 
 exit
 

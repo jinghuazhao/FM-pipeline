@@ -93,12 +93,11 @@ if [ $clumping -eq 1 ]; then
       }
       print snpid, $7
    }" OFS="\t" $rt.input > $rt.tab
-   awk "{if (NR==1) print \"snpid\", \"P\"; print \$11,\$7}" OFS="\t" $f.dat > $f.tab
    plink-1.9 --bfile $f --clump $f.tab \
              --clump-field P \
              --clump-kb 500 \
              --clump-p1 5e-08 \
-             --clump-r2 0.1 \
+             --clump-r2 0 \
              --clump-snp-field snpid \
              --out $f
 fi
@@ -126,7 +125,7 @@ if [ $GCTA -eq 1 ]; then
    awk -f $FM_location/files/ma.awk > $f.ma
    gcta64 --bfile $f --cojo-file $f.ma --cojo-joint --cojo-collinear 0.9 --out $f
    gcta64 --bfile $f --cojo-file $f.ma --cojo-slct --maf 0.000072 --out $f
-   grep {5} $f.r | \
+   grep ${5} $f.r | \
    cut -d" " -f11 > $f.snpid
    gcta64 --bfile $f --cojo-file $f.ma --cojo-cond $f.snpid --out $f
    gcta64 --bfile $f --cojo-file $f.ma --cojo-top-SNPs 1 --out $f.top
@@ -141,7 +140,7 @@ if [ $JAM -eq 1 ]; then
    if [ $NF -eq 4 ]; then
        plink-1.9 --bfile $f --indep-pairwise 500kb 1 0.8 --maf 0.0001 --out $f
    else
-       grep {5} $f.r | \
+       grep ${5} $f.r | \
        cut -d" " -f11 > $f.snpid
        plink-1.9 --bfile $f --exclude $f.snpid --indep-pairwise 500kb 1 0.80 --maf 0.0001 --out $f
        cat $f.snpid >> $f.prune.in
