@@ -128,6 +128,7 @@ Assuming an HRC panel is ready, file `97.snps` is used to build `st.bed` and the
 # st.bed
 (
   echo "chr start end rsid pos r"
+  sed -i 's/rs12016871/rs9581854/g' 97.snps
   grep -w -f 97.snps snp150.txt | \
   sort -k1,1n -k2,2n | \
   awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
@@ -137,7 +138,7 @@ gunzip -c bmi.tsv.gz > BMI_HRC
 # export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 fmp.sh BMI_HRC
 ```
-and the results will be in `BMI_HRC.out`.
+and the results will be in `BMI_HRC.out`. Note the change in rsid from build 36 to build 37.
 
 ## ADDITIONAL TOPICS
 
