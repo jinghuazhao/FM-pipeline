@@ -1,4 +1,8 @@
-*26-10-2018*
+*4/1/2019*
+
+Retest using BMI example from SUMSTATS using LD-block.
+
+*26/10/2018*
 
 A compromise is made regarding region-specific data processing and analysis as composed to fgwas whose original implementation is kept.
 
