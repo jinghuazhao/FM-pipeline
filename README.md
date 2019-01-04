@@ -104,17 +104,33 @@ It is helpful to examine directions of effects together with their correlation w
 
 ## EXAMPLE
 
-Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS.
+Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS. From the 97 SNPs, a st.bed is generated as follows,
+```bash
+# st.bed
+(
+  echo "chr start end rsid pos r"
+  sed -i 's/rs12016871/rs9581854/g' 97.snps
+  grep -w -f 97.snps snp150.txt | \
+  sort -k1,1n -k2,2n | \
+  awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
+) > st.bed
+```
+We can also use approximately indepdent LD blocks
+```bash
+# dummy rsid and pos in this case
+awk '{
+  gsub(/chr|region/,"",$0);
+  if(NR==1) print "chr","start","end","rsid","pos","region"; else print $1,$2,$3,"top","pos",$4
+}' 1KG/EUR.bed > st.bed
+```
 
-### --- 1000Genomes panel using approximately indepdent LD blocks ---
+### --- 1000Genomes panel ---
 
 This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required data.
+[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required LD-blocks. A counterpart for the 97 regions above can also be generated.
 
 We then proceed with
 ```bash
-# dummy rsid and pos in this case
-awk '{gsub(/chr|region/,"",$0);if(NR==1) {print "chr","start","end","rsid","pos","region"} else print $1,$2,$3,"top","pos",$4}' 1KG/EUR.bed > st.bed
 gunzip bmi.tsv.gz > BMI_1KG
 # modify fmp.ini to use the 1KG panel
 fmp.sh BMI_1KG
@@ -125,14 +141,6 @@ and the results will be in `BMI_1KG.out`.
 
 Assuming an HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
 ```bash
-# st.bed
-(
-  echo "chr start end rsid pos r"
-  sed -i 's/rs12016871/rs9581854/g' 97.snps
-  grep -w -f 97.snps snp150.txt | \
-  sort -k1,1n -k2,2n | \
-  awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
-) > st.bed
 gunzip -c bmi.tsv.gz > BMI_HRC
 # modify fmp.ini to use the HRC panel
 # export GEN_location=/scratch/tempjhz22/LDcalc/HRC
