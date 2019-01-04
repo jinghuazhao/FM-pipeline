@@ -104,7 +104,7 @@ It is helpful to examine directions of effects together with their correlation w
 
 ## EXAMPLE
 
-Files `bmi.txt` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS.
+Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS.
 
 ### --- 1000Genomes panel using approximately indepdent LD blocks ---
 
@@ -114,7 +114,7 @@ This is available as [FUSION LD reference panel](https://data.broadinstitute.org
 We then proceed with
 ```bash
 awk '{gsub(/chr/,"",$0);if(NR==1) {print "chr","start","end","region"} else print $1,$2,$3,$4}' 1KG/EUR.bed > st.bed
-ln -s bmi.txt BMI_1KG
+gunzip bmi.tsv.gz > BMI_1KG
 # modify fmp.ini to use the 1KG panel
 fmp.sh BMI_1KG
 ```
@@ -125,11 +125,13 @@ and the results will be in `BMI_1KG.out`.
 Assuming an HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
 ```bash
 # st.bed
-echo "chr start end rsid pos r" > st.bed
-grep -w -f 97.snps snp150.txt | \
-sort -k1,1n -k2,2n | \
-awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}' >> st.bed
-ln -s bmi.txt BMI_HRC
+(
+  echo "chr start end rsid pos r"
+  grep -w -f 97.snps snp150.txt | \
+  sort -k1,1n -k2,2n | \
+  awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
+) > st.bed
+gunzip -c bmi.tsv.gz > BMI_HRC
 # modify fmp.ini to use the HRC panel
 # export GEN_location=/scratch/tempjhz22/LDcalc/HRC
 fmp.sh BMI_HRC
