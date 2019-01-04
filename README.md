@@ -115,9 +115,9 @@ Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao
   awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
 ) > st.bed
 ```
-Note the change in rsid from build 36 to build 37.
+Note rs12016871 in build 36 became rs9581854 in build 37.
 
-We can also use approximately indepdent LD blocks
+We can also use approximately independent LD blocks
 ```bash
 # dummy rsid and pos in this case
 awk '{
