@@ -139,7 +139,7 @@ sed 's/chr//g' | \
   awk '$5!="."{print $1,$2,$3,$8,$9,$4}'
 ) > st.bed
 ```
-Note rs12016871 in build 36 became rs9581854 in build 37. If we do not use approximately independent LD blocks, we could use a space-delimited, alphanumerically numbered chromsome (i.e., 1 instead of chr1, etc.) version of 1.bed as st.bed.
+Note rs12016871 in build 36 became rs9581854 in build 37. If we do not use approximately independent LD blocks, we could use a space-delimited version of 1.bed with alphanumerically numbered chromsome names (i.e., 1 instead of chr1, etc.) as st.bed.
 
 We then proceed with
 ```bash
