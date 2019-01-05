@@ -138,11 +138,11 @@ Note rs12016871 in build 36 became rs9581854 in build 37. Should we not use appr
 
 We then proceed with
 ```bash
-gunzip bmi.tsv.gz > BMI_1KG
+gunzip bmi.tsv.gz > BMI
 # modify fmp.ini to use the 1KG panel
-fmp.sh BMI_1KG
+fmp.sh BMI
 ```
-and the results will be in `BMI_1KG.out`.
+and the results will be in `BMI.out`.
 
 ## ADDITIONAL TOPICS
 
