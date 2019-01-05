@@ -104,7 +104,18 @@ It is helpful to examine directions of effects together with their correlation w
 
 ## EXAMPLE
 
-Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao/SUMSTATS. From the 97 SNPs, a st.bed is generated as follows,
+### --- GWAS summary statistics ---
+
+Files `bmi.tsv.gz` is described in SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS.
+
+### --- 1000Genomes panel ---
+
+This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
+[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required LD-blocks.
+
+### --- The lead SNPs ---
+
+From the 97 SNPs described in the SUMSTATS repository, a st.bed is generated as follows,
 ```bash
 # st.bed
 (
@@ -113,7 +124,7 @@ Files `bmi.tsv.gz` and `97.snps` are described in https://github.com/jinghuazhao
   grep -w -f 97.snps snp150.txt | \
   sort -k1,1n -k2,2n | \
   awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
-) > st.bed
+) > 97.bed
 ```
 Note rs12016871 in build 36 became rs9581854 in build 37.
 
@@ -123,13 +134,10 @@ We can also use approximately independent LD blocks
 awk '{
   gsub(/chr|region/,"",$0);
   if(NR==1) print "chr","start","end","rsid","pos","region"; else print $1,$2,$3,"top","pos",$4
-}' 1KG/EUR.bed > st.bed
+}' 1KG/EUR.bed > ld.bed
 ```
 
-### --- 1000Genomes panel ---
-
-This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required LD-blocks. A counterpart for the 97 regions above can also be generated.
+As this involves over a thousand blocks, it is desirable to intesect the two.
 
 We then proceed with
 ```bash
@@ -138,17 +146,6 @@ gunzip bmi.tsv.gz > BMI_1KG
 fmp.sh BMI_1KG
 ```
 and the results will be in `BMI_1KG.out`.
-
-### --- HRC panel ---
-
-Assuming an HRC panel is ready, file `97.snps` is used to build `st.bed` and the analysis proceeds as follows,
-```bash
-gunzip -c bmi.tsv.gz > BMI_HRC
-# modify fmp.ini to use the HRC panel
-# export GEN_location=/scratch/tempjhz22/LDcalc/HRC
-fmp.sh BMI_HRC
-```
-and the results will be in `BMI_HRC.out`.
 
 ## ADDITIONAL TOPICS
 
