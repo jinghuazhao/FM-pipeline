@@ -126,9 +126,7 @@ From the 97 SNPs described in the SUMSTATS repository, a 97.bed is generated as 
   awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
 ) > 97.bed
 ```
-Note rs12016871 in build 36 became rs9581854 in build 37.
-
-We can also use approximately independent LD blocks
+Note rs12016871 in build 36 became rs9581854 in build 37. We next use approximately independent LD blocks
 ```bash
 # dummy rsid and pos in this case
 awk '{
@@ -136,7 +134,7 @@ awk '{
   if(NR==1) print "chr","start","end","rsid","pos","region"; else print $1,$2,$3,"top","pos",$4
 }' 1KG/EUR.bed > ld.bed
 ```
-Wee can then intersect the two bed files for st.bed.
+The two bed files are then then intersected for the much desired st.bed.
 
 We then proceed with
 ```bash
