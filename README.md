@@ -89,7 +89,7 @@ a sequence number of region.
 
 ## Outputs
 
-The output will involve counterpart(s) from individual software, i.e., .set/post, caviarbf, .snp/.config, .jam/.top
+The output will involve counterpart(s) from individual software, i.e., .set/post, caviarbf, .snp/.config/.cred, .jam/.top/.cs
 
 **Software** | **Output type** | **Description**
 ---------|---------------------|--------------------------------------------------------------
