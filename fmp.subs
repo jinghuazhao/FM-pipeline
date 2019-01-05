@@ -42,8 +42,8 @@ plink-1.9 --bfile work/$f --extract $f.inc \
 if [ $LD_MAGIC -eq 1 ]; then
    gunzip -c work/$f.gen.gz | \
    awk -f $FM_location/files/order.awk chr=${1} > work/$f.ord
-   qctool_v2.0 -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype gen -og work/$f.magic.gen \
-               -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome
+   qctool -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype gen -og work/$f.magic.gen \
+          -threads $threads -threshhold 0.9 -log $f.log -omit-chromosome
    awk -f $FM_location/files/info.awk c=2 work/$f.info > work/$f.magic.info
    gzip -f work/$f.magic.gen
    Rscript --vanilla $FM_location/files/computeCorrelationsImpute2forFINEMAP.r \
