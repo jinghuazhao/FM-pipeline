@@ -125,17 +125,11 @@ From the 97 SNPs described in the SUMSTATS repository, the [st.bed](st.bed) is g
   sort -k1,1n -k2,2n | \
   awk -vOFS="\t" '{print "chr" $1,$2-1,$2,$3,$2,NR}'
 ) > 1.bed
-# approximately independent LD blocks
-awk -vOFS="\t" '{
-  gsub(/chr|region/,"",$0);
-  if(NR==1) print "chrom","start","end","region";
-  else print "chr" $1,$2,$3,$4
-}' 1KG/EUR.bed > 2.bed
-# interset
-bedtools intersect -a 2.bed -b 1.bed -loj | \
-sed 's/chr//g' | \
+# intersect with approximately independent LD blocks
+bedtools intersect -a 1KG/EUR.bed -b 1.bed -loj | \
+sed 's/chr//g;s/region//g' | \
 (
-  echo -e "chr start end rsid pos r"
+  echo "chr start end rsid pos r"
   awk '$5!="."{print $1,$2,$3,$8,$9,$4}'
 ) > st.bed
 ```
