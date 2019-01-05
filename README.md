@@ -63,7 +63,7 @@ bash fmp.sh <input>
 
 ### --- GWAS summary statistics ---
 
-The input will be GWAS summary statistics described at https://github.com/jinghuazhao/SUMSTATS, in line with joint/conditional analysis by GCTA involving chromosomal positions.
+The input will be GWAS summary statistics described at the SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS, in line with joint/conditional analysis by GCTA involving chromosomal positions.
 
 ### --- Reference panel ---
 
@@ -106,7 +106,7 @@ It is helpful to examine directions of effects together with their correlation w
 
 ### --- GWAS summary statistics ---
 
-Files `bmi.tsv.gz` is described in SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS.
+File `bmi.tsv.gz` is described in the SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS.
 
 ### --- 1000Genomes panel ---
 
