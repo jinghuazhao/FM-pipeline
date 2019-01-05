@@ -110,12 +110,12 @@ File `bmi.tsv.gz` is described in the SUMSTATS repository, https://github.com/ji
 
 ### --- 1000Genomes panel ---
 
-This is available as [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[1KG.sh](1KG/1KG.sh) to generate `SNPinfo.dta.gz` and [st.do](1KG/st.do) to generate the script [Extract.sh](1KG/Extract.sh) for the required LD-blocks.
+The approximately independent LD blocks are available from [1KG/LD-blocks](1KG/LD-blocks), derived from [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
+[1KG.sh](1KG/1KG.sh) for `SNPinfo.dta.gz` and [st.do](1KG/st.do) for script [Extract.sh](1KG/Extract.sh).
 
 ### --- The lead SNPs ---
 
-From the 97 SNPs described in the SUMSTATS repository, a st.bed is generated as follows,
+From the 97 SNPs described in the SUMSTATS repository, a 97.bed is generated as follows,
 ```bash
 # st.bed
 (
@@ -136,8 +136,7 @@ awk '{
   if(NR==1) print "chr","start","end","rsid","pos","region"; else print $1,$2,$3,"top","pos",$4
 }' 1KG/EUR.bed > ld.bed
 ```
-
-As this involves over a thousand blocks, it is desirable to intesect the two.
+Wee can then intersect the two bed files for st.bed.
 
 We then proceed with
 ```bash
