@@ -115,7 +115,7 @@ The approximately independent LD blocks are available from [1KG/LD-blocks](1KG/L
 
 ### --- The lead SNPs ---
 
-From the 97 SNPs described in the SUMSTATS repository, a st.bed is generated as follows,
+From the 97 SNPs described in the SUMSTATS repository, the [st.bed](st.bed) is generated as follows,
 ```bash
 # 97 SNPs
 (
@@ -139,7 +139,7 @@ sed 's/chr//g' | \
   awk '$5!="."{print $1,$2,$3,$8,$9,$4}'
 ) > st.bed
 ```
-Note rs12016871 in build 36 became rs9581854 in build 37. If we do not use approximately independent LD blocks, we could use a space-delimited version of 1.bed as st.bed.
+Note rs12016871 in build 36 became rs9581854 in build 37. If we do not use approximately independent LD blocks, we could use a space-delimited, alphanumerically numbered chromsome (i.e., 1 instead of chr1, etc.) version of 1.bed as st.bed.
 
 We then proceed with
 ```bash
