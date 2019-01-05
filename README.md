@@ -115,26 +115,31 @@ The approximately independent LD blocks are available from [1KG/LD-blocks](1KG/L
 
 ### --- The lead SNPs ---
 
-From the 97 SNPs described in the SUMSTATS repository, a 97.bed is generated as follows,
+From the 97 SNPs described in the SUMSTATS repository, a st.bed is generated as follows,
 ```bash
-# st.bed
+# 97 SNPs
 (
-  echo "chr start end rsid pos r"
+  echo -e "chrom\tstart\tend\trsid\tpos\tr"
   sed -i 's/rs12016871/rs9581854/g' 97.snps
   grep -w -f 97.snps snp150.txt | \
   sort -k1,1n -k2,2n | \
-  awk -vflanking=250000 '{print $1,$2-flanking,$2+flanking,$3,$2,NR}'
-) > 97.bed
-```
-Note rs12016871 in build 36 became rs9581854 in build 37. We next use approximately independent LD blocks
-```bash
-# dummy rsid and pos in this case
-awk '{
+  awk -vOFS="\t" '{print "chr" $1,$2-1,$2,$3,$2,NR}'
+) > 1.bed
+# approximately independent LD blocks
+awk -vOFS="\t" '{
   gsub(/chr|region/,"",$0);
-  if(NR==1) print "chr","start","end","rsid","pos","region"; else print $1,$2,$3,"top","pos",$4
-}' 1KG/EUR.bed > ld.bed
+  if(NR==1) print "chrom","start","end","region";
+  else print "chr" $1,$2,$3,$4
+}' 1KG/EUR.bed > 2.bed
+# interset
+bedtools intersect -a 2.bed -b 1.bed -loj | \
+sed 's/chr//g' | \
+(
+  echo -e "chr start end rsid pos r"
+  awk '$5!="."{print $1,$2,$3,$8,$9,$4}'
+) > st.bed
 ```
-The two bed files are then then intersected for the much desired st.bed.
+Note rs12016871 in build 36 became rs9581854 in build 37. If we do not use approximately independent LD blocks, we could use a space-delimited version of 1.bed as st.bed.
 
 We then proceed with
 ```bash
