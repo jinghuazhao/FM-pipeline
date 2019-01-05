@@ -1,5 +1,5 @@
 #!/bin/bash
-# 4-1-2019 JHZ
+# 5-1-2019 JHZ
 
 export f=chr${1}_${2}_${3}
 
@@ -116,7 +116,7 @@ if [ $GCTA -eq 1 ]; then
    echo "--> GCTA"
    awk -f $FM_location/files/info.awk c=1 chr=${1} $GEN_location/$f.info | \
    sort -k2,2 > $f.tmp
-   sort -k2,2 $GEN_location/$f.bim | \
+   sort -k2,2 work/$f.bim | \
    join -j2 $f.tmp - | \
    awk -vOFS="\t" "{print \$7,\$6,0,\$2,\$10,\$11,\$9}" > ${f}_map
    sort -k4,4 ${f}_map | \
