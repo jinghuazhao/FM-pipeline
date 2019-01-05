@@ -1,4 +1,4 @@
-# 26-10-2018 MRC-Epid JHZ
+# 5-1-2019 MRC-Epid JHZ
 
 git add .gitignore
 git commit -m "Don't process these"
@@ -10,7 +10,7 @@ git add fmp.sh fmp.subs
 git commit -m "main program"
 git add gcta-slct.sh gcta-slct.ini
 git commit -m "GCTA conditional/joint analysis"
-git add 1KG
+git add 1KG st.bed
 git commit -m "1000 Genomes reference panel"
 git add README.*
 git commit -m "README"
