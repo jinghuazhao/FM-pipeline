@@ -117,7 +117,7 @@ The approximately independent LD blocks are available from [1KG/LD-blocks](1KG/L
 
 From the 97 SNPs described in the SUMSTATS repository, the [st.bed](st.bed) is generated as follows,
 ```bash
-# 97 SNPs
+# 97 SNPs intersect with approximately independent LD blocks
 (
   echo -e "chrom\tstart\tend\trsid\tpos\tr"
   sed -i 's/rs12016871/rs9581854/g' 97.snps
@@ -126,7 +126,6 @@ From the 97 SNPs described in the SUMSTATS repository, the [st.bed](st.bed) is g
   awk -vOFS="\t" '{print "chr" $1,$2-1,$2,$3,$2,NR}'
 # awk -vflanking=250000 '{l=$2-flanking;u=$2+flanking;if(l<0) l=0;print $1,l,u,$3,$2,NR}'
 ) | \
-# intersect with approximately independent LD blocks
 bedtools intersect -a 1KG/EUR.bed -b - -loj | \
 sed 's/chr//g;s/region//g' | \
 (
