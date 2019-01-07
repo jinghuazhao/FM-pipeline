@@ -84,8 +84,8 @@ We may also work on a text version for instance SNPinfo.txt.
 ### --- The lead SNPs ---
 
 The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
-over different builds. An auxiliary file called `st.bed` contains chr, start, end, rsid, pos, r corresponding to the lead SNPs specified and r is
-a sequence number of region. 
+over different builds. An auxiliary file called `st.bed` contains chr, start, end, rsid, pos, r, p corresponding to the lead SNPs specified and r is
+a sequence number of region while p is a phenotype for GWASs involving multiple phenotyps such as different proteins. 
 
 ## Outputs
 
