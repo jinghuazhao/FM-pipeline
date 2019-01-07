@@ -125,16 +125,16 @@ From the 97 SNPs described in the SUMSTATS repository, the [st.bed](st.bed) is g
   sort -k1,1n -k2,2n | \
   awk -vOFS="\t" '{print "chr" $1,$2-1,$2,$3,$2,NR}'
 # awk -vflanking=250000 '{l=$2-flanking;u=$2+flanking;if(l<0) l=0;print $1,l,u,$3,$2,NR}'
-) > 1.bed
+) | \
 # intersect with approximately independent LD blocks
-bedtools intersect -a 1KG/EUR.bed -b 1.bed -loj | \
+bedtools intersect -a 1KG/EUR.bed -b - -loj | \
 sed 's/chr//g;s/region//g' | \
 (
   echo "chr start end rsid pos r"
   awk '$5!="."{print $1,$2,$3,$8,$9,$4}'
 ) > st.bed
 ```
-Note rs12016871 in build 36 became rs9581854 in build 37. Should we not use approximately independent LD blocks, we would use a flanking region around each SNP in a space-delimited version of 1.bed with alphanumerically numbered chromsome names (i.e., 1 instead of chr1, etc.) as st.bed.
+Note rs12016871 in build 36 became rs9581854 in build 37. Should we not use approximately independent LD blocks, we would use a flanking region around each SNP in a space-delimited version with alphanumerically numbered chromsome names (i.e., 1 instead of chr1, etc.) as st.bed.
 
 We then proceed with
 ```bash
