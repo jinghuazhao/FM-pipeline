@@ -17,6 +17,8 @@ The process involves the following steps,
 
 The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
 
+It is common to use PLINK and GCTA for identification of independent variants. Although this pipeline focuses on regional association, these vehicles would offer corroborative information on the regional level alike, especially when approximately independent LD blocks are used.
+
 Information on whole-genome analysis, which could be used to set up the regions, are described at the [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki).
 Clumping using PLINK is also included analogous to those used in depict (e.g. description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
 
