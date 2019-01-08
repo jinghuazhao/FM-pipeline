@@ -1,5 +1,5 @@
-#!/genetics/data/software/bin/Rscript --vanilla
-# 21-1-2018 MRC-Epid JHZ
+#!/scratch/jhz22/bin/Rscript --vanilla
+# 8-1-2019 MRC-Epid JHZ
 
 options(scipen=20,width=200)
 getCredibleSNP <- function(snp, logProb, threshold=0.99)
