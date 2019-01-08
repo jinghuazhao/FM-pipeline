@@ -1,5 +1,5 @@
 #!/bin/bash
-# 4-1-2019 JHZ
+# 8-1-2019 JHZ
 
 ## SETTINGS
 
@@ -25,6 +25,7 @@ export rt=$dir/$(basename $args)
 echo "--> $rt.input, st.bed"
 awk '{$2=toupper($2);$3=toupper($3)};1' $args > $rt.input
 if [ $clumping -eq 1 ]; then
+   echo "--> $rt.tab"
    awk '
    {
       if (NR==1) print "snpid", "P"
