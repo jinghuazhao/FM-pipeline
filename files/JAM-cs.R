@@ -1,4 +1,4 @@
-# 9-2-2018 MRC-Epid JHZ
+# 9-1-2019 MRC-Epid JHZ
 
 options(scipen=20, width=200)
 
@@ -8,7 +8,7 @@ stbed <- read.table("st.bed",as.is=TRUE,header=TRUE)
 for(i in seq(nrow(stbed)))
 {
   r <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3])
-  f <- paste0(r,"p.cs")
+  f <- paste0(r,".cs")
   if(file.exists(f))
   {
     t <- read.table(f,as.is=TRUE,header=TRUE)
