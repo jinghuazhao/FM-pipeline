@@ -135,7 +135,7 @@ sed 's/chr//g;s/region//g' | \
   awk '$5!="."{print $1,$2,$3,$8,$9,$4}'
 ) > st.bed
 ```
-Note rs12016871 in build 36 became rs9581854 in build 37 and a recent version of bedtools is required to recoggnise standard input. Should we not use approximately independent LD blocks, we would use a flanking region around each SNP in a space-delimited version with alphanumerically numbered chromsome names (i.e., 1 instead of chr1, etc.) as st.bed.
+Note rs12016871 in build 36 became rs9581854 in build 37 and a recent version of bedtools is required to recoggnise standard input. Should we not use approximately independent LD blocks, we would use a flanking region around each SNP as st.bed.
 
 We then proceed with
 ```bash
