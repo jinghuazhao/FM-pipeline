@@ -120,9 +120,9 @@ The approximately independent LD blocks are available from [1KG/LD-blocks](1KG/L
 From the 97 SNPs described in the SUMSTATS repository, the [st.bed](st.bed) is generated as follows,
 ```bash
 # 97 SNPs in approximately independent LD blocks
+sed -i 's/rs12016871/rs9581854/g' 97.snps
 (
   echo -e "chrom\tstart\tend\trsid\tpos\tr"
-  sed -i 's/rs12016871/rs9581854/g' 97.snps
   grep -w -f 97.snps snp150.txt | \
   sort -k1,1n -k2,2n | \
   awk -vOFS="\t" '{print "chr" $1,$2-1,$2,$3,$2,NR}'
