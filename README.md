@@ -158,11 +158,12 @@ Credible sets are often described, see https://github.com/statgen/gwas-credible-
 
 ## ACKNOWLEDGEMENTS
 
-The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in the 
-Physalia course `Practical GWAS Using Linux and R` are greatly appreciated. In particular, the [utility program in Stata](files/st.do) was adapted from 
-[p0.do](files/p0.do) (which is still used when LD_MAGIC is enabled) originally written by Dr Jian'an Luan and 
-[computeCorrelationsImpute2forFINEMAP.r](files/computeCorrelationsImpute2forFINEMAP.r) by Ji Chen from the MAGIC consortium who also provides code calculating the 
-credible set based on finemap configurations. Earlier version of the pipeline also used [GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html).
+The work was motivated by finemapping analysis at the MRC Epidemiology Unit and inputs from authors of GCTA, finemap, JAM, FM-summary as with participants in 
+the Physalia course `Practical GWAS Using Linux and R` are greatly appreciated. In particular, [st.do](files/st.do) was adapted from [p0.do](files/p0.do) 
+(which is still used when LD_MAGIC is enabled) originally written by Dr Jian'an Luan and 
+[computeCorrelationsImpute2forFINEMAP.r](files/computeCorrelationsImpute2forFINEMAP.r) by Ji Chen from the MAGIC consortium who also provides code calculating 
+the credible set based on finemap configurations. Earlier version of the pipeline also used 
+[GTOOL](http://www.well.ox.ac.uk/%7Ecfreeman/software/gwas/gtool.html).
 
 ## SOFTWARE AND REFERENCES
 
