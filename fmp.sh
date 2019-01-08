@@ -44,7 +44,7 @@ fi
 ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
-awk 'NR==10' st.bed | \
+awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' \
          --env FM_location \
          --env GEN_location  \

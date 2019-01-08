@@ -8,7 +8,12 @@ if [ ! -d work ]; then mkdir work; fi
 gunzip -c $GEN_location/$f.gen.gz | \
 awk -f $FM_location/files/order.awk chr=${1} > work/$f.ord
 qctool -filetype gen -g work/$f.ord -s ${sample_file} -ofiletype binary_ped -og work/$f \
-       -threads $threads -threshold 0.9 -log $f.log -assume-chromosome ${1}
+       -excl-range 1:48227413-52227412 2:86146489-101133568 2:183291755-190291755 \
+                   3:47524996-50024996 3:83417310-86917310 5:44464243-50464243 5:128972101-131972101 \
+                   6:25392021-33392022 6:56892041-63942041 6:139958307-142458307 7:55032506-66362565 \
+                   8:7962590-11962591 8:42880843-49837447 8:111930824-114930824 10:36959994-43679994 \
+                   11:87860352-90860352 12:33108733-41713733 20:32536339-35066586 \
+       -threshold 0.9 -log $f.log -assume-chromosome ${1}
 
 echo "--> region-specific data"
 awk "(\$9==chr && \$10 >= l && \$10 <= u){if(\$2<\$3) {a1=\$2; a2=\$3;} else {a1=\$3; a2=\$2};\
