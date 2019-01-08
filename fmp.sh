@@ -24,10 +24,26 @@ ln -sf $wd/$args
 export rt=$dir/$(basename $args)
 echo "--> $rt.input, st.bed"
 awk '{$2=toupper($2);$3=toupper($3)};1' $args > $rt.input
+if [ $clumping -eq 1 ]; then
+   awk '
+   {
+      if (NR==1) print "snpid", "P"
+      chr=$9;
+      pos=$10;
+      a1=$2;
+      a2=$3;
+      if (a1>a2) {
+         snpid=chr ":" pos "_" a2 "_" a1;
+      } else {
+         snpid=chr ":" pos "_" a1 "_" a2;
+      }
+      print snpid, $7
+   }' OFS='\t' $rt.input > $rt.tab
+fi
 ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
-awk 'NR==2' st.bed | \
+awk 'NR==10' st.bed | \
 parallel -j${threads} -C' ' \
          --env FM_location \
          --env GEN_location  \

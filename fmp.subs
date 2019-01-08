@@ -1,5 +1,5 @@
 #!/bin/bash
-# 5-1-2019 JHZ
+# 8-1-2019 JHZ
 
 export f=chr${1}_${2}_${3}
 
@@ -24,7 +24,7 @@ cut -d" " -f10,11 $f.r > $f.rsid
 cut -d" " -f11,12 $f.r > $f.z
 (
   awk "BEGIN{print \"rsid\",\"chromosome\",\"position\",\"allele1\",\"allele2\",\"maf\",\"beta\",\"se\"}"
-  awk "{if(\$5>0.5) \$5=1-\$5; print \$11,\$1,\$2,\$3,\$4,\$5,\$6,\$7}" $f.r
+  awk -veps=0.00001 "{if(\$5==\"NA\") \$5=eps; if(\$5>0.5) \$5=1-\$5; print \$11,\$1,\$2,\$3,\$4,\$5,\$6,\$7}" $f.r
 ) > $f.fm.z
 awk "{print \$1}" $f.incl > $f.inc
 awk "{print \$1,\$4,\$3,\$15,\$16}" $f.incl > $f.a
@@ -79,21 +79,9 @@ fi
 
 if [ $clumping -eq 1 ]; then
    echo "--> clumping"
-   awk "
-   {
-      if (NR==1) print "snpid", "P"
-      chr=$9;
-      pos=$10;
-      a1=$2;
-      a2=$3;
-      if (a1>a2) {
-         snpid=chr \":\" pos \"_\" a2 \"_\" a1;
-      } else {
-         snpid=chr \":\" pos \"_\" a1 \"_\" a2;
-      }
-      print snpid, $7
-   }" OFS="\t" $rt.input > $rt.tab
-   plink-1.9 --bfile $f --clump $f.tab \
+   plink-1.9 --bfile $f \
+             --clump $rt.tab \
+             --chr ${1} --from-bp ${2} --to-bp ${3} \
              --clump-field P \
              --clump-kb 500 \
              --clump-p1 5e-08 \
@@ -156,7 +144,8 @@ if [ $LocusZoom -eq 1 ]; then
    echo "--> LocusZoom"
    awk -v OFS="\t" "{if(NR==1) print \"MarkerName\",\"P-value\",\"Weight\"; print \$10,\$8,\$9}" $f.r > $f.lz
    rm -f ld_cache.db
-   locuszoom-1.4 --source 1000G_Nov2014 --build hg19 --pop EUR --metal $f.lz --plotonly --chr ${1} --start ${2} --end ${3} --no-date --rundir .
+   locuszoom-1.4 --source 1000G_Nov2014 --build hg19 --pop EUR --metal $f.lz --plotonly \
+                 --chr ${1} --start ${2} --end ${3} --no-date --rundir .
    pdftopng chr${1}_${2}-${3}.pdf -r 300 ${5}
    R -q --no-save < ${FM_location}/files/lz.R > lz.log
 fi
