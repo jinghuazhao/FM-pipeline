@@ -4,7 +4,7 @@ options(scipen=20, width=200)
 
 # collate all Credible sets
 cs <- data.frame()
-wd <- Sys.netenv("wd")
+wd <- Sys.getenv("wd")
 stbed <- read.table(file.path(wd,"st.bed"),as.is=TRUE,header=TRUE)
 for(i in seq(nrow(stbed)))
 {
