@@ -5,7 +5,7 @@ options(scipen=20, width=200)
 # collate all Credible sets
 cs <- data.frame()
 wd <- Sys.netenv("wd")
-stbed <- read.table(paste(wd,"st.bed",sep="/"),as.is=TRUE,header=TRUE)
+stbed <- read.table(file.path(wd,"st.bed"),as.is=TRUE,header=TRUE)
 for(i in seq(nrow(stbed)))
 {
   r <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3])

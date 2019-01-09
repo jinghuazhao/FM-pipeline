@@ -26,7 +26,7 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
   writeDataTable(wb, "gcta-cs", gcta_cs[ord,])
   saveWorkbook(wb, file=xlsx, overwrite=TRUE)
   wd <- Sys.getenv("wd")
-  stbed <- read.table(paste(wd,"st.bed",sep="/"),as.is=TRUE,header=TRUE)
+  stbed <- read.table(file.path(wd,"st.bed"),as.is=TRUE,header=TRUE)
   require(qpcR)
   for(i in seq(nrow(stbed)))
   {

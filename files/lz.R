@@ -7,7 +7,7 @@ xlsx <- "lz.xlsx"
 unlink(xlsx, recursive = FALSE, force = TRUE)
 wb <- createWorkbook(xlsx)
 wd <- Sys.getenv("wd")
-bed <- read.table(paste(wd,"st.bed",sep="/"), as.is=TRUE, header=TRUE)
+bed <- read.table(file.path(wd,"st.bed"), as.is=TRUE, header=TRUE)
 for(r in 1:nrow(bed))
 {
    rsid <- with(bed, rsid)[r]
