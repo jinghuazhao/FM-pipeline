@@ -1,11 +1,11 @@
-# 10-1-2019 MRC-Epid JHZ
+# 9-1-2019 MRC-Epid JHZ
 
 options(scipen=20, width=200)
 
 # collate all Credible sets
 cs <- data.frame()
-d <- Sys.netenv("dir")
-stbed <- read.table(paste(d,"st.bed",sep="/"),as.is=TRUE,header=TRUE)
+wd <- Sys.netenv("wd")
+stbed <- read.table(paste(wd,"st.bed",sep="/"),as.is=TRUE,header=TRUE)
 for(i in seq(nrow(stbed)))
 {
   r <- paste0("chr",stbed[i,1],"_",stbed[i,2],"_",stbed[i,3])

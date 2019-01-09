@@ -1,4 +1,4 @@
-# 10-1-2019 MRC-Epid JHZ
+# 9-1-2019 MRC-Epid JHZ
 
 options(digits=3, scipen=20, width=200)
 
@@ -6,8 +6,8 @@ library(openxlsx)
 xlsx <- "lz.xlsx"
 unlink(xlsx, recursive = FALSE, force = TRUE)
 wb <- createWorkbook(xlsx)
-d <- Sys.getenv("dir")
-bed <- read.table(paste(d,"st.bed",sep="/"), as.is=TRUE, header=TRUE)
+wd <- Sys.getenv("wd")
+bed <- read.table(paste(wd,"st.bed",sep="/"), as.is=TRUE, header=TRUE)
 for(r in 1:nrow(bed))
 {
    rsid <- with(bed, rsid)[r]

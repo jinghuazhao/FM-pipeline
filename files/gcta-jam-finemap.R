@@ -1,4 +1,4 @@
-# 10-1-2019 MRC-Epid JHZ
+# 9-1-2019 MRC-Epid JHZ
 
 options(scipen=20, width=200, rgl.useNULL=TRUE)
 
@@ -25,8 +25,8 @@ if(file.exists("gcta-slct.csv")&file.exists("jam.cs"))
   addWorksheet(wb, "gcta-cs")
   writeDataTable(wb, "gcta-cs", gcta_cs[ord,])
   saveWorkbook(wb, file=xlsx, overwrite=TRUE)
-  d <- Sys.getenv("dir")
-  stbed <- read.table(paste(d,"st.bed",sep="/"),as.is=TRUE,header=TRUE)
+  wd <- Sys.getenv("wd")
+  stbed <- read.table(paste(wd,"st.bed",sep="/"),as.is=TRUE,header=TRUE)
   require(qpcR)
   for(i in seq(nrow(stbed)))
   {
