@@ -77,9 +77,6 @@ if(n.sel[1]>0&n.sel[1]!=n.snps)
    t <- cbind(subset(ssr,ssnpid%in%selected), PostProb_model, subset(pst,rownames(pst)%in%selected))
    write.table(t,paste0(fp,".sel"),row.names=FALSE,quote=FALSE)
 }
-png(paste0(fp,".png"), units = 'in', width=18, height=12, res=300)
-ManhattanPlot(j)
-dev.off()
 
 xlsx <- paste0(fp,".xlsx")
 wb <- createWorkbook(xlsx)
@@ -96,8 +93,6 @@ addWorksheet(wb, "ModelSizeBayesFactors")
 writeDataTable(wb, "ModelSizeBayesFactors", as.data.frame(msbf))
 addWorksheet(wb, "posterior.summary.table")
 writeDataTable(wb, "posterior.summary.table", cbind(ID=rownames(pst), as.data.frame(pst)))
-addWorksheet(wb, "Manhattan.plot")
-insertImage(wb, "Manhattan.plot", paste0(fp, ".png"), width=18, height=12)
 saveWorkbook(wb, file=xlsx, overwrite=TRUE)
 
 # obsolete as it only deals with complete data
