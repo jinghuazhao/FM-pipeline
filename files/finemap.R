@@ -1,4 +1,4 @@
-# 4-1-2019 JHZ
+# 9-1-2019 JHZ
 
 options(digits=3, scipen=20, width=500)
 
@@ -16,7 +16,7 @@ chk <- cbind(z[id, ], with(subset(snp,index%in%id), c(prob,log10bf)), ld[id, id]
 chk
 
 library(openxlsx)
-xlsx <- paste0(f, ".xlsx")
+xlsx <- file.path(f, "-finemap.xlsx")
 unlink(xlsx, recursive = FALSE, force = TRUE)
 wb <- createWorkbook(xlsx)
 addWorksheet(wb, paste0(f, ".snp"))

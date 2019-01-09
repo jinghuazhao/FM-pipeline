@@ -78,7 +78,7 @@ if(n.sel[1]>0&n.sel[1]!=n.snps)
    write.table(t,paste0(fp,".sel"),row.names=FALSE,quote=FALSE)
 }
 
-xlsx <- paste0(fp,".xlsx")
+xlsx <- file.path(fp,"-JAM.xlsx")
 wb <- createWorkbook(xlsx)
 addWorksheet(wb, "ID")
 writeDataTable(wb, "ID", ssr)
