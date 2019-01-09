@@ -1,5 +1,5 @@
 #!/bin/bash
-# 8-1-2019 JHZ
+# 9-1-2019 JHZ
 
 ## SETTINGS
 
@@ -46,6 +46,7 @@ ln -sf $wd/st.bed
 echo "--> region-specific finemapping"
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' \
+         --env wd \
          --env FM_location \
          --env GEN_location  \
          --env CAVIAR \
