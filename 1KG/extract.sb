@@ -1,0 +1,16 @@
+#!/bin/bash --login
+
+#SBATCH -J extract
+#SBATCH -o extract_%A_%a.log
+#SBATCH -a 1-1703
+#SBATCH -t 3:0
+#SBATCH -p short
+
+export id=$SLURM_ARRAY_TASK_ID
+
+grep -w region${id} $HOME/FM-pipeline/1KG/EUR.bed | \
+sed 's/chr//g' > region-$id
+read chr start end region < region-$id
+qctool -filetype gen -g chr${chr}.gen.gz -ofiletype gen -incl-range ${chr}:${start}-${end} -og chr${chr}_${start}_${end}.gen -omit-chromosome -sort
+gzip -f chr${chr}_${start}_${end}.gen
+rm region-$id

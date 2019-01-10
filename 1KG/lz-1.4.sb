@@ -1,0 +1,31 @@
+#!/bin/bash --login
+
+#SBATCH -J lz-1.4
+#SBATCH -o lz-1.4_%A_%a.log
+#SBATCH -a 1-22
+#SBATCH -t 1-0:0
+#SBATCH -p medium
+
+export chr=$SLURM_ARRAY_TASK_ID
+export EUR=/scratch/jhz22/locuszoom_1.4/data/1000G/genotypes/2017-04-10/EUR
+
+echo "--> 1000Genomes reference data for $chr"
+
+plink --bfile $EUR/chr${chr} --recode vcf bgz --out chr${chr}
+bcftools annotate --set-id "chr%CHROM\:%POS\_%REF\_%ALT" chr${chr}.vcf.gz -O z -o 1KG-${chr}.vcf.gz
+tabix -f -p vcf chr${chr}.vcf.gz
+plink --vcf 1KG-${chr}.vcf.gz --list-duplicate-vars require-same-ref -out 1KG-${chr}
+awk 'NR>1{split($NF,dupids," ");print dupids[1]}' 1KG-${chr}.dupvar > 1KG-${chr}.dupid
+plink --vcf 1KG-${chr}.vcf.gz --exclude 1KG-${chr}.dupid --make-bed --out nodup-${chr}
+awk -vOFS="\t" '
+{
+    CHR=$1
+    POS=$4
+    a1=$5
+    a2=$6
+    if (a1>a2) snpid="chr" CHR ":" POS "_" a2 "_" a1;
+    else snpid="chr" CHR ":" POS "_" a1 "_" a2
+    print snpid, $2
+}' nodup-${chr}.bim > nodup-${chr}.snpid
+plink --bfile nodup-${chr} --update-name nodup-${chr}.snpid 1 2 --make-bed --out EUR1KG-${chr}
+qctool -filetype binary_ped -g EUR1KG-${chr}.bed -ofiletype gen -og chr${chr}.gen.gz
