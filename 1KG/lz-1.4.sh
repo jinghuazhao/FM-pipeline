@@ -15,4 +15,6 @@ sbatch --wait $HOME/FM-pipeline/doc/extract.sb
 plink-1.9 --bfile EUR --freq --out EUR
 awk -vOFS="\t" '(NR>1){print $2,$5}' EUR.frq > EUR.dat
 
+export TMPDIR=$HOME/FM-pipeline
+
 stata -b do lz-1.4.do
