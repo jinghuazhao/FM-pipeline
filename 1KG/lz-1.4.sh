@@ -37,6 +37,7 @@ END
 
 // extract GEN file for each LD region in 1000G data
 
+stata <<END
 set more off
 
 gzuse SNPinfo.dta.gz, clear
@@ -63,3 +64,4 @@ forval k=1/22 {
    }
    restore
 }
+END
