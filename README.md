@@ -152,7 +152,7 @@ The [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki) has the followi
 * [Whole-genome conditional/joint analysis](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-conditional-joint-analysis)
 * [Whole genome analysis using approxmiately independent LD blocks](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-analysis-using-approximate-LD-blocks).
 
-The 1000Genomes data above are largely HapMap II SNPs, and a counterpart based on LocusZoom 1.4 and built from [lz-1.4.sh](1KG/lz-1.4.sh) increase the number of SNPs from ~1M to ~22M.
+The 1000Genomes data above are largely HapMap II SNPs, and a counterpart based on LocusZoom 1.4 and built from [lz-1.4.sh](1KG/lz-1.4.sh) increases the number of SNPs from ~1M to ~22M.
 
 ## RELATED LINK
 
