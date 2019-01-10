@@ -1,3 +1,4 @@
+#!/bin/bash
 # 10-1-2019 JHZ
 
 sbatch --wait lz-1.4.sb
