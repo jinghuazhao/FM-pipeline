@@ -2,7 +2,7 @@
 
 set more off
 
-gzuse SNPinfo.dta.gz, clear
+gzuse FUSION.dta.gz, clear
 !rm -f extract.sh
 tempfile f0
 forval k=1/22 {

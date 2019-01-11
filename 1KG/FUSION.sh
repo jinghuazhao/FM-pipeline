@@ -1,4 +1,4 @@
-# 20-7-2018 JHZ
+# 11-1-2019 JHZ
 
 wget -qO- https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2 | tar xfj - --strip-components=1
 seq 22|parallel -j4 -C' ' 'plink-1.9 --bfile 1000G.EUR.{} --recode oxford gen-gz --out chr{}'
@@ -24,5 +24,5 @@ stata <<END
   gen MAC=2*489*maf
   rename FreqA2 exp_freq_a1
   order snpid pos exp_freq_a1 info type
-  gzsave SNPinfo, replace
+  gzsave FUSION, replace
 END
