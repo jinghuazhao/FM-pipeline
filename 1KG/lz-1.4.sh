@@ -10,6 +10,14 @@ qctool -filetype binary_ped -g EUR.bed -ofiletype gen -og EUR.gen.gz
 
 sbatch --wait $HOME/FM-pipeline/1KG/extract.sb
 
+// generate .sample file
+
+(
+  echo "ID_1 ID_2 missing sex phenotype"
+  echo "0 0 0 D B"
+  awk '{print $1,$2,$3,$4,"NA"}' EUR.fam
+) > lz-1.4.sample
+
 // generate .info files
 
 plink-1.9 --bfile EUR --freq --out EUR

@@ -17,14 +17,14 @@ sort chr pos snpid
 gen MAC=2*503*maf
 rename FreqA2 exp_freq_a1
 order snpid pos exp_freq_a1 info type
-gzsave SNPinfo, replace
+gzsave "lz-1.4.dta.gz", replace
 
 // .info
 
 global home: env HOME
 set more off
 
-gzuse SNPinfo.dta.gz, clear
+gzuse "lz-1.4.dta.gz", clear
 tempfile f0
 forval k=1/22 {
    preserve
