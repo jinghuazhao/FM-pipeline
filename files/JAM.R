@@ -1,4 +1,4 @@
-# 9-1-2019 MRC-Epid JHZ
+# 11-1-2019 MRC-Epid JHZ
 
 require(plink2R)
 # require(snpStats)
@@ -78,7 +78,7 @@ if(n.sel[1]>0&n.sel[1]!=n.snps)
    write.table(t,paste0(fp,".sel"),row.names=FALSE,quote=FALSE)
 }
 
-xlsx <- file.path(fp,"-JAM.xlsx")
+xlsx <- paste0(fp,"-JAM.xlsx")
 wb <- createWorkbook(xlsx)
 addWorksheet(wb, "ID")
 writeDataTable(wb, "ID", ssr)
