@@ -1,5 +1,5 @@
 #!/bin/bash
-# 10-1-2019 JHZ
+# 11-1-2019 JHZ
 
 sbatch --wait $HOME/FM-pipeline/doc/lz-1.4.sb
 
@@ -8,7 +8,7 @@ plink --merge-list EUR.list --make-bed --out EUR
 
 qctool -filetype binary_ped -g EUR.bed -ofiletype gen -og EUR.gen.gz 
 
-sbatch --wait $HOME/FM-pipeline/doc/extract.sb
+sbatch --wait $HOME/FM-pipeline/1KG/extract.sb
 
 // generate .info files
 
