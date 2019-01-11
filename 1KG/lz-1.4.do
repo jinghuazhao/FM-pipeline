@@ -1,3 +1,5 @@
+// SNPinfo.dta.gz
+
 insheet rsid FreqA2 using EUR.dat, case
 sort rsid
 gzsave EUR, replace
@@ -17,6 +19,9 @@ rename FreqA2 exp_freq_a1
 order snpid pos exp_freq_a1 info type
 gzsave SNPinfo, replace
 
+// .info
+
+global home: env HOME
 set more off
 
 gzuse SNPinfo.dta.gz, clear
@@ -25,7 +30,7 @@ forval k=1/22 {
    preserve
    keep if chr==`k'
    save `f0', replace
-   import delimited using EUR.bed, asdouble clear
+   import delimited using $home/FM-pipeline/1KG/EUR.bed, asdouble clear
    keep chrom start end
    drop if end<=start
    gen chr=substr(chrom,4,2)
@@ -44,4 +49,3 @@ forval k=1/22 {
    }
    restore
 }
-
