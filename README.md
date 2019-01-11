@@ -73,15 +73,13 @@ The pipeline uses a reference panel in a .gen.gz format, taking into account dir
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
 A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with a sample file. For our own data, [st.do](files/st.do) is
-written to generate such files from their whole chromosome counterpart using SNPinfo.dta.gz which has the following information,
+written to generate such files from their whole chromosome counterpart using a .dta.gz which has the following information,
 
 chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
 ----|--------------|-------------|--------|-----------|----------|------|------|----
  1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
  1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
 ... | ... | ... | ... | ... | ... | ... | ... | ... |
-
-We may also work on a text version for instance SNPinfo.txt.
 
 ### --- The lead SNPs ---
 
@@ -113,7 +111,7 @@ File `bmi.tsv.gz` is described in the SUMSTATS repository, https://github.com/ji
 ### --- 1000Genomes panel ---
 
 The approximately independent LD blocks are available from [1KG/FUSION](1KG/FUSION), derived from [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[1KG.sh](1KG/1KG.sh) for `SNPinfo.dta.gz` and [st.do](1KG/st.do) for script [extract.sh](1KG/extract.sh).
+[FUSION.sh](1KG/FUSION.sh) for `FUSION.dta.gz` and [st.do](1KG/st.do) for script [extract.sh](1KG/extract.sh).
 
 ### --- The lead SNPs ---
 
