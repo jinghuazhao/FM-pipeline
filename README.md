@@ -113,7 +113,7 @@ File `bmi.tsv.gz` is described in the SUMSTATS repository, https://github.com/ji
 ### --- 1000Genomes panel ---
 
 The approximately independent LD blocks are available from [1KG/FUSION](1KG/FUSION), derived from [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[1KG.sh](1KG/1KG.sh) for `SNPinfo.dta.gz` and [st.do](1KG/st.do) for script [Extract.sh](1KG/Extract.sh).
+[1KG.sh](1KG/1KG.sh) for `SNPinfo.dta.gz` and [st.do](1KG/st.do) for script [extract.sh](1KG/extract.sh).
 
 ### --- The lead SNPs ---
 
