@@ -2,11 +2,8 @@
 
 set more off
 
-local F /genetics/bin/FUSION/LDREF
-local T /genetics/bin/FM-pipeline/1KG/LD-blocks
-
-gzuse `F'/SNPinfo.dta.gz, clear
-!rm -f `T'/Extract.sh
+gzuse SNPinfo.dta.gz, clear
+!rm -f extract.sh
 tempfile f0
 forval k=1/22 {
    preserve
@@ -26,11 +23,11 @@ forval k=1/22 {
       local lowr=start[`j']
       local uppr=end[`j']
       local f="chr`k'_`lowr'_`uppr'"
-      outsheet snpid pos exp_freq_a1 info type rsid if pos>=`lowr' & pos<=`uppr' using `T'/`f'.info, names noquote replace nolab delim(" ")
-      !echo -e "/genetics/bin/qctool -g `F'/chr`k'.gen.gz -og `f'.gen -incl-range `lowr'-`uppr' -omit-chromosome -sort;gzip -f `f'.gen" >> `T'/Extract.sh
+      outsheet snpid pos exp_freq_a1 info type rsid if pos>=`lowr' & pos<=`uppr' using `f'.info, names noquote replace nolab delim(" ")
+      !echo -e "qctool -g chr`k'.gen.gz -og `f'.gen -incl-range `lowr'-`uppr' -omit-chromosome -sort;gzip -f `f'.gen" >> extract.sh
    }
    restore
 }
 cd `T'
-!chmod u+x Extract.sh
-!./Extract.sh
+!chmod u+x extract.sh
+!./extract.sh
