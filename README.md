@@ -131,7 +131,7 @@ Note rs12016871 in build 36 became rs9581854 in build 37 and a recent version of
 We then proceed with
 ```bash
 # modify fmp.ini to use the 1KG panel
-gunzip bmi.tsv.gz > BMI
+gunzip -c bmi.tsv.gz > BMI
 fmp.sh BMI
 ```
 and the results will be in `BMI.out`.
