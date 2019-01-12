@@ -72,7 +72,7 @@ The input will be GWAS summary statistics described at the SUMSTATS repository, 
 The pipeline uses a reference panel in a .gen.gz format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with an info file and a single sample file, see example below.
+A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with an info file and a single .sample file for all regions, see example below.
 
 ### --- The lead SNPs ---
 
@@ -103,8 +103,8 @@ File `bmi.tsv.gz` is described in the SUMSTATS repository, https://github.com/ji
 
 ### --- 1000Genomes panel ---
 
-The approximately independent LD blocks are available from [1KG/FUSION](1KG/FUSION), derived from [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
-[FUSION.sh](1KG/FUSION.sh) and [FUSION.do](1KG/FUSION.do) for [FUSION.dta.gz](1KG/FUSION.dta.gz) and [extract.sh](1KG/extract.sh).
+The .gen.gz and .info files for all approximately independent LD blocks are available from [1KG/FUSION](1KG/FUSION), the .sample file is [FUSION.sample](1KG/FUSION.sample), all derived from [FUSION LD reference panel](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2), with
+[FUSION.sh](1KG/FUSION.sh) and [FUSION.do](1KG/FUSION.do).
 
 ### --- The lead SNPs ---
 
