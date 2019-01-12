@@ -72,14 +72,7 @@ The input will be GWAS summary statistics described at the SUMSTATS repository, 
 The pipeline uses a reference panel in a .gen.gz format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
-A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with a sample file. For our own data, [st.do](files/st.do) is
-written to generate such files from their whole chromosome counterpart using a .dta.gz which has the following information,
-
-chr |        rsid  |      RSnum |    pos |    FreqA2 |    info  | type |  A1  | A2
-----|--------------|-------------|--------|-----------|----------|------|------|----
- 1  | 1:54591_A_G  | rs561234294 |  54591 |  .0000783 |  .33544  |    0 |   A  |  G  
- 1  | 1:55351_T_A  | rs531766459 |  55351 |  .0003424 |   .5033  |    0 |   T  |  A  
-... | ... | ... | ... | ... | ... | ... | ... | ... |
+A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with an info file and a single sample file, see example below.
 
 ### --- The lead SNPs ---
 
