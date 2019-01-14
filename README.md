@@ -60,7 +60,7 @@ The pipeline is then called with
 ```
 bash fmp.sh <input>
 ```
-where <input> is a file containing GWAS summary statistics as described at the SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS. The input is in line with joint/conditional analysis by GCTA involving chromosomal positions.
+where \<input\> is a file containing GWAS summary statistics as described at the SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS. The input is in line with joint/conditional analysis by GCTA involving chromosomal positions.
 
 The pipeline uses a reference panel in a .gen.gz format, allowing for imputed genotypes and taking into account directions of effect in both the GWAS summary statistics and the reference panel. A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with an info file and a single .sample file for all regions, see example below.
 
