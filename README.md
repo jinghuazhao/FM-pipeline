@@ -60,24 +60,14 @@ The pipeline is then called with
 ```
 bash fmp.sh <input>
 ```
-
-## Inputs
-
-### --- GWAS summary statistics ---
-
-The input will be GWAS summary statistics described at the SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS, in line with joint/conditional analysis by GCTA involving chromosomal positions.
-
-### --- Reference panel ---
+where <input> is a file containing GWAS summary statistics as described at the SUMSTATS repository, https://github.com/jinghuazhao/SUMSTATS. The input is in line with joint/conditional analysis by GCTA involving chromosomal positions.
 
 The pipeline uses a reference panel in a .gen.gz format, allowing for imputed genotypes and taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
 A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with an info file and a single .sample file for all regions, see example below.
 
-### --- The lead SNPs ---
-
-The setup is in line with summary statistics from consortia where only RSid are given for the fact that their chromosomal position may be changed
-over different builds. An auxiliary file called `st.bed` contains chr, start, end, rsid, pos, r, p corresponding to the lead SNPs specified and r is
+An auxiliary file called `st.bed` contains chr, start, end, rsid, pos, r, p corresponding to the lead SNPs specified and r is
 a sequence number of region while p is a phenotype for GWASs involving multiple phenotyps such as different proteins. 
 
 ## Outputs
