@@ -69,7 +69,7 @@ The input will be GWAS summary statistics described at the SUMSTATS repository, 
 
 ### --- Reference panel ---
 
-The pipeline uses a reference panel in a .gen.gz format, taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
+The pipeline uses a reference panel in a .gen.gz format, allowing for imputed genotypes and taking into account directions of effect in both the GWAS summary statistics and the reference panel. Its 
 development will facilitate summary statistics from a variety of consortiua as with reference panels such as the HRC and 1000Genomes.
 
 A .gen.gz file is required for each region, named such that chr{chr}\_{start}\_{end}.gen.gz, together with an info file and a single .sample file for all regions, see example below.
