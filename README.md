@@ -152,7 +152,7 @@ gzip -f > BMI.sumstats.gz
 Then the PLINK is called,
 ```bash
 if [ -f BMI.clumped ]; then rm BMI.clumped; fi
-plink --bfile EUR \
+plink --bfile 1KG/EUR \
       --clump BMI.sumstats.gz \
       --clump-snp-field SNPID \
       --clump-field P \
