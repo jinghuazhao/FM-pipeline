@@ -127,35 +127,38 @@ and the results will be in `BMI.out`.
 
 We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as described above,
 ```bash
-gunzip -c bmi.tsv.gz | \
+gunzip -c /scratch/jhz22/SUMSTATS/bmi.tsv.gz | \
 sort -k9,9n -k10,10n | \
 awk '
 {
    OFS="\t"
-   if (NR==1) print "SNPID","CHR","POS","A1","A2","MAF","b","se","P","N","rsid"
+   if (NR==1) print "SNP","A1","A2","freq","b","se","p","N"
    rsid=$1
    CHR=$9
    POS=$10
    a1=$2
    a2=$3
-   MAF=$4
+   freq=$4
    b=$5
    se=$6
    P=$7
    N=$8
-   if (a1>a2) snpid="chr" CHR ":" POS "_" a2 "_" a1;
-   else snpid="chr" CHR ":" POS "_" a1 "_" a2
-   print snpid, CHR, POS, a1, a2, MAF, b, se, P, N, rsid
+   if (a1>a2) snp="chr" CHR ":" POS "_" a2 "_" a1;
+   else snp="chr" CHR ":" POS "_" a1 "_" a2
+   print snp, a1, a2, MAF, b, se, p, N
 }' | \
 gzip -f > BMI.sumstats.gz
+
+gunzip -c BMI.sumstats.gz | \
+awk '{gsub(/\t/," ");print}' > BMI.ma
 ```
 Then PLINK is called,
 ```bash
 if [ -f BMI.clumped ]; then rm BMI.clumped; fi
 plink --bfile 1KG/EUR \
       --clump BMI.sumstats.gz \
-      --clump-snp-field SNPID \
-      --clump-field P \
+      --clump-snp-field SNP \
+      --clump-field p \
       --clump-kb 500 \
       --clump-p1 5e-8 \
       --clump-p2 0.01 \
@@ -165,7 +168,22 @@ plink --bfile 1KG/EUR \
 ```
 where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNPID and P value are required.
 
-GCTA is described on [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki),
+With GCTA, we use
+```bash
+if [ -f BMI.jma.cojo ]; then rm BMI.jma.cojo BMI.ldr.cojo; fi
+gcta64 --bfile 1KG/EUR \
+       --cojo-file BMI.ma \
+       --cojo-slct \
+       --cojo-p 5e-8 \
+       --cojo-collinear 0.01 \
+       --cojo-wind 500 \
+       --maf 0.0001 \
+       --thread-num 3 \
+       --out BMI
+```
+Since it does not yet accept a compressed file as input.
+
+GCTA is also described on [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki),
 
 * [Whole-genome conditional/joint analysis](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-conditional-joint-analysis)
 * [Whole genome analysis using approxmiately independent LD blocks](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-analysis-using-approximate-LD-blocks).
