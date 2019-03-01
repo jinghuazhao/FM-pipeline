@@ -133,17 +133,7 @@ awk '
 {
    OFS="\t"
    if (NR==1) print "SNP","A1","A2","freq","b","se","p","N"
-   snp=$1
-   CHR=$9
-   POS=$10
-   a1=$2
-   a2=$3
-   freq=$4
-   b=$5
-   se=$6
-   p=$7
-   N=$8
-   print snp, a1, a2, freq, b, se, p, N
+   print $1, $2, $3, $4, $5, $6, $7, $8
 }' | \
 gzip -f > BMI.sumstats.gz
 if [ -f BMI.clumped ]; then rm BMI.clumped; fi
@@ -160,8 +150,13 @@ plink --bfile 1KG/EUR \
 ```
 where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNP and p value are required, and for GCTA, we use
 ```bash
-gunzip -c BMI.sumstats.gz | \
-awk '{gsub(/\t/," ");print}' > BMI.ma
+gunzip -c bmi.tsv.gz | \
+sort -k9,9n -k10,10n | \
+awk '
+{
+   if (NR==1) print "SNP","A1","A2","freq","b","se","p","N"
+   print $1, $2, $3, $4, $5, $6, $7, $8
+}' > BMI.ma
 if [ -f BMI.jma.cojo ]; then rm BMI.jma.cojo BMI.ldr.cojo; fi
 gcta64 --bfile 1KG/EUR \
        --cojo-file BMI.ma \
