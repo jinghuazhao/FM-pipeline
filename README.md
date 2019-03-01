@@ -125,7 +125,7 @@ and the results will be in `BMI.out`.
 
 ## ADDITIONAL TOPICS
 
-We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as described in the [SUMSTATS]((https://github.com/jinghuazhao/SUMSTATS) repository,
+We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as described in the SUMSTATS repository,
 ```bash
 gunzip -c /scratch/jhz22/SUMSTATS/bmi.tsv.gz | \
 sort -k9,9n -k10,10n | \
