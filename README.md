@@ -132,15 +132,15 @@ sort -k9,9n -k10,10n | \
 awk '
 {
    OFS="\t"
-   if (NR==1) print "SNP","A1","A2","freq","b","se","p","N"
-   print $1, $2, $3, $4, $5, $6, $7, $8
+   if (NR==1) print "SNP","P"
+   print $1, $7
 }' | \
-gzip -f > BMI.sumstats.gz
+gzip -f > BMI.P.gz
 if [ -f BMI.clumped ]; then rm BMI.clumped; fi
 plink --bfile 1KG/EUR \
-      --clump BMI.sumstats.gz \
+      --clump BMI.P.gz \
       --clump-snp-field SNP \
-      --clump-field p \
+      --clump-field P \
       --clump-kb 500 \
       --clump-p1 5e-8 \
       --clump-p2 0.01 \
