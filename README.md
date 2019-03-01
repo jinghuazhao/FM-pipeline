@@ -125,7 +125,7 @@ and the results will be in `BMI.out`.
 
 ## ADDITIONAL TOPICS
 
-We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as used above,
+We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as used above. For PLINK, we do
 ```bash
 gunzip -c bmi.tsv.gz | \
 sort -k9,9n -k10,10n | \
@@ -148,9 +148,6 @@ awk '
    print snp, a1, a2, freq, b, se, p, N
 }' | \
 gzip -f > BMI.sumstats.gz
-```
-Then PLINK is called,
-```bash
 if [ -f BMI.clumped ]; then rm BMI.clumped; fi
 plink --bfile 1KG/EUR \
       --clump BMI.sumstats.gz \
@@ -165,7 +162,7 @@ plink --bfile 1KG/EUR \
 ```
 where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNP and p value are required.
 
-With GCTA, we use
+and for GCTA, we use
 ```bash
 gunzip -c BMI.sumstats.gz | \
 awk '{gsub(/\t/," ");print}' > BMI.ma
