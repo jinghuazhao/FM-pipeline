@@ -127,7 +127,7 @@ and the results will be in `BMI.out`.
 
 We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as described above,
 ```bash
-gunzip -c /scratch/jhz22/SUMSTATS/bmi.tsv.gz | \
+gunzip -c bmi.tsv.gz | \
 sort -k9,9n -k10,10n | \
 awk '
 {
@@ -141,11 +141,11 @@ awk '
    freq=$4
    b=$5
    se=$6
-   P=$7
+   p=$7
    N=$8
    if (a1>a2) snp="chr" CHR ":" POS "_" a2 "_" a1;
    else snp="chr" CHR ":" POS "_" a1 "_" a2
-   print snp, a1, a2, MAF, b, se, p, N
+   print snp, a1, a2, freq, b, se, p, N
 }' | \
 gzip -f > BMI.sumstats.gz
 
