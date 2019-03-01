@@ -1,14 +1,14 @@
 // SNPinfo.dta.gz
 
-insheet rsid FreqA2 using EUR.dat, case
+insheet rsid FreqA2 using lz-1.4.dat, case
 sort rsid
-gzsave EUR, replace
-insheet chr rsid m pos A1 A2 using EUR.bim, case clear
+gzsave LocusZoom, replace
+insheet chr rsid m pos A1 A2 using lz-1.4.bim, case clear
 gen RSnum=rsid
 gen info=1
 gen type=2
 sort rsid
-gzmerge using EUR
+gzmerge using lz-1.4
 gen snpid=string(chr)+":"+string(pos,"%12.0f")+"_"+cond(A1<A2,A1,A2)+"_"+cond(A1<A2,A2,A1)
 sort chr pos
 drop _merge

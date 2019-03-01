@@ -3,10 +3,10 @@
 
 sbatch --wait $HOME/FM-pipeline/doc/lz-1.4.sb
 
-for i in `seq 22`; do echo EUR1KG-$i; done > EUR.list
-plink --merge-list EUR.list --make-bed --out EUR
+for i in `seq 22`; do echo EUR1KG-$i; done > lz-1.4.list
+plink --merge-list LocusZoom.list --make-bed --out lz-1.4
 
-qctool -filetype binary_ped -g EUR.bed -ofiletype gen -og EUR.gen.gz 
+qctool -filetype binary_ped -g lz-1.4.bed -ofiletype gen -og lz-1.4.gen.gz 
 
 sbatch --wait $HOME/FM-pipeline/1KG/extract.sb
 
@@ -15,13 +15,13 @@ sbatch --wait $HOME/FM-pipeline/1KG/extract.sb
 (
   echo "ID_1 ID_2 missing sex phenotype"
   echo "0 0 0 D B"
-  awk '{print $1,$2,$3,$4,"NA"}' EUR.fam
+  awk '{print $1,$2,$3,$4,"NA"}' lz-1.4.fam
 ) > lz-1.4.sample
 
 // generate .info files
 
-plink-1.9 --bfile EUR --freq --out EUR
-awk -vOFS="\t" '(NR>1){print $2,$5}' EUR.frq > EUR.dat
+plink-1.9 --bfile LocusZoom --freq --out LocusZoom
+awk -vOFS="\t" '(NR>1){print $2,$5}' LocusZoom.frq > LocusZoom.dat
 
 export TMPDIR=$HOME/FM-pipeline
 
