@@ -125,7 +125,7 @@ and the results will be in `BMI.out`.
 
 ## ADDITIONAL TOPICS
 
-We describes use of PLINK and GCTA to establish regions of interest. We return to the GIANT BMI example as described in the [SUMSTATS]((https://github.com/jinghuazhao/SUMSTATS) repository,
+We describe use of PLINK and GCTA to establish regions of interest by first returning to the GIANT BMI example as described in the [SUMSTATS]((https://github.com/jinghuazhao/SUMSTATS) repository,
 ```bash
 gunzip -c /scratch/jhz22/SUMSTATS/bmi.tsv.gz | \
 sort -k9,9n -k10,10n | \
@@ -165,7 +165,7 @@ plink --bfile EUR \
 '```
 where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNPID and P value are required.
 
-The [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki) has the following information,
+GCTA is described on [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki),
 
 * [Whole-genome conditional/joint analysis](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-conditional-joint-analysis)
 * [Whole genome analysis using approxmiately independent LD blocks](https://github.com/jinghuazhao/FM-pipeline/wiki/Whole-genome-analysis-using-approximate-LD-blocks).
