@@ -157,7 +157,7 @@ plink --bfile 1KG/EUR \
       --clump-snp-field SNPID \
       --clump-field P \
       --clump-kb 500 \
-      --clump-p1 5e-10 \
+      --clump-p1 5e-8 \
       --clump-p2 0.01 \
       --clump-r2 0.1 \
       --mac 50 \
