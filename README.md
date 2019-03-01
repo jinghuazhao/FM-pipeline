@@ -17,7 +17,7 @@ The process involves the following steps,
 
 The measure of evidence is typically (log10) Bayes factor (BF) and associate SNP probability in the causal set.
 
-It is common to use PLINK and GCTA for identification of independent variants. Although this pipeline focuses on regional association, these vehicles would offer corroborative information on the regional level alike, especially when approximately independent LD blocks are used.
+It is common to use PLINK and GCTA for identification of independent variants, see ADDTIONAL TOPICS below. Although this pipeline focuses on regional association, these vehicles would offer corroborative information on the regional level, especially when approximately independent LD blocks are used.
 
 Information on whole-genome analysis, which could be used to set up the regions, are described at the [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki).
 Clumping using PLINK is also included analogous to those used in depict (e.g. description in [PW-pipeline](https://github.com/jinghuazhao/PW-pipeline)).
@@ -124,6 +124,46 @@ fmp.sh BMI
 and the results will be in `BMI.out`.
 
 ## ADDITIONAL TOPICS
+
+We describes use of PLINK and GCTA to establish regions of interest. We return to the GIANT BMI example as described in the [SUMSTATS]((https://github.com/jinghuazhao/SUMSTATS) repository,
+```bash
+gunzip -c /scratch/jhz22/SUMSTATS/bmi.tsv.gz | \
+sort -k9,9n -k10,10n | \
+awk '
+{
+   OFS="\t"
+   if (NR==1) print "SNPID","CHR","POS","A1","A2","MAF","b","se","P","N","rsid"
+   rsid=$1
+   CHR=$9
+   POS=$10
+   a1=$2
+   a2=$3
+   MAF=$4
+   b=$5
+   se=$6
+   P=$7
+   N=$8
+   if (a1>a2) snpid="chr" CHR ":" POS "_" a2 "_" a1;
+   else snpid="chr" CHR ":" POS "_" a1 "_" a2
+   print snpid, CHR, POS, a1, a2, MAF, b, se, P, N, rsid
+}' | \
+gzip -f > BMI.sumstats.gz
+```
+Then the PLINK is called,
+```bash
+if [ -f BMI.clumped ]; then rm BMI.clumped; fi
+plink --bfile EUR \
+      --clump BMI.sumstats.gz \
+      --clump-snp-field SNPID \
+      --clump-field P \
+      --clump-kb 500 \
+      --clump-p1 5e-10 \
+      --clump-p2 0.01 \
+      --clump-r2 0.1 \
+      --mac 50 \
+      --out BMI
+'```
+where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNPID and P value are required.
 
 The [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki) has the following information,
 
