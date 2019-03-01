@@ -160,9 +160,7 @@ plink --bfile 1KG/EUR \
       --mac 50 \
       --out BMI
 ```
-where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNP and p value are required.
-
-and for GCTA, we use
+where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNP and p value are required, and for GCTA, we use
 ```bash
 gunzip -c BMI.sumstats.gz | \
 awk '{gsub(/\t/," ");print}' > BMI.ma
