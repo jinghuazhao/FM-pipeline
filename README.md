@@ -137,7 +137,7 @@ awk '
 }' | \
 gzip -f > BMI.P.gz
 if [ -f BMI.clumped ]; then rm BMI.clumped; fi
-plink --bfile 1KG/EUR \
+plink --bfile 1KG/FUSION \
       --clump BMI.P.gz \
       --clump-snp-field SNP \
       --clump-field P \
@@ -158,7 +158,7 @@ awk '
    print $1, $2, $3, $4, $5, $6, $7, $8
 }' > BMI.ma
 if [ -f BMI.jma.cojo ]; then rm BMI.jma.cojo BMI.ldr.cojo; fi
-gcta64 --bfile 1KG/EUR \
+gcta64 --bfile 1KG/FUSION \
        --cojo-file BMI.ma \
        --cojo-slct \
        --cojo-p 5e-8 \
