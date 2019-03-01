@@ -148,7 +148,7 @@ plink --bfile 1KG/FUSION \
       --mac 50 \
       --out BMI
 ```
-where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNP and p value are required, and for GCTA, we use
+where --bfile FUSION contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNP and p value are required, and for GCTA, we use
 ```bash
 gunzip -c bmi.tsv.gz | \
 sort -k9,9n -k10,10n | \
