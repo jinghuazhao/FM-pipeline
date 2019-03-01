@@ -2,7 +2,7 @@
 
 insheet rsid FreqA2 using lz-1.4.dat, case
 sort rsid
-gzsave LocusZoom, replace
+gzsave lz-1.4, replace
 insheet chr rsid m pos A1 A2 using lz-1.4.bim, case clear
 gen RSnum=rsid
 gen info=1
