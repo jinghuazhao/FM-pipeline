@@ -1,14 +1,14 @@
 // generate FUSION.dta.gz
 
-insheet rsid FreqA2 using EUR.dat, case
+insheet rsid FreqA2 using FUSION.dat, case
 sort rsid
-gzsave EUR, replace
-insheet chr rsid m pos A1 A2 using EUR.bim, case clear
+gzsave FUSION, replace
+insheet chr rsid m pos A1 A2 using FUSION.bim, case clear
 gen RSnum=rsid
 gen info=1
 gen type=2
 sort rsid
-gzmerge using EUR
+gzmerge using FUSION
 gen snpid=string(chr)+":"+string(pos,"%12.0f")+"_"+cond(A1<A2,A1,A2)+"_"+cond(A1<A2,A2,A1)
 sort chr pos
 drop _merge
