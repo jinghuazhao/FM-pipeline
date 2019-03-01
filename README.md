@@ -133,7 +133,7 @@ awk '
 {
    OFS="\t"
    if (NR==1) print "SNP","A1","A2","freq","b","se","p","N"
-   rsid=$1
+   snp=$1
    CHR=$9
    POS=$10
    a1=$2
@@ -143,8 +143,6 @@ awk '
    se=$6
    p=$7
    N=$8
-   if (a1>a2) snp="chr" CHR ":" POS "_" a2 "_" a1;
-   else snp="chr" CHR ":" POS "_" a1 "_" a2
    print snp, a1, a2, freq, b, se, p, N
 }' | \
 gzip -f > BMI.sumstats.gz
