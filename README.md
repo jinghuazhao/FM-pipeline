@@ -162,7 +162,7 @@ plink --bfile 1KG/EUR \
       --clump-r2 0.1 \
       --mac 50 \
       --out BMI
-'```
+```
 where EUR.* contains the LD reference data as from [FUSION.sh](1KG/FUSION.sh) here. Note that only fields for SNPID and P value are required.
 
 GCTA is described on [wiki page](https://github.com/jinghuazhao/FM-pipeline/wiki),
