@@ -1,5 +1,5 @@
 #!/bin/bash
-# 11-1-2019 JHZ
+# 2-3-2019 JHZ
 
 sbatch --wait $HOME/FM-pipeline/doc/lz-1.4.sb
 
@@ -20,8 +20,8 @@ sbatch --wait $HOME/FM-pipeline/1KG/extract.sb
 
 // generate .info files
 
-plink-1.9 --bfile LocusZoom --freq --out LocusZoom
-awk -vOFS="\t" '(NR>1){print $2,$5}' LocusZoom.frq > LocusZoom.dat
+plink-1.9 --bfile LocusZoom --freq --out lz-1.4
+awk -vOFS="\t" '(NR>1){print $2,$5}' lz-1.4.frq > lz-1.4.dat
 
 export TMPDIR=$HOME/FM-pipeline
 
