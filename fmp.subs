@@ -85,7 +85,6 @@ fi
 if [ $clumping -eq 1 ]; then
    echo "--> clumping"
    plink-1.9 --bfile $f \
-             --exclude range $FM_location/files/high-LD-regions-hg19.txt \
              --clump $rt.tab \
              --chr ${1} --from-bp ${2} --to-bp ${3} \
              --clump-field P \
@@ -95,7 +94,6 @@ if [ $clumping -eq 1 ]; then
              --clump-snp-field snpid \
              --out $f
    plink-1.9 --bfile $f \
-             --exclude range $FM_location/files/high-LD-regions-hg19.txt \
              --clump $rt.tab --clump-range rlist-EURLD --clump-range-border 250 \
              --clump-snp-field snpid \
              --clump-field P \
