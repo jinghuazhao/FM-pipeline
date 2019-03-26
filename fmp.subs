@@ -1,5 +1,5 @@
 #!/bin/bash
-# 9-1-2019 JHZ
+# 26-3-2019 JHZ
 
 export f=chr${1}_${2}_${3}
 
@@ -85,14 +85,23 @@ fi
 if [ $clumping -eq 1 ]; then
    echo "--> clumping"
    plink-1.9 --bfile $f \
+             --exclude range $FM_location/files/high-LD-regions-hg19.txt \
              --clump $rt.tab \
              --chr ${1} --from-bp ${2} --to-bp ${3} \
              --clump-field P \
              --clump-kb 500 \
-             --clump-p1 5e-08 \
+             --clump-p1 5e-8 \
              --clump-r2 0 \
              --clump-snp-field snpid \
              --out $f
+   plink-1.9 --bfile $f \
+             --exclude range $FM_location/files/high-LD-regions-hg19.txt \
+             --clump $rt.tab --clump-range rlist-EURLD --clump-range-border 250 \
+             --clump-snp-field snpid \
+             --clump-field P \
+             --clump-p1 5e-8 --clump-p2 0.01 --clump-r2 0 \
+             --mac 50 \
+             --out $f'
 fi
 
 if [ $FM_summary -eq 1 ]; then

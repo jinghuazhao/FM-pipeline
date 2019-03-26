@@ -1,5 +1,5 @@
 #!/bin/bash
-# 9-1-2019 JHZ
+#26-3-2019 JHZ
 
 ## SETTINGS
 
@@ -44,6 +44,9 @@ fi
 ln -sf $wd/st.bed
 
 echo "--> region-specific finemapping"
+if [ $clumping -eq 1 ]; then
+   awk "NR>1{gsub(/chr/,"",$1);print}" $FM_location/1KG/EUR.bed > rlist-EURLD
+fi
 awk 'NR>1' st.bed | \
 parallel -j${threads} -C' ' \
          --env wd \
