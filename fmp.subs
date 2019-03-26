@@ -99,7 +99,7 @@ if [ $clumping -eq 1 ]; then
              --clump-field P \
              --clump-p1 5e-8 --clump-p2 0.01 --clump-r2 0 \
              --mac 50 \
-             --out $f'
+             --out $f
 fi
 
 if [ $FM_summary -eq 1 ]; then
