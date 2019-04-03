@@ -1,5 +1,5 @@
 #!/bin/bash
-# 2-4-2019 JHZ
+# 3-4-2019 JHZ
 
 ## SETTINGS
 
@@ -74,7 +74,23 @@ parallel -j${threads} -C' ' \
          --env LocusZoom \
           '$FM_location/fmp.subs {1} {2} {3} {4} {5}'
 
-exit
+# PLINK clumping
+
+if [ $clumping -eq 1 ]; then
+  export rt=$dir
+  (
+    grep CHR $rt/*.clumped.ranges | \
+    head -1
+    ls METAL/*-1.tbl.gz | \
+    sed 's|METAL/||g;s/-1.tbl.gz//g' | \
+    parallel -j1 --env rt -C' ' '
+      grep -H -v CHR $rt/{}.clumped.ranges | \
+      sed "s/.clumped.ranges://g"'
+  ) | \
+  sed 's|'"$rt"'/||g;s/.clumped://g' | \
+  awk '(NF>1){$3="";print}' | \
+  awk '{$1=$1;if(NR==1)$1="prot";print}' > plink.ranges
+fi
 
 # Genome-wide Complex Trait Analysis (GCTA)
 
