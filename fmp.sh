@@ -81,10 +81,10 @@ if [ $clumping -eq 1 ]; then
   (
     grep CHR $rt/*.clumped.ranges | \
     head -1
-    ls METAL/*-1.tbl.gz | \
-    sed 's|METAL/||g;s/-1.tbl.gz//g' | \
+    awk 'NR>1' | \
     parallel -j1 --env rt -C' ' '
-      grep -H -v CHR $rt/{}.clumped.ranges | \
+      export f=chr{1}_{2}_{3}
+      grep -H -v CHR $rt/${f}.clumped.ranges | \
       sed "s/.clumped.ranges://g"'
   ) | \
   sed 's|'"$rt"'/||g;s/.clumped://g' | \
