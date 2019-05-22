@@ -1,10 +1,10 @@
 #!/bin/bash
-# 2-3-2019 JHZ
+# 22-5-2019 JHZ
 
 sbatch --wait $HOME/FM-pipeline/doc/lz-1.4.sb
 
 for i in `seq 22`; do echo EUR1KG-$i; done > lz-1.4.list
-plink --merge-list LocusZoom.list --make-bed --out lz-1.4
+plink --merge-list lz-1.4.list --make-bed --out lz-1.4
 
 qctool -filetype binary_ped -g lz-1.4.bed -ofiletype gen -og lz-1.4.gen.gz 
 
