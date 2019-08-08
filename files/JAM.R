@@ -1,4 +1,4 @@
-# 11-1-2019 MRC-Epid JHZ
+# 8-8-2019 MRC-Epid JHZ
 
 require(plink2R)
 # require(snpStats)
@@ -24,10 +24,7 @@ p <- read_plink(f)
 R <- with(p, as.data.frame(2-bed))
 # p <- read.plink(bed,bim,fam)
 # R <- as(with(p,genotypes),"numeric")
-R[] <- lapply(R, function(x) {
-  x[is.na(x)] <- mean(x, na.rm = TRUE)
-  x
-})
+for (i in 1:ncol(R)) R[is.na(R[,i]), i] <- mean(R[,i], na.rm = TRUE)
 X.ref <- R
 
 ss <- subset(sumstats,SNP_ID%in%p$bim$V2)
