@@ -1,4 +1,4 @@
-# 11-1-2019 JHZ
+# 10-9-2019 JHZ
 
 options(digits=3, scipen=20, width=500)
 
@@ -10,9 +10,12 @@ snp <- read.table(paste0(f, ".snp"), as.is=TRUE, header=TRUE)
 config <- read.table(paste0(f,".config"),as.is=TRUE,header=TRUE)
 subset(snp, prob>0.01)
 subset(config, prob>0.01)
-id <- with(subset(snp, prob>0.01), index)
-ld[id,id][upper.tri(ld[id,id])] <- NA
-chk <- cbind(z[id, ], with(subset(snp,index%in%id), c(prob,log10bf)), ld[id, id])
+z <- subset(snp, abs(z) > 5.73)
+id <- as.integer(row.names(z))
+ldt <- ld[id,id]
+ldt[upper.tri(ldt, diag=TRUE)] <- NA
+colnames(ldt) <- with(z, rsid)
+chk <- cbind(z[c("rsid","z")], ldt)
 chk
 
 library(openxlsx)
