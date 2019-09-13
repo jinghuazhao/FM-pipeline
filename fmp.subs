@@ -1,5 +1,5 @@
 #!/bin/bash
-# 26-3-2019 JHZ
+# 13-9-2019 JHZ
 
 export f=chr${1}_${2}_${3}
 
@@ -60,8 +60,7 @@ if [ $LD_PLINK -eq 1 ]; then
    plink-1.9 --bfile $f --maf 0.0001 --freq --threads 3 --out $f
    awk "(\$5<0.0001){print \$2}" $f.frq > $f.excl
    cp $f.z $f.sav
-   plink-1.9 --bfile $f --maf 0.0001 --r square --threads 3 --out $f
-   sed "s/\t/ /g" $f.ld > $f.plink
+   plink-1.9 --bfile $f --maf 0.0001 --r square spaces --threads 3 --out $f
 fi
 
 if [ $CAVIAR -eq 1 ] || [ $CAVIARBF -eq 1 ] || [ $finemap -eq 1 ]; then
